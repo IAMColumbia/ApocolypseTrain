@@ -42,8 +42,8 @@ void AMyCharacter::BeginPlay()
 void AMyCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	AMyCharacter::setXRot(GetInputAxisValue("Horizontal"));
-	AMyCharacter::setYRot(GetInputAxisValue("Vertical"));
+	AMyCharacter::setXRot(GetInputAxisValue("MoveRight"));
+	AMyCharacter::setYRot(GetInputAxisValue("MoveForward"));
 	AMyCharacter::setRotation();
 }
 
@@ -51,16 +51,16 @@ void AMyCharacter::Tick(float DeltaTime)
 void AMyCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
-
+	//this dumbass bindaction shit is not working
+	//PlayerInputComponent->BindAction("Shoot", IE_Pressed, this, &AMyCharacter::ShootPressed);
+	//PlayerInputComponent->BindAction("Shoot", IE_Released, this, &AMyCharacter::ShootReleased);
 	PlayerInputComponent->BindAxis("MoveForward", this, &AMyCharacter::MoveForward);
 	PlayerInputComponent->BindAxis("MoveRight", this, &AMyCharacter::MoveRight);
-
-	PlayerInputComponent->BindAction("Shoot", IE_Pressed,this, &AMyCharacter::Ray);
 }
 
 void AMyCharacter::setXRot(float AxisValue) {
 	if (AxisValue != 0.0f) {
-		xRot = AxisValue;
+		xRot = AxisValue * -1;
 	}
 }
 
@@ -70,9 +70,17 @@ void AMyCharacter::setYRot(float AxisValue) {
 	}
 }
 
-void AMyCharacter::MoveForward(float AxisValue) {
-	if ((Controller != NULL) && AxisValue != 0.0f) {
+void AMyCharacter::ShootPressed() {
+	Ray();
+	GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Emerald, TEXT("SHoot Pressed"));
+}
 
+void AMyCharacter::ShootReleased() {
+	GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Emerald, TEXT("SHoot Released"));
+}
+
+void AMyCharacter::MoveForward(float AxisValue) {
+	if ((Controller != NULL) && AxisValue != 0.0f && !IsShooting) {
 		//find out which direction is forward
 		const FRotator Rotation = Controller->GetControlRotation();
 		const FRotator YawRotation(0, Rotation.Yaw, 0);
@@ -84,7 +92,7 @@ void AMyCharacter::MoveForward(float AxisValue) {
 }
 
 void AMyCharacter::MoveRight(float AxisValue) {
-	if (Controller != NULL && AxisValue != 0.0f) {
+	if (Controller != NULL && AxisValue != 0.0f && !IsShooting) {
 
 		//find out which direction is right
 		const FRotator Rotation = Controller->GetControlRotation();

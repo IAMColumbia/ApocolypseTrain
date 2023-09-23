@@ -32,6 +32,9 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Components")
 	class UWeapon* PlayerWeapon;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category= "Variables")
+	bool IsShooting;
+
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
@@ -43,6 +46,9 @@ protected:
 
 	float RayLength = 100;
 	void Ray();
+
+	void ShootPressed();
+	void ShootReleased();
 
 public:	
 	// Called every frame
