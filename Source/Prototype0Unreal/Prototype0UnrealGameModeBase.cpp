@@ -6,5 +6,6 @@
 void APrototype0UnrealGameModeBase::StartPlay() {
 	Super::StartPlay();
 	UGameplayStatics::CreatePlayer(this, -1, true);
-	//UGameplayStatics::CreatePlayer(this, -1);
+	UGameplayStatics::CreatePlayer(this, -1, true);
+	UGameplayStatics::CreatePlayer(this, -1, true);
 }

@@ -12,11 +12,17 @@ APlayerSpawner::APlayerSpawner()
 
 }
 
+
+
 // Called when the game starts or when spawned
 void APlayerSpawner::BeginPlay()
 {
+
 	Super::BeginPlay();
-	UGameplayStatics::CreatePlayer(this, -1);
+	UGameplayStatics::CreatePlayer(this, -1, true);
+	UGameplayStatics::CreatePlayer(this, -1, true);
+	UGameplayStatics::CreatePlayer(this, -1, true);
+	GEngine->AddOnScreenDebugMessage(-1, 3, FColor::Blue, TEXT("whatevertrejbkrj"));
 }
 
 // Called every frame
