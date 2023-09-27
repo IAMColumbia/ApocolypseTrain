@@ -24,17 +24,18 @@ protected:
 	void setYRot(float AxisValue);
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Components")
-	class USpringArmComponent* CameraBoom;
-
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Components")
-	class UCameraComponent* FollowCamera;
-
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Components")
 	class UWeapon* PlayerWeapon;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category= "Variables")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category= "Combat")
 	bool IsShooting;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat")
+	float FireRate;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat")
+	float Damage;
+
+	FTimerHandle shootTimerHandle;
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
@@ -60,4 +61,9 @@ public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, category = "Mesh")
 	USkeletalMeshComponent* characterMesh;
 
+	UFUNCTION(BlueprintCallable, Category = "ProjectileSpawning")
+	void ShootProjectile();
+private:
+	UPROPERTY(EditAnywhere, meta=(AllowPrivateAccess="true"))
+	TSubclassOf<AActor> ActorToSpawn;
 };

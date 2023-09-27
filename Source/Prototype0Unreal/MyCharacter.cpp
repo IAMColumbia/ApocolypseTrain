@@ -6,6 +6,8 @@
 #include "Camera/CameraComponent.h"
 #include "Weapon.h"
 #include <Kismet/KismetMathLibrary.h>
+#include <Kismet/KismetSystemLibrary.h>
+#include <EnemyCharacter.h>
 
 // Sets default values
 AMyCharacter::AMyCharacter()
@@ -14,22 +16,7 @@ AMyCharacter::AMyCharacter()
 	PrimaryActorTick.bCanEverTick = true;
 
 	characterMesh = FindComponentByClass<USkeletalMeshComponent>();
-	////Initialize the Camera Boom
-	//CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
-
-	////Setup Camera Boom attatchment to the root component of the class
-	//CameraBoom->SetupAttachment(RootComponent);
-
-	////Set the boolean to use the PawnControlRotaion to true;
-	//CameraBoom->bUsePawnControlRotation = true;
-
-	////Initialize the FollowCamera
-	//FollowCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FollowCamera"));
-
-	////Set followcamera attachment to the camera boom
-	//FollowCamera->SetupAttachment(CameraBoom);
-
-	//PlayerWeapon->CreateDefaultSubobject<UWeapon>(TEXT("PlayerWeapon"));
+	
 }
 
 // Called when the game starts or when spawned
@@ -37,6 +24,7 @@ void AMyCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 }
+
 
 // Called every frame
 void AMyCharacter::Tick(float DeltaTime)
@@ -52,8 +40,8 @@ void AMyCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 	//this dumbass bindaction shit is not working
-	//PlayerInputComponent->BindAction("Shoot", IE_Pressed, this, &AMyCharacter::ShootPressed);
-	//PlayerInputComponent->BindAction("Shoot", IE_Released, this, &AMyCharacter::ShootReleased);
+	PlayerInputComponent->BindAction("ShootWeapon", EInputEvent::IE_Pressed, this, &AMyCharacter::ShootPressed);
+	PlayerInputComponent->BindAction("ShootWeapon", EInputEvent::IE_Released, this, &AMyCharacter::ShootReleased);
 	PlayerInputComponent->BindAxis("MoveForward", this, &AMyCharacter::MoveForward);
 	PlayerInputComponent->BindAxis("MoveRight", this, &AMyCharacter::MoveRight);
 }
@@ -71,12 +59,18 @@ void AMyCharacter::setYRot(float AxisValue) {
 }
 
 void AMyCharacter::ShootPressed() {
-	Ray();
-	GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Emerald, TEXT("SHoot Pressed"));
+	IsShooting = true;
+	shootTimerHandle = UKismetSystemLibrary::K2_SetTimer(this, TEXT("ShootProjectile"), FireRate, true, 0, 0);
 }
 
 void AMyCharacter::ShootReleased() {
-	GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Emerald, TEXT("SHoot Released"));
+	IsShooting = false;
+	UKismetSystemLibrary::K2_ClearAndInvalidateTimerHandle(this, shootTimerHandle);
+}
+
+void AMyCharacter::ShootProjectile() {
+	Ray();
+	//GetWorld()->SpawnActor<AActor>(ActorToSpawn, GetActorLocation(), characterMesh->GetComponentRotation() + FRotator(0,90,0));
 }
 
 void AMyCharacter::MoveForward(float AxisValue) {
@@ -124,10 +118,19 @@ void AMyCharacter::Ray()
 
 	if (GetWorld()) {
 		bool actorHit = GetWorld()->LineTraceSingleByChannel(hit, start, end, ECC_Pawn, FCollisionQueryParams(), FCollisionResponseParams());
-		DrawDebugLine(GetWorld(), start, end, FColor::Red, false, 2.0f, 0.f, 10.f);
+		DrawDebugLine(GetWorld(), start, end, FColor::Red, false, 0.15f, 0.f, 10.f);
 		if (actorHit && hit.GetActor()) {
 			GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red, hit.GetActor()->GetFName().ToString());
+			if (AEnemyCharacter* enemy = Cast<AEnemyCharacter>(hit.GetActor())) {
+				enemy->TakeDamage(hit.Distance, Damage);
+			}
 		}
+		
+		//if(actorHit && hit.GetActor() == Enemy)
+		//need to insert a cpp class and make enemy ai inherit from that class
+		//make a method in cpp for taking damage
+		//override or call that method from enemy BP
+		//maybe pass in the distance from player to determine a delay before the enemy starts taking damage
 	}
 }
 
