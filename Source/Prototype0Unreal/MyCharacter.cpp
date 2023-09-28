@@ -23,6 +23,8 @@ AMyCharacter::AMyCharacter()
 void AMyCharacter::BeginPlay()
 {
 	Super::BeginPlay();
+	currentHealth = MaxHealth;
+	NotifyHealthBarWidget();
 }
 
 
@@ -131,6 +133,15 @@ void AMyCharacter::Ray()
 		//make a method in cpp for taking damage
 		//override or call that method from enemy BP
 		//maybe pass in the distance from player to determine a delay before the enemy starts taking damage
+	}
+}
+
+void AMyCharacter::TakeDamage(float damageToTake) {
+	currentHealth -= damageToTake;
+	GEngine->AddOnScreenDebugMessage(1, 3.0f, FColor::MakeRandomColor(), FString::Printf(TEXT("PLAYER WAS HIT for %f damage"), damageToTake));
+	NotifyHealthBarWidget();
+	if (currentHealth <= 0) {
+		Destroy();
 	}
 }
 

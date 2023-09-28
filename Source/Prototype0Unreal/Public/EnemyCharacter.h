@@ -27,6 +27,10 @@ public:
 	float MaxHealth;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	float currentHealth;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat")
+	float AttackRange;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Combat")
+	bool isAttacking;
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 

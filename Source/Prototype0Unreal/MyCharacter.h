@@ -51,6 +51,9 @@ protected:
 	void ShootPressed();
 	void ShootReleased();
 
+	UFUNCTION(BlueprintImplementableEvent)
+	void NotifyHealthBarWidget();
+
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -63,7 +66,17 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "ProjectileSpawning")
 	void ShootProjectile();
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat")
+	float MaxHealth;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	float currentHealth;
+
+	UFUNCTION(BlueprintCallable, Category = "Combat")
+	void TakeDamage(float damageToTake);
 private:
 	UPROPERTY(EditAnywhere, meta=(AllowPrivateAccess="true"))
 	TSubclassOf<AActor> ActorToSpawn;
+
+
 };

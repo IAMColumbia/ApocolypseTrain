@@ -2,6 +2,7 @@
 
 #include <GameFramework/Actor.h>
 #include "EnemyCharacter.h"
+#include <Kismet/KismetMathLibrary.h>
 
 // Sets default values
 AEnemyCharacter::AEnemyCharacter()
@@ -42,7 +43,14 @@ void AEnemyCharacter::TakeDamage(float distance, float damage) {
 }
 
 void AEnemyCharacter::AttackTarget(AActor* target) {
-
+	double distance = (GetActorLocation() - target->GetActorLocation()).Size();
+	if (distance < AttackRange) {
+		isAttacking = true;
+		//GEngine->AddOnScreenDebugMessage(-1, 1, FColor::MakeRandomColor(), FString::Printf(TEXT("attackrnage = %d"), distance));
+	}
+	else {
+		isAttacking = false;
+	}
 }
 
 
