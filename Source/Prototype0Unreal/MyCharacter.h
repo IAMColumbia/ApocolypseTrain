@@ -54,6 +54,15 @@ protected:
 	UFUNCTION(BlueprintImplementableEvent)
 	void NotifyHealthBarWidget();
 
+	UFUNCTION(BlueprintImplementableEvent)
+	void NotifyStartedShooting(FVector direction);
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void NotifyStoppedShooting();
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void NotifyPlayerDied();
+
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -66,6 +75,9 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "ProjectileSpawning")
 	void ShootProjectile();
+
+	UFUNCTION(BlueprintCallable, Category = "Respawning")
+	void ResetPlayer();
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat")
 	float MaxHealth;

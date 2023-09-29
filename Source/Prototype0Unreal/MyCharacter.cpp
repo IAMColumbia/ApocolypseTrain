@@ -62,16 +62,19 @@ void AMyCharacter::setYRot(float AxisValue) {
 
 void AMyCharacter::ShootPressed() {
 	IsShooting = true;
+	NotifyStartedShooting(GetActorForwardVector());
 	shootTimerHandle = UKismetSystemLibrary::K2_SetTimer(this, TEXT("ShootProjectile"), FireRate, true, 0, 0);
 }
 
 void AMyCharacter::ShootReleased() {
 	IsShooting = false;
+	NotifyStoppedShooting();
 	UKismetSystemLibrary::K2_ClearAndInvalidateTimerHandle(this, shootTimerHandle);
 }
 
 void AMyCharacter::ShootProjectile() {
 	Ray();
+	
 	//GetWorld()->SpawnActor<AActor>(ActorToSpawn, GetActorLocation(), characterMesh->GetComponentRotation() + FRotator(0,90,0));
 }
 
@@ -118,11 +121,12 @@ void AMyCharacter::Ray()
 
 	FHitResult hit;
 
+	
 	if (GetWorld()) {
 		bool actorHit = GetWorld()->LineTraceSingleByChannel(hit, start, end, ECC_Pawn, FCollisionQueryParams(), FCollisionResponseParams());
-		DrawDebugLine(GetWorld(), start, end, FColor::Red, false, 0.15f, 0.f, 10.f);
+		//DrawDebugLine(GetWorld(), start, end, FColor::Red, false, 0.15f, 0.f, 10.f);
 		if (actorHit && hit.GetActor()) {
-			GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red, hit.GetActor()->GetFName().ToString());
+			//GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red, hit.GetActor()->GetFName().ToString());
 			if (AEnemyCharacter* enemy = Cast<AEnemyCharacter>(hit.GetActor())) {
 				enemy->TakeDamage(hit.Distance, Damage);
 			}
@@ -141,7 +145,12 @@ void AMyCharacter::TakeDamage(float damageToTake) {
 	GEngine->AddOnScreenDebugMessage(1, 3.0f, FColor::MakeRandomColor(), FString::Printf(TEXT("PLAYER WAS HIT for %f damage"), damageToTake));
 	NotifyHealthBarWidget();
 	if (currentHealth <= 0) {
-		Destroy();
+		NotifyPlayerDied();
 	}
+}
+
+void AMyCharacter::ResetPlayer() {
+	currentHealth = MaxHealth;
+	NotifyHealthBarWidget();
 }
 
