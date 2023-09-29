@@ -45,7 +45,8 @@ protected:
 
 	void setRotation();
 
-	float RayLength = 100;
+	float RayOffset = 80;
+	float RayLength = 1500;
 	void Ray();
 
 	void ShootPressed();

@@ -116,8 +116,8 @@ void AMyCharacter::Ray()
 	FVector start = GetActorLocation();
 	//getting right as the forward vector is offset 90 degrees
 	FVector forward = characterMesh->GetRightVector();
-	start = FVector(start.X + (forward.X * RayLength), start.Y + (forward.Y * RayLength), start.Z + (forward.Z * RayLength));
-	FVector end = start + (forward * 1000);
+	start = FVector(start.X + (forward.X * RayOffset), start.Y + (forward.Y * RayOffset), start.Z + (forward.Z * RayOffset));
+	FVector end = start + (forward * RayLength);
 
 	FHitResult hit;
 

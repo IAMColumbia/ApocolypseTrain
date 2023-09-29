@@ -45,12 +45,12 @@ void AEnemyCharacter::TakeDamage(float distance, float damage) {
 void AEnemyCharacter::AttackTarget(AActor* target) {
 	double distance = (GetActorLocation() - target->GetActorLocation()).Size();
 	if (distance < AttackRange) {
-		isAttacking = true;
+		//isAttacking = true;
 		//GEngine->AddOnScreenDebugMessage(-1, 1, FColor::MakeRandomColor(), FString::Printf(TEXT("attackrnage = %d"), distance));
 	}
 	else {
 		//maybe use an anim notify to call this method again once the attack animation is done and see if the enemy is still near the player
-		isAttacking = false;
+		//isAttacking = false;
 	}
 }
 
