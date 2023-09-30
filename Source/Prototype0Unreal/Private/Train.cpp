@@ -17,20 +17,21 @@ ATrain::ATrain()
 void ATrain::BeginPlay()
 {
 	Super::BeginPlay();
-	GetWorld()->GetSubsystem<UGameManagerWSS>()->PrintTrainLocation(GetActorLocation());
+	GetWorld()->GetSubsystem<UGameManagerWSS>()->train = this;
 }
 
 // Called every frame
 void ATrain::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	currentLocation = GetActorLocation();
-	currentLocation += FVector(0, 1, 0) * trainSpeed * DeltaTime;
-	SetActorLocation(currentLocation);
-	GetWorld()->GetSubsystem<UGameManagerWSS>()->PrintTrainLocation(GetActorLocation());
-	GEngine->AddOnScreenDebugMessage(-1, 3, FColor::Red, FString::Printf(TEXT("target Pos = %f"), targetYPos));
+	if (CanMove) {
+		currentLocation = GetActorLocation();
+		currentLocation += FVector(0, 1, 0) * trainSpeed * DeltaTime;
+		SetActorLocation(currentLocation);
+	}
 	if (currentLocation.Y >= targetYPos) {
-		targetYPos = GetWorld()->GetSubsystem<UGameManagerWSS>()->GetNextTargetLocation();
+		GetWorld()->GetSubsystem<UGameManagerWSS>()->TrainArrivedAtTarget();
 	}
 }
+
 

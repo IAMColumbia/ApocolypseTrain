@@ -4,38 +4,36 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "ChunkSpawner.generated.h"
+#include "EnemySpawner.generated.h"
 
 class UGameManagerWSS;
 
 UCLASS()
-class PROTOTYPE0UNREAL_API AChunkSpawner : public AActor
+class PROTOTYPE0UNREAL_API AEnemySpawner : public AActor
 {
 	GENERATED_BODY()
 	
 public:	
 	// Sets default values for this actor's properties
-	AChunkSpawner();
+	AEnemySpawner();
 
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
 	UFUNCTION(BlueprintImplementableEvent)
-	void spawnLevelChunk();
+	void NotifySpawnEnemy(FVector spawnLocation);
+
+	
 
 public:	
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Spawning")
-	FVector chunkScale;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Subsystem")
-	float nextTargetLocation;
-
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Spawning")
+	int EnemiesPerChunk;
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	float GetNextTargetLocation();
+	void SpawnEnemies();
 
-	void SpawnNextChunk();
-
+	void PrintStuff();
+	
 };

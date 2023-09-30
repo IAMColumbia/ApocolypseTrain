@@ -15,13 +15,15 @@ public:
 	// Sets default values for this actor's properties
 	ATrain();
 
-	
 
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
 public:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement")
+	bool CanMove;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement")
 	float targetYPos;
 

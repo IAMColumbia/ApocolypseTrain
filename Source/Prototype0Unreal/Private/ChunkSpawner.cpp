@@ -4,6 +4,7 @@
 #include "ChunkSpawner.h"
 #include "GameManagerWSS.h"
 
+
 // Sets default values
 AChunkSpawner::AChunkSpawner()
 {
@@ -20,17 +21,19 @@ void AChunkSpawner::BeginPlay()
 }
 
 
-
 // Called every frame
 void AChunkSpawner::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
 }
 
 float AChunkSpawner::GetNextTargetLocation()
 {
-	spawnLevelChunk();
 	return nextTargetLocation;
+}
+
+void AChunkSpawner::SpawnNextChunk()
+{
+	spawnLevelChunk();
 }
 
