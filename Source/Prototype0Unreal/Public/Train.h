@@ -7,7 +7,7 @@
 
 
 UCLASS()
-class PROTOTYPE0UNREAL_API ATrain : public AActor
+class PROTOTYPE0UNREAL_API ATrain : public APawn
 {
 	GENERATED_BODY()
 	
