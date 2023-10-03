@@ -31,6 +31,7 @@ void AEnemySpawner::SpawnEnemies()
 		FVector spawnLocation = GetWorld()->GetSubsystem<UGameManagerWSS>()->GetRandomLocationInChunk();
 		NotifySpawnEnemy(spawnLocation);
 	}
+	EnemiesPerChunk++;
 }
 
 void AEnemySpawner::PrintStuff()

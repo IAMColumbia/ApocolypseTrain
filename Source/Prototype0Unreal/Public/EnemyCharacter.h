@@ -41,5 +41,5 @@ public:
 	virtual void TakeDamage(float distance, float damage);
 	
 	UFUNCTION(BlueprintCallable)
-	void AttackTarget(AActor* target);
+	bool IsInAttackRange(AActor* target);
 };

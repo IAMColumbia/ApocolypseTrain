@@ -18,6 +18,21 @@ void ATrain::BeginPlay()
 {
 	Super::BeginPlay();
 	GetWorld()->GetSubsystem<UGameManagerWSS>()->train = this;
+	TotalMeters = 0;
+}
+
+void ATrain::IncrementTotalMeters()
+{
+	if (CanMove) {
+		TotalMeters++;
+		trainSpeed += 10;
+	}
+}
+
+void ATrain::ResetTrain()
+{
+	TotalMeters = 0;
+	trainSpeed = 100;
 }
 
 // Called every frame
@@ -31,6 +46,7 @@ void ATrain::Tick(float DeltaTime)
 	}
 	if (currentLocation.Y >= targetYPos) {
 		GetWorld()->GetSubsystem<UGameManagerWSS>()->TrainArrivedAtTarget();
+		
 	}
 }
 

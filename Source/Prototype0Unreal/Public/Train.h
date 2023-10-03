@@ -34,6 +34,14 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat")
 	float trainHealth;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat")
+	float TotalMeters;
+
+	void IncrementTotalMeters();
+
+	UFUNCTION(BlueprintCallable)
+	void ResetTrain();
+
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 

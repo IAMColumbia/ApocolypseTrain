@@ -9,3 +9,5 @@ void APrototype0UnrealGameModeBase::StartPlay() {
 	UGameplayStatics::CreatePlayer(this, -1, true);
 	UGameplayStatics::CreatePlayer(this, -1, true);
 }
+
+

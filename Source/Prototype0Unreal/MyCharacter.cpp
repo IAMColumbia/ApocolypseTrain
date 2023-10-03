@@ -142,7 +142,7 @@ void AMyCharacter::Ray()
 
 void AMyCharacter::TakeDamage(float damageToTake) {
 	currentHealth -= damageToTake;
-	GEngine->AddOnScreenDebugMessage(1, 3.0f, FColor::MakeRandomColor(), FString::Printf(TEXT("PLAYER WAS HIT for %f damage"), damageToTake));
+	//GEngine->AddOnScreenDebugMessage(1, 3.0f, FColor::MakeRandomColor(), FString::Printf(TEXT("PLAYER WAS HIT for %f damage"), damageToTake));
 	NotifyHealthBarWidget();
 	if (currentHealth <= 0) {
 		NotifyPlayerDied();

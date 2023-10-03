@@ -23,8 +23,11 @@ float UGameManagerWSS::GetNextTargetLocation() {
 void UGameManagerWSS::TrainArrivedAtTarget()
 {
 	chunkSpawner->SpawnNextChunk();
-	enemySpawner->SpawnEnemies();
+	if (train->CanMove) {
+		enemySpawner->SpawnEnemies();
+	}
 	train->targetYPos = GetNextTargetLocation();
+	train->IncrementTotalMeters();
 }
 
 FVector UGameManagerWSS::GetRandomLocationInChunk()
@@ -34,7 +37,7 @@ FVector UGameManagerWSS::GetRandomLocationInChunk()
 	float yOffset = chunkSpawner->nextTargetLocation;
 	float zOffset = 400;
 	FVector location = FVector(FMath::RandRange(-chunkScale.X, chunkScale.X), FMath::RandRange(-chunkScale.Y + yOffset, chunkScale.Y + yOffset), zOffset);
-	GEngine->AddOnScreenDebugMessage(-1, 3, FColor::Yellow, FString::Printf(TEXT("x: %f y: %f z: %f"), location.X, location.Y, location.Z));
+	//GEngine->AddOnScreenDebugMessage(-1, 3, FColor::Yellow, FString::Printf(TEXT("x: %f y: %f z: %f"), location.X, location.Y, location.Z));
 
 	return location;
 }
