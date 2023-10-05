@@ -46,6 +46,7 @@ protected:
 	void setRotation();
 
 	float RayOffset = 80;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Combat")
 	float RayLength = 1800;
 	void Ray();
 
