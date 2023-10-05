@@ -46,7 +46,6 @@ void ATrain::Tick(float DeltaTime)
 	}
 	if (currentLocation.Y >= targetYPos) {
 		GetWorld()->GetSubsystem<UGameManagerWSS>()->TrainArrivedAtTarget();
-		
 	}
 }
 
