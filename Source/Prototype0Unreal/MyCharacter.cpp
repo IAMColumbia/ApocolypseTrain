@@ -32,8 +32,8 @@ void AMyCharacter::BeginPlay()
 void AMyCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	AMyCharacter::setXRot(GetInputAxisValue("MoveRight"));
-	AMyCharacter::setYRot(GetInputAxisValue("MoveForward"));
+	AMyCharacter::setXRot(GetInputAxisValue("Horizontal"));
+	AMyCharacter::setYRot(GetInputAxisValue("Vertical"));
 	AMyCharacter::setRotation();
 }
 
@@ -79,7 +79,7 @@ void AMyCharacter::ShootProjectile() {
 }
 
 void AMyCharacter::MoveForward(float AxisValue) {
-	if ((Controller != NULL) && AxisValue != 0.0f && !IsShooting) {
+	if ((Controller != NULL) && AxisValue != 0.0f) {
 		//find out which direction is forward
 		const FRotator Rotation = Controller->GetControlRotation();
 		const FRotator YawRotation(0, Rotation.Yaw, 0);
@@ -91,7 +91,7 @@ void AMyCharacter::MoveForward(float AxisValue) {
 }
 
 void AMyCharacter::MoveRight(float AxisValue) {
-	if (Controller != NULL && AxisValue != 0.0f && !IsShooting) {
+	if (Controller != NULL && AxisValue != 0.0f) {
 
 		//find out which direction is right
 		const FRotator Rotation = Controller->GetControlRotation();

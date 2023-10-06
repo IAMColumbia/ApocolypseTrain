@@ -42,7 +42,7 @@ void ATrain::Tick(float DeltaTime)
 	if (CanMove) {
 		currentLocation = GetActorLocation();
 		currentLocation += FVector(0, 1, 0) * trainSpeed * DeltaTime;
-		SetActorLocation(currentLocation);
+		SetActorLocation(currentLocation, true);
 	}
 	if (currentLocation.Y >= targetYPos) {
 		GetWorld()->GetSubsystem<UGameManagerWSS>()->TrainArrivedAtTarget();
