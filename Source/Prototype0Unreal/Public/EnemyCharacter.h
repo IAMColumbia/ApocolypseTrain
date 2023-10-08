@@ -21,6 +21,9 @@ protected:
 
 	UFUNCTION(BlueprintImplementableEvent)
 	void NotifyHealthBarWidget();
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void NotifyDamageEnemy();
 public:	
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat")
@@ -41,5 +44,5 @@ public:
 	virtual void TakeDamage(float distance, float damage);
 	
 	UFUNCTION(BlueprintCallable)
-	bool IsInAttackRange(AActor* target);
+	bool IsInAttackRange(AActor* targetToAttack);
 };

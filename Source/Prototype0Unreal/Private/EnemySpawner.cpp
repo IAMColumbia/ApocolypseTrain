@@ -3,6 +3,7 @@
 
 #include "EnemySpawner.h"
 #include "GameManagerWSS.h"
+#include <Kismet/KismetSystemLibrary.h>
 // Sets default values
 AEnemySpawner::AEnemySpawner()
 {
@@ -16,6 +17,7 @@ void AEnemySpawner::BeginPlay()
 {
 	Super::BeginPlay();
 	GetWorld()->GetSubsystem<UGameManagerWSS>()->enemySpawner = this;
+	//spawnTimerHandle = UKismetSystemLibrary::K2_SetTimer(this, TEXT("SpawnEnemies"), 20, true, 0, 0);
 }
 
 // Called every frame

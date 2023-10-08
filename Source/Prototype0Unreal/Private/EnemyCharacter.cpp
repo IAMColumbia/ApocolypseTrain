@@ -37,13 +37,18 @@ void AEnemyCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComp
 void AEnemyCharacter::TakeDamage(float distance, float damage) {
 	currentHealth -= damage;
 	NotifyHealthBarWidget();
+	NotifyDamageEnemy();
 	if (currentHealth <= 0) {
 		Destroy();
 	}
 }
 
-bool AEnemyCharacter::IsInAttackRange(AActor* target) {
-	double distance = (GetActorLocation() - target->GetActorLocation()).Size();
+bool AEnemyCharacter::IsInAttackRange(AActor* targetToAttack) {
+	if (targetToAttack == NULL) {
+		UE_LOG(LogTemp, Warning, TEXT("NULL TARGET FOR ENEMEMY"));
+		return false;
+	}
+	double distance = (GetActorLocation() - targetToAttack->GetActorLocation()).Size();
 	if (distance < AttackRange) {
 		return true;
 	}

@@ -8,6 +8,8 @@
 #include <Kismet/KismetMathLibrary.h>
 #include <Kismet/KismetSystemLibrary.h>
 #include <EnemyCharacter.h>
+#include "GameManagerWSS.h"
+#include "Train.h"
 
 // Sets default values
 AMyCharacter::AMyCharacter()
@@ -16,7 +18,6 @@ AMyCharacter::AMyCharacter()
 	PrimaryActorTick.bCanEverTick = true;
 
 	characterMesh = FindComponentByClass<USkeletalMeshComponent>();
-	
 }
 
 // Called when the game starts or when spawned
@@ -25,6 +26,7 @@ void AMyCharacter::BeginPlay()
 	Super::BeginPlay();
 	currentHealth = MaxHealth;
 	NotifyHealthBarWidget();
+	trainPtr = GetWorld()->GetSubsystem<UGameManagerWSS>()->train;
 }
 
 
@@ -35,6 +37,13 @@ void AMyCharacter::Tick(float DeltaTime)
 	AMyCharacter::setXRot(GetInputAxisValue("Horizontal"));
 	AMyCharacter::setYRot(GetInputAxisValue("Vertical"));
 	AMyCharacter::setRotation();
+	if (trainPtr->IsOverlappingFuelBox(GetActorLocation())) {
+		//GEngine->AddOnScreenDebugMessage(-1, 1, FColor::Orange, FString::Printf(TEXT("is in box")));
+		CanAddFuel = true;
+	}
+	else {
+		CanAddFuel = false;
+	}
 }
 
 // Called to bind functionality to input
@@ -44,8 +53,18 @@ void AMyCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 	//this dumbass bindaction shit is not working
 	PlayerInputComponent->BindAction("ShootWeapon", EInputEvent::IE_Pressed, this, &AMyCharacter::ShootPressed);
 	PlayerInputComponent->BindAction("ShootWeapon", EInputEvent::IE_Released, this, &AMyCharacter::ShootReleased);
+	PlayerInputComponent->BindAction("Interact", EInputEvent::IE_Pressed, this, &AMyCharacter::InteractPressed);
 	PlayerInputComponent->BindAxis("MoveForward", this, &AMyCharacter::MoveForward);
 	PlayerInputComponent->BindAxis("MoveRight", this, &AMyCharacter::MoveRight);
+}
+
+void AMyCharacter::InteractPressed() {
+	if (trainPtr->IsOverlappingFuelBox(GetActorLocation()) && Fuel > 0) {
+		if (trainPtr->AddFuel()) {
+			Fuel--;
+		}
+		NotifyFuelDisplay();
+	}
 }
 
 void AMyCharacter::setXRot(float AxisValue) {
@@ -145,12 +164,18 @@ void AMyCharacter::TakeDamage(float damageToTake) {
 	//GEngine->AddOnScreenDebugMessage(1, 3.0f, FColor::MakeRandomColor(), FString::Printf(TEXT("PLAYER WAS HIT for %f damage"), damageToTake));
 	NotifyHealthBarWidget();
 	if (currentHealth <= 0) {
+		IsPlayerDead = true;
+		if (IsShooting) {
+			ShootReleased();
+		}
 		NotifyPlayerDied();
 	}
 }
 
 void AMyCharacter::ResetPlayer() {
+	SetActorLocation(trainPtr->GetRespawnPos());
 	currentHealth = MaxHealth;
+	IsPlayerDead = false;
 	NotifyHealthBarWidget();
 }
 

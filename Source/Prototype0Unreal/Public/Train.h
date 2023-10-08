@@ -3,7 +3,9 @@
 #pragma once
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include <Components/BoxComponent.h>
 #include "Train.generated.h"
+
 
 
 UCLASS()
@@ -20,6 +22,8 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+	void BurnFuel();
+
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement")
 	bool CanMove;
@@ -28,7 +32,7 @@ public:
 	float targetYPos;
 
 	FVector currentLocation;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement")
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Movement")
 	float trainSpeed;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat")
@@ -37,12 +41,30 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat")
 	float TotalMeters;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement")
+	float Fuel;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement")
+	float MaxFuel;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement")
+	float SpeedFuelMultiplier;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement")
+	float burnRate;
+
 	void IncrementTotalMeters();
 
-	UFUNCTION(BlueprintCallable)
-	void ResetTrain();
+
+	bool IsOverlappingFuelBox(FVector actorPos);
+
+	bool AddFuel();
 
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
+
+	UBoxComponent* fuelDeposit;
+
+	FVector GetRespawnPos();
 
 };

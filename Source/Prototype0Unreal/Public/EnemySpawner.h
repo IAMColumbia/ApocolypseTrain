@@ -36,4 +36,5 @@ public:
 
 	void PrintStuff();
 	
+	FTimerHandle spawnTimerHandle;
 };

@@ -18,6 +18,9 @@ public:
 	AMyCharacter();
 
 protected:
+	class UGameManagerWSS* gameManager;
+	class ATrain* trainPtr;
+
 	float xRot;
 	float yRot;
 	void setXRot(float AxisValue);
@@ -34,6 +37,12 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat")
 	float Damage;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI")
+	bool CanAddFuel;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Fuel")
+	int Fuel;
 
 	FTimerHandle shootTimerHandle;
 	// Called when the game starts or when spawned
@@ -53,8 +62,13 @@ protected:
 	void ShootPressed();
 	void ShootReleased();
 
+	void InteractPressed();
+
 	UFUNCTION(BlueprintImplementableEvent)
 	void NotifyHealthBarWidget();
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void NotifyFuelDisplay();
 
 	UFUNCTION(BlueprintImplementableEvent)
 	void NotifyStartedShooting(FVector direction);
@@ -83,6 +97,10 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat")
 	float MaxHealth;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat")
+	bool IsPlayerDead;
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	float currentHealth;
 
