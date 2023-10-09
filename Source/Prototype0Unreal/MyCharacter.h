@@ -104,8 +104,21 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	float currentHealth;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Initialize")
+	float BackBoundOffsetFromTrain;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Initialize")
+	int PIndex;
+
 	UFUNCTION(BlueprintCallable, Category = "Combat")
 	void TakeDamage(float damageToTake);
+
+	UFUNCTION(BlueprintCallable, Category = "Initialize")
+	void OnPlayerSpawn();
+
+	
+
+
 private:
 	UPROPERTY(EditAnywhere, meta=(AllowPrivateAccess="true"))
 	TSubclassOf<AActor> ActorToSpawn;

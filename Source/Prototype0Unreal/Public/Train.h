@@ -53,6 +53,16 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement")
 	float burnRate;
 
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Spawning")
+	FVector player1RespawnPos;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Spawning")
+	FVector player2RespawnPos;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Spawning")
+	FVector player3RespawnPos;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Spawning")
+	FVector player4RespawnPos;
+
 	void IncrementTotalMeters();
 
 
@@ -65,6 +75,8 @@ public:
 
 	UBoxComponent* fuelDeposit;
 
-	FVector GetRespawnPos();
+	FVector GetRandomRespawnPos();
+
+	FVector GetRespawnPos(int PlayerIndex);
 
 };

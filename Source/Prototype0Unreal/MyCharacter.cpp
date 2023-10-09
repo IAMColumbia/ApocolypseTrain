@@ -10,6 +10,7 @@
 #include <EnemyCharacter.h>
 #include "GameManagerWSS.h"
 #include "Train.h"
+#include "Kismet/GameplayStatics.h"
 
 // Sets default values
 AMyCharacter::AMyCharacter()
@@ -24,11 +25,17 @@ AMyCharacter::AMyCharacter()
 void AMyCharacter::BeginPlay()
 {
 	Super::BeginPlay();
+	//PlayerIndex = UGameplayStatics::GetPlayerControllerID(((APlayerController*)GetController()));
 	currentHealth = MaxHealth;
 	NotifyHealthBarWidget();
 	trainPtr = GetWorld()->GetSubsystem<UGameManagerWSS>()->train;
 }
 
+void AMyCharacter::OnPlayerSpawn() {
+	if (GetActorLocation().Y < trainPtr->GetActorLocation().Y - BackBoundOffsetFromTrain) {
+		SetActorLocation(trainPtr->GetRandomRespawnPos());
+	}
+}
 
 // Called every frame
 void AMyCharacter::Tick(float DeltaTime)
@@ -50,12 +57,12 @@ void AMyCharacter::Tick(float DeltaTime)
 void AMyCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
-	//this dumbass bindaction shit is not working
 	PlayerInputComponent->BindAction("ShootWeapon", EInputEvent::IE_Pressed, this, &AMyCharacter::ShootPressed);
 	PlayerInputComponent->BindAction("ShootWeapon", EInputEvent::IE_Released, this, &AMyCharacter::ShootReleased);
 	PlayerInputComponent->BindAction("Interact", EInputEvent::IE_Pressed, this, &AMyCharacter::InteractPressed);
 	PlayerInputComponent->BindAxis("MoveForward", this, &AMyCharacter::MoveForward);
 	PlayerInputComponent->BindAxis("MoveRight", this, &AMyCharacter::MoveRight);
+	
 }
 
 void AMyCharacter::InteractPressed() {
@@ -173,7 +180,7 @@ void AMyCharacter::TakeDamage(float damageToTake) {
 }
 
 void AMyCharacter::ResetPlayer() {
-	SetActorLocation(trainPtr->GetRespawnPos());
+	SetActorLocation(trainPtr->GetRandomRespawnPos());
 	currentHealth = MaxHealth;
 	IsPlayerDead = false;
 	NotifyHealthBarWidget();

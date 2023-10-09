@@ -86,6 +86,33 @@ void ATrain::BurnFuel() {
 	}
 }
 
-FVector ATrain::GetRespawnPos() {
-	return GetActorLocation() + FVector(-200, 0, 0);
+FVector ATrain::GetRandomRespawnPos() {
+	int posChoice = UKismetMathLibrary::RandomInteger(4);
+	switch (posChoice) {
+		case 0:
+			return GetActorLocation() + FVector(200, 0, 0);
+		case 1:
+			return GetActorLocation() + FVector(-200, 0, 0);
+		case 2:
+			return GetActorLocation() + FVector(200, -300, 0);
+		case 3:
+			return GetActorLocation() + FVector(-200, -300, 0);
+		default:
+			return GetActorLocation() + FVector(-200, 0, 0);
+	}
+}
+
+FVector ATrain::GetRespawnPos(int PlayerIndex) {
+	switch (PlayerIndex) {
+		case 0:
+			return player1RespawnPos;
+		case 1:
+			return player2RespawnPos;
+		case 2:
+			return player3RespawnPos;
+		case 3:
+			return player4RespawnPos;
+		default:
+			return player1RespawnPos;
+	}
 }
