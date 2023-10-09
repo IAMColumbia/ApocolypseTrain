@@ -25,13 +25,15 @@ AMyCharacter::AMyCharacter()
 void AMyCharacter::BeginPlay()
 {
 	Super::BeginPlay();
-	//PlayerIndex = UGameplayStatics::GetPlayerControllerID(((APlayerController*)GetController()));
+	
 	currentHealth = MaxHealth;
 	NotifyHealthBarWidget();
 	trainPtr = GetWorld()->GetSubsystem<UGameManagerWSS>()->train;
 }
 
 void AMyCharacter::OnPlayerSpawn() {
+	PlayerIndex = UGameplayStatics::GetPlayerControllerID(((APlayerController*)GetController()));
+	GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Cyan, FString::Printf(TEXT("Player With Index %d Joined The Game"), PlayerIndex));
 	if (GetActorLocation().Y < trainPtr->GetActorLocation().Y - BackBoundOffsetFromTrain) {
 		SetActorLocation(trainPtr->GetRandomRespawnPos());
 	}

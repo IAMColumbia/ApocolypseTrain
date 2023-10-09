@@ -108,7 +108,7 @@ public:
 	float BackBoundOffsetFromTrain;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Initialize")
-	int PIndex;
+	int PlayerIndex;
 
 	UFUNCTION(BlueprintCallable, Category = "Combat")
 	void TakeDamage(float damageToTake);
