@@ -8,7 +8,7 @@
 
 void UGameManagerWSS::Initialize(FSubsystemCollectionBase& Collection) {
 	Super::Initialize(Collection);
-	UE_LOG(LogTemp, Warning, TEXT("Subsystem Initialized"));
+	UE_LOG(LogTemp, Warning, TEXT("GameManager Initialized"));
 }
 
 

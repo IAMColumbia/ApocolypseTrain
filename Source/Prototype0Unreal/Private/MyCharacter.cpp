@@ -4,7 +4,6 @@
 #include "MyCharacter.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Camera/CameraComponent.h"
-#include "Weapon.h"
 #include <Kismet/KismetMathLibrary.h>
 #include <Kismet/KismetSystemLibrary.h>
 #include <EnemyCharacter.h>
@@ -34,9 +33,7 @@ void AMyCharacter::BeginPlay()
 void AMyCharacter::OnPlayerSpawn() {
 	PlayerIndex = UGameplayStatics::GetPlayerControllerID(((APlayerController*)GetController()));
 	GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Cyan, FString::Printf(TEXT("Player With Index %d Joined The Game"), PlayerIndex));
-	if (GetActorLocation().Y < trainPtr->GetActorLocation().Y - BackBoundOffsetFromTrain) {
-		SetActorLocation(trainPtr->GetRandomRespawnPos());
-	}
+	SetActorLocation(trainPtr->GetRespawnPos(PlayerIndex));
 }
 
 // Called every frame
@@ -53,6 +50,7 @@ void AMyCharacter::Tick(float DeltaTime)
 	else {
 		CanAddFuel = false;
 	}
+	DrawDebugBox(GetWorld(), trainPtr->GetRespawnPos(PlayerIndex), FVector(1, 1, 1) * 60, FColor(PlayerColor.X * 255, PlayerColor.Y * 255, PlayerColor.Z*255), false, -1.0f, 0U, 10.0f);
 }
 
 // Called to bind functionality to input
@@ -181,10 +179,16 @@ void AMyCharacter::TakeDamage(float damageToTake) {
 	}
 }
 
+void AMyCharacter::OnPlayerDeath() {
+
+}
+
 void AMyCharacter::ResetPlayer() {
-	SetActorLocation(trainPtr->GetRandomRespawnPos());
+	SetActorLocation(trainPtr->GetRespawnPos(PlayerIndex));
 	currentHealth = MaxHealth;
 	IsPlayerDead = false;
 	NotifyHealthBarWidget();
 }
+
+
 

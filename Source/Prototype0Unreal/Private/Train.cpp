@@ -56,6 +56,7 @@ void ATrain::Tick(float DeltaTime)
 		GetWorld()->GetSubsystem<UGameManagerWSS>()->TrainArrivedAtTarget();
 	}
 	DrawDebugBox(GetWorld(), fuelDeposit->GetComponentLocation(), fuelDeposit->GetComponentScale() * 50, FColor::Orange, false, -1.0f, 0U, 10.0f);
+	
 	BurnFuel();
 }
 
@@ -105,14 +106,14 @@ FVector ATrain::GetRandomRespawnPos() {
 FVector ATrain::GetRespawnPos(int PlayerIndex) {
 	switch (PlayerIndex) {
 		case 0:
-			return player1RespawnPos;
+			return player0RespawnPos + GetActorLocation();
 		case 1:
-			return player2RespawnPos;
+			return player1RespawnPos + GetActorLocation();
 		case 2:
-			return player3RespawnPos;
+			return player2RespawnPos + GetActorLocation();
 		case 3:
-			return player4RespawnPos;
+			return player3RespawnPos + GetActorLocation();
 		default:
-			return player1RespawnPos;
+			return player1RespawnPos + GetActorLocation();
 	}
 }

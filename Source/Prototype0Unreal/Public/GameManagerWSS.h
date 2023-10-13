@@ -18,8 +18,6 @@ class PROTOTYPE0UNREAL_API UGameManagerWSS : public UWorldSubsystem
 
 public:
 
-	//when train reaches its current target location, call a method to this, that calls a method on the chunkspawner to spawn a chunk and get the next tagret location
-	//maybe chunk spawner can be included in cpp and just wrap this in a method
 	class AChunkSpawner* chunkSpawner;
 	class AEnemySpawner* enemySpawner;
 	class ATrain* train;

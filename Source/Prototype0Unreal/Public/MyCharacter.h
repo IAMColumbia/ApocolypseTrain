@@ -104,17 +104,20 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	float currentHealth;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Initialize")
-	float BackBoundOffsetFromTrain;
-
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Initialize")
 	int PlayerIndex;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Initialize")
+	FVector PlayerColor;
 
 	UFUNCTION(BlueprintCallable, Category = "Combat")
 	void TakeDamage(float damageToTake);
 
 	UFUNCTION(BlueprintCallable, Category = "Initialize")
 	void OnPlayerSpawn();
+
+	UFUNCTION(BlueprintCallable, Category = "Death")
+	void OnPlayerDeath();
 
 	
 
