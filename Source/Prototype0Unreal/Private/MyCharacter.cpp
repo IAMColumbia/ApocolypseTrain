@@ -10,6 +10,7 @@
 #include "GameManagerWSS.h"
 #include "Train.h"
 #include "Kismet/GameplayStatics.h"
+#include "PlayerManagerWSS.h"
 
 // Sets default values
 AMyCharacter::AMyCharacter()
@@ -28,13 +29,17 @@ void AMyCharacter::BeginPlay()
 	currentHealth = MaxHealth;
 	NotifyHealthBarWidget();
 	trainPtr = GetWorld()->GetSubsystem<UGameManagerWSS>()->train;
+	
 }
 
 void AMyCharacter::OnPlayerSpawn() {
 	PlayerIndex = UGameplayStatics::GetPlayerControllerID(((APlayerController*)GetController()));
-	GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Cyan, FString::Printf(TEXT("Player With Index %d Joined The Game"), PlayerIndex));
+	PlayerColor = SetPlayerColorVector(PlayerIndex);
+	GEngine->AddOnScreenDebugMessage(-1, 5, GetPlayerColor(), FString::Printf(TEXT("Player With Index %d Joined The Game"), PlayerIndex));
 	SetActorLocation(trainPtr->GetRespawnPos(PlayerIndex));
+	GetWorld()->GetSubsystem<UPlayerManagerWSS>()->RegisterPlayer(this);
 }
+
 
 // Called every frame
 void AMyCharacter::Tick(float DeltaTime)
@@ -50,7 +55,7 @@ void AMyCharacter::Tick(float DeltaTime)
 	else {
 		CanAddFuel = false;
 	}
-	DrawDebugBox(GetWorld(), trainPtr->GetRespawnPos(PlayerIndex), FVector(1, 1, 1) * 60, FColor(PlayerColor.X * 255, PlayerColor.Y * 255, PlayerColor.Z*255), false, -1.0f, 0U, 10.0f);
+	DrawDebugBox(GetWorld(), trainPtr->GetRespawnPos(PlayerIndex), FVector(1, 1, 1) * 60, GetPlayerColor(), false, -1.0f, 0U, 10.0f);
 }
 
 // Called to bind functionality to input
@@ -181,6 +186,27 @@ void AMyCharacter::TakeDamage(float damageToTake) {
 
 void AMyCharacter::OnPlayerDeath() {
 
+}
+
+FColor AMyCharacter::GetPlayerColor()
+{
+	return FColor(PlayerColor.X * 255, PlayerColor.Y * 255, PlayerColor.Z * 255, 255);
+}
+
+FVector AMyCharacter::SetPlayerColorVector(int index)
+{
+	switch (index) {
+	case 0:
+		return FVector(0, 0.4, 1);
+	case 1:
+		return FVector(0.4, 1, 0);
+	case 2:
+		return FVector(1, 0.5 , 0 );
+	case 3:
+		return FVector(0 , 0.5 , 0.5 );
+	default:
+		return FVector(255, 255, 255);
+	}
 }
 
 void AMyCharacter::ResetPlayer() {

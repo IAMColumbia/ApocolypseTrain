@@ -18,9 +18,12 @@ class PROTOTYPE0UNREAL_API UPlayerManagerWSS : public UWorldSubsystem
 
 public:
 
-	TArray<AMyCharacter*> players;
+	TArray<AMyCharacter*> Players;
+
+	void RegisterPlayer(AMyCharacter* player);
 
 protected:
 	virtual void Initialize(FSubsystemCollectionBase& Collection) override;
-	
+
+	void SortPlayers();
 };

@@ -119,12 +119,15 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Death")
 	void OnPlayerDeath();
 
-	
+	FColor GetPlayerColor();
+
+	FVector SetPlayerColorVector(int index);
 
 
 private:
 	UPROPERTY(EditAnywhere, meta=(AllowPrivateAccess="true"))
 	TSubclassOf<AActor> ActorToSpawn;
 
+	
 
 };
