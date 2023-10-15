@@ -124,10 +124,13 @@ float ATrain::GetFrontBound()
 
 void ATrain::OnPlowBeginOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
+	if (trainSpeed <= minnimumDamagingSpeed) {
+		return;
+	}
 	if (AEnemyCharacter* enemy = Cast<AEnemyCharacter>(OtherActor)) {
 
 		//GEngine->AddOnScreenDebugMessage(1, 3, FColor::Red, TEXT("TRAIN HIT ENEMY BOI"));
-		enemy->TakeDamage(0, trainSpeed * .1, GetActorLocation(), trainSpeed * .01);
+		enemy->TakeDamage(0, trainSpeed * damageMultiplier, GetActorLocation(), trainSpeed * launchMultiplier);
 	}
 }
 

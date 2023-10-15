@@ -35,6 +35,7 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat")
 	float FireRate;
 
+	//how much damage players do to enemies
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat")
 	float Damage;
 
@@ -47,6 +48,7 @@ protected:
 	FTimerHandle shootTimerHandle;
 	FTimerHandle respawnTimerHandle;
 
+	//How long it takes the player to respawn when they die
 	UPROPERTY(EditAnywhere, Category = "Respawning")
 	int TotalRespawnTime;
 	int currentRespawnTime;
@@ -113,6 +115,7 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Respawning")
 	FVector GetRespawnLocation();
 
+	//Player health
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat")
 	float MaxHealth;
 

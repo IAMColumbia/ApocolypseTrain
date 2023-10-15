@@ -191,9 +191,6 @@ void AMyCharacter::Ray()
 
 
 void AMyCharacter::TakeDamage(float damageToTake) {
-	if (IsPlayerDead) {
-		return;
-	}
 	currentHealth -= damageToTake;
 	NotifyHealthBarWidget();
 	if (currentHealth <= 0) {
@@ -203,6 +200,9 @@ void AMyCharacter::TakeDamage(float damageToTake) {
 
 void AMyCharacter::DespawnPlayer()
 {
+	if (IsPlayerDead) {
+		return;
+	}
 	IsPlayerDead = true;
 	if (IsShooting) {
 		ShootReleased();

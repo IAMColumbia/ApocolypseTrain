@@ -24,9 +24,10 @@ protected:
 
 	void BurnFuel();
 
-
+	//the back bound of the train to cleanup enemies players and fuel that are left behind. this is relative to the trains world location.
 	UPROPERTY(EditAnywhere, Category = "Bounds")
 	float BackBound;
+	//stop players from going to far forward. this is relative to the trains world location.
 	UPROPERTY(EditAnywhere, Category = "Bounds")
 	float FrontBound;
 
@@ -41,21 +42,33 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Movement")
 	float trainSpeed;
 
+	//damage dealt to enemy when train runs into it, multiplied by speed
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat")
-	float trainHealth;
+	float damageMultiplier;
 
+	//force enemy launched by train runs into it, multiplied by speed
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat")
+	float launchMultiplier;
+
+	//minnimum speed the train must be going to deal damage or launch enemy
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat")
+	float minnimumDamagingSpeed;
+
+	UPROPERTY(VisibleAnywhere)
 	int TotalMeters;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement")
 	float Fuel;
 
+	//Maximum fuel that can be in the train at once. this affects max speed
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement")
 	float MaxFuel;
 
+	//how much the integer number fuel is multiplied by to set the speed of the train. this affects speed and max speed.
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement")
 	float SpeedFuelMultiplier;
 
+	//the decceleration rate of the train. how fast does the train burn fuel.
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement")
 	float burnRate;
 

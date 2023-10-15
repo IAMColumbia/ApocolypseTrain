@@ -36,6 +36,7 @@ public:
 	float MaxHealth;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	float currentHealth;
+	//how far away from the player before the enemy starts playing the attack animation
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat")
 	float AttackRange;
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Combat")
