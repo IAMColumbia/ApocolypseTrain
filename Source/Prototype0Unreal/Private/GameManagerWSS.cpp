@@ -42,4 +42,26 @@ FVector UGameManagerWSS::GetRandomLocationInChunk()
 	return location;
 }
 
+bool UGameManagerWSS::IsOutOfBounds(FVector actorLocation)
+{
+	if (actorLocation.Y < train->GetBackBound()|| actorLocation.Y > train->GetFrontBound()) {
+		return true;
+	}
+	if (actorLocation.Z < -100) {
+		return true;
+	}
+	return false;
+}
+
+bool UGameManagerWSS::IsOutOfBackBounds(FVector actorLocation)
+{
+	if (actorLocation.Y < train->GetBackBound()) {
+		return true;
+	}
+	if (actorLocation.Z < -100) {
+		return true;
+	}
+	return false;
+}
+
 

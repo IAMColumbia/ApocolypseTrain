@@ -24,6 +24,12 @@ protected:
 
 	UFUNCTION(BlueprintImplementableEvent)
 	void NotifyDamageEnemy();
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void ActivateEnemy();
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void DeactivateEnemy();
 public:	
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat")
@@ -41,7 +47,7 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 	UFUNCTION(BlueprintCallable)
-	virtual void TakeDamage(float distance, float damage);
+	virtual void TakeDamage(float distance, float damage, FVector sourcePos, float launchForce);
 	
 	UFUNCTION(BlueprintCallable)
 	bool IsInAttackRange(AActor* targetToAttack);

@@ -7,6 +7,7 @@
 #include "EnemySpawner.generated.h"
 
 class UGameManagerWSS;
+class AEnemyCharacter;
 
 UCLASS()
 class PROTOTYPE0UNREAL_API AEnemySpawner : public AActor
@@ -24,11 +25,15 @@ protected:
 	UFUNCTION(BlueprintImplementableEvent)
 	void NotifySpawnEnemy(FVector spawnLocation);
 
-	
+	//TQueue<AEnemyCharacter*> objectPool;
+	//void PopulatePool();
 
 public:	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Spawning")
 	int EnemiesPerChunk;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Spawning")
+	int MaxEnemies;
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 

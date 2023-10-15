@@ -71,7 +71,10 @@ protected:
 	void NotifyFuelDisplay();
 
 	UFUNCTION(BlueprintImplementableEvent)
-	void NotifyStartedShooting(FVector direction);
+	void NotifyStartedShooting();
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void NotifyFiredShot(FVector direction);
 
 	UFUNCTION(BlueprintImplementableEvent)
 	void NotifyStoppedShooting();
@@ -128,6 +131,6 @@ private:
 	UPROPERTY(EditAnywhere, meta=(AllowPrivateAccess="true"))
 	TSubclassOf<AActor> ActorToSpawn;
 
-	
+	void DespawnPlayer();
 
 };

@@ -2,6 +2,7 @@
 
 #include "EnemyCharacter.h"
 #include <GameFramework/Actor.h>
+#include "GameManagerWSS.h"
 #include <Kismet/KismetMathLibrary.h>
 
 // Sets default values
@@ -24,7 +25,9 @@ void AEnemyCharacter::BeginPlay()
 void AEnemyCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
+	if (GetWorld()->GetSubsystem<UGameManagerWSS>()->IsOutOfBackBounds(GetActorLocation())) {
+		Destroy();
+	}
 }
 
 // Called to bind functionality to input
@@ -34,10 +37,11 @@ void AEnemyCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComp
 
 }
 
-void AEnemyCharacter::TakeDamage(float distance, float damage) {
+void AEnemyCharacter::TakeDamage(float distance, float damage, FVector sourcePos, float launchForce) {
 	currentHealth -= damage;
 	NotifyHealthBarWidget();
 	NotifyDamageEnemy();
+	LaunchCharacter((GetActorLocation()-sourcePos) * launchForce,false, false);
 	if (currentHealth <= 0) {
 		Destroy();
 	}
@@ -56,5 +60,6 @@ bool AEnemyCharacter::IsInAttackRange(AActor* targetToAttack) {
 		return false;
 	}
 }
+
 
 

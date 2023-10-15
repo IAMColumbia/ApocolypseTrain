@@ -5,6 +5,7 @@
 #include "Train.h"
 #include "GameManagerWSS.h"
 #include "Kismet/KismetMathLibrary.h"
+#include "EnemyCharacter.h"
 
 
 // Sets default values
@@ -31,6 +32,13 @@ void ATrain::BeginPlay()
 				// You've found the Box Collision component with the specified tag.
 				// You can perform operations on it here.
 				fuelDeposit = BoxCollisionComponent;
+			}
+			if (BoxCollisionComponent && BoxCollisionComponent->ComponentHasTag("Plow"))
+			{
+				// You've found the Box Collision component with the specified tag.
+				// You can perform operations on it here.
+				plow = BoxCollisionComponent;
+				plow->OnComponentBeginOverlap.AddDynamic(this, &ATrain::OnPlowBeginOverlap);
 			}
 		}
 	}
@@ -91,15 +99,34 @@ FVector ATrain::GetRandomRespawnPos() {
 	int posChoice = UKismetMathLibrary::RandomInteger(4);
 	switch (posChoice) {
 		case 0:
-			return GetActorLocation() + FVector(200, 0, 0);
+			return GetActorLocation() + FVector(200, -100, 0);
 		case 1:
-			return GetActorLocation() + FVector(-200, 0, 0);
+			return GetActorLocation() + FVector(-200, -100, 0);
 		case 2:
-			return GetActorLocation() + FVector(200, -300, 0);
+			return GetActorLocation() + FVector(200, -400, 0);
 		case 3:
-			return GetActorLocation() + FVector(-200, -300, 0);
+			return GetActorLocation() + FVector(-200, -400, 0);
 		default:
-			return GetActorLocation() + FVector(-200, 0, 0);
+			return GetActorLocation() + FVector(-200, -100, 0);
+	}
+}
+
+float ATrain::GetBackBound()
+{
+	return GetActorLocation().Y - BackBound;
+}
+
+float ATrain::GetFrontBound()
+{
+	return BackBound + GetActorLocation().Y;
+}
+
+void ATrain::OnPlowBeginOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
+	if (AEnemyCharacter* enemy = Cast<AEnemyCharacter>(OtherActor)) {
+
+		//GEngine->AddOnScreenDebugMessage(1, 3, FColor::Red, TEXT("TRAIN HIT ENEMY BOI"));
+		enemy->TakeDamage(0, trainSpeed * .1, GetActorLocation(), trainSpeed * .01);
 	}
 }
 

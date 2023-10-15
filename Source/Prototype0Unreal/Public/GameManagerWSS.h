@@ -28,7 +28,14 @@ public:
 
 	FVector GetRandomLocationInChunk();
 
+	bool IsOutOfBounds(FVector actorLocation);
+
+	UFUNCTION(BlueprintCallable)
+	bool IsOutOfBackBounds(FVector actorLocation);
+
 protected:
 	virtual void Initialize(FSubsystemCollectionBase& Collection) override;
+
+
 	
 };

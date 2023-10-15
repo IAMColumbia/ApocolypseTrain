@@ -24,6 +24,12 @@ protected:
 
 	void BurnFuel();
 
+
+	UPROPERTY(EditAnywhere, Category = "Bounds")
+	float BackBound;
+	UPROPERTY(EditAnywhere, Category = "Bounds")
+	float FrontBound;
+
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement")
 	bool CanMove;
@@ -63,6 +69,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Spawning")
 	FVector player3RespawnPos;
 
+
 	void IncrementTotalMeters();
 
 
@@ -73,10 +80,20 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+	float GetBackBound();
+
+	float GetFrontBound();
+
 	UBoxComponent* fuelDeposit;
+	UBoxComponent* plow;
 
 	FVector GetRandomRespawnPos();
 
 	FVector GetRespawnPos(int PlayerIndex);
+
+	UFUNCTION()
+	void OnPlowBeginOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+
+
 
 };

@@ -3,6 +3,7 @@
 
 #include "EnemySpawner.h"
 #include "GameManagerWSS.h"
+#include "EnemyCharacter.h"
 #include <Kismet/KismetSystemLibrary.h>
 // Sets default values
 AEnemySpawner::AEnemySpawner()
