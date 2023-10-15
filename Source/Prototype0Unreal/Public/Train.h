@@ -45,7 +45,7 @@ public:
 	float trainHealth;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat")
-	float TotalMeters;
+	int TotalMeters;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement")
 	float Fuel;
@@ -94,6 +94,19 @@ public:
 	UFUNCTION()
 	void OnPlowBeginOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 
+	UFUNCTION(BlueprintImplementableEvent)
+	void OnControllerPosses(int PlayerIndex, FColor playerColor);
 
+	UFUNCTION(BlueprintImplementableEvent)
+	void UpdateTimer(int PlayerIndex, int timeLeft);
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void StartRespawnTimer(int PlayerIndex, int timeLeft);
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void StopRespawnTimer(int PlayerIndex, int timeLeft);
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void NotifyIncrementMeters(int meters);
 
 };

@@ -45,6 +45,15 @@ protected:
 	int Fuel;
 
 	FTimerHandle shootTimerHandle;
+	FTimerHandle respawnTimerHandle;
+
+	UPROPERTY(EditAnywhere, Category = "Respawning")
+	int TotalRespawnTime;
+	int currentRespawnTime;
+
+	UFUNCTION(BlueprintCallable, Category = "Respawning")
+	void UpdateRespawnTimer();
+
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
@@ -82,6 +91,9 @@ protected:
 	UFUNCTION(BlueprintImplementableEvent)
 	void NotifyPlayerDied();
 
+	UFUNCTION(BlueprintImplementableEvent)
+	void NotifyPlayerRespawn();
+
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -97,6 +109,9 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Respawning")
 	void ResetPlayer();
+
+	UFUNCTION(BlueprintCallable, Category = "Respawning")
+	FVector GetRespawnLocation();
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat")
 	float MaxHealth;
@@ -118,9 +133,6 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Initialize")
 	void OnPlayerSpawn();
-
-	UFUNCTION(BlueprintCallable, Category = "Death")
-	void OnPlayerDeath();
 
 	FColor GetPlayerColor();
 

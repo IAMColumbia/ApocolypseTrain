@@ -48,6 +48,7 @@ void ATrain::IncrementTotalMeters()
 {
 	if (CanMove) {
 		TotalMeters++;
+		NotifyIncrementMeters(TotalMeters);
 	}
 }
 

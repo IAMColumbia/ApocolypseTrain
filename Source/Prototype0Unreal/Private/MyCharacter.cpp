@@ -21,6 +21,7 @@ AMyCharacter::AMyCharacter()
 	characterMesh = FindComponentByClass<USkeletalMeshComponent>();
 }
 
+
 // Called when the game starts or when spawned
 void AMyCharacter::BeginPlay()
 {
@@ -30,7 +31,6 @@ void AMyCharacter::BeginPlay()
 	NotifyHealthBarWidget();
 	gameManager = GetWorld()->GetSubsystem<UGameManagerWSS>();
 	trainPtr = gameManager->train;
-	
 }
 
 void AMyCharacter::OnPlayerSpawn() {
@@ -39,8 +39,8 @@ void AMyCharacter::OnPlayerSpawn() {
 	GEngine->AddOnScreenDebugMessage(-1, 5, GetPlayerColor(), FString::Printf(TEXT("Player With Index %d Joined The Game"), PlayerIndex));
 	SetActorLocation(trainPtr->GetRespawnPos(PlayerIndex));
 	GetWorld()->GetSubsystem<UPlayerManagerWSS>()->RegisterPlayer(this);
+	trainPtr->OnControllerPosses(PlayerIndex, GetPlayerColor());
 }
-
 
 // Called every frame
 void AMyCharacter::Tick(float DeltaTime)
@@ -61,6 +61,8 @@ void AMyCharacter::Tick(float DeltaTime)
 		DespawnPlayer();
 	}
 }
+
+#pragma region Movement
 
 // Called to bind functionality to input
 void AMyCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -95,36 +97,6 @@ void AMyCharacter::setYRot(float AxisValue) {
 	}
 }
 
-void AMyCharacter::ShootPressed() {
-	IsShooting = true;
-	NotifyStartedShooting();
-	shootTimerHandle = UKismetSystemLibrary::K2_SetTimer(this, TEXT("ShootProjectile"), FireRate, true, 0, 0);
-}
-
-void AMyCharacter::ShootReleased() {
-	IsShooting = false;
-	NotifyStoppedShooting();
-	UKismetSystemLibrary::K2_ClearAndInvalidateTimerHandle(this, shootTimerHandle);
-}
-
-void AMyCharacter::ShootProjectile() {
-	Ray();
-	
-	//GetWorld()->SpawnActor<AActor>(ActorToSpawn, GetActorLocation(), characterMesh->GetComponentRotation() + FRotator(0,90,0));
-}
-
-void AMyCharacter::MoveForward(float AxisValue) {
-	if ((Controller != NULL) && AxisValue != 0.0f) {
-		//find out which direction is forward
-		const FRotator Rotation = Controller->GetControlRotation();
-		const FRotator YawRotation(0, Rotation.Yaw, 0);
-
-		//get forward vector
-		const FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
-		AddMovementInput(Direction, AxisValue);
-	}
-}
-
 void AMyCharacter::MoveRight(float AxisValue) {
 	if (Controller != NULL && AxisValue != 0.0f) {
 
@@ -146,20 +118,56 @@ void AMyCharacter::setRotation() {
 	characterMesh->SetWorldRotation(rotation);
 }
 
+void AMyCharacter::MoveForward(float AxisValue) {
+	if ((Controller != NULL) && AxisValue != 0.0f) {
+		//find out which direction is forward
+		const FRotator Rotation = Controller->GetControlRotation();
+		const FRotator YawRotation(0, Rotation.Yaw, 0);
+
+		//get forward vector
+		const FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
+		AddMovementInput(Direction, AxisValue);
+	}
+}
+
+#pragma endregion Movement
+
+#pragma region Shooting
+
+void AMyCharacter::ShootPressed() {
+	IsShooting = true;
+	NotifyStartedShooting();
+	shootTimerHandle = UKismetSystemLibrary::K2_SetTimer(this, TEXT("ShootProjectile"), FireRate, true, 0, 0);
+}
+
+void AMyCharacter::ShootReleased() {
+	IsShooting = false;
+	NotifyStoppedShooting();
+	UKismetSystemLibrary::K2_ClearAndInvalidateTimerHandle(this, shootTimerHandle);
+}
+
+
+
+void AMyCharacter::ShootProjectile() {
+	Ray();
+	
+	//GetWorld()->SpawnActor<AActor>(ActorToSpawn, GetActorLocation(), characterMesh->GetComponentRotation() + FRotator(0,90,0));
+}
+
 void AMyCharacter::Ray()
 {
 	FVector start = GetActorLocation();
 
 	FVector forward = UKismetMathLibrary::RandomUnitVectorInConeInDegrees(characterMesh->GetRightVector(), 0.8);
 	forward.Z = 0;
-	
+
 	start = FVector(start.X + (forward.X * RayOffset), start.Y + (forward.Y * RayOffset), start.Z + (forward.Z * RayOffset));
 	//maybe need to change end pos for randomness
 	FVector end = start + forward * RayLength;
 
 	FHitResult hit;
 
-	
+
 	if (GetWorld()) {
 		bool actorHit = GetWorld()->LineTraceSingleByChannel(hit, start, end, ECC_Pawn, FCollisionQueryParams(), FCollisionResponseParams());
 		NotifyFiredShot(GetActorForwardVector());
@@ -170,7 +178,7 @@ void AMyCharacter::Ray()
 				enemy->TakeDamage(hit.Distance, Damage, GetActorLocation(), 2);
 			}
 		}
-		
+
 		//if(actorHit && hit.GetActor() == Enemy)
 		//need to insert a cpp class and make enemy ai inherit from that class
 		//make a method in cpp for taking damage
@@ -179,7 +187,13 @@ void AMyCharacter::Ray()
 	}
 }
 
+#pragma endregion Shooting
+
+
 void AMyCharacter::TakeDamage(float damageToTake) {
+	if (IsPlayerDead) {
+		return;
+	}
 	currentHealth -= damageToTake;
 	NotifyHealthBarWidget();
 	if (currentHealth <= 0) {
@@ -187,9 +201,45 @@ void AMyCharacter::TakeDamage(float damageToTake) {
 	}
 }
 
-void AMyCharacter::OnPlayerDeath() {
-
+void AMyCharacter::DespawnPlayer()
+{
+	IsPlayerDead = true;
+	if (IsShooting) {
+		ShootReleased();
+	}
+	Fuel = 0;
+	NotifyFuelDisplay();
+	NotifyPlayerDied();
+	currentRespawnTime = TotalRespawnTime;
+	respawnTimerHandle = UKismetSystemLibrary::K2_SetTimer(this, TEXT("UpdateRespawnTimer"), 1, true, 0, 0);
+	trainPtr->StartRespawnTimer(PlayerIndex, currentRespawnTime);
 }
+
+void AMyCharacter::UpdateRespawnTimer()
+{
+	currentRespawnTime--;
+	trainPtr->UpdateTimer(PlayerIndex, currentRespawnTime);
+	if (currentRespawnTime <= 0) {
+		UKismetSystemLibrary::K2_ClearAndInvalidateTimerHandle(this, respawnTimerHandle);
+		ResetPlayer();
+	}
+}
+
+void AMyCharacter::ResetPlayer() {
+	SetActorLocation(trainPtr->GetRespawnPos(PlayerIndex));
+	currentHealth = MaxHealth;
+	IsPlayerDead = false;
+	NotifyHealthBarWidget();
+	NotifyPlayerRespawn();
+	trainPtr->StopRespawnTimer(PlayerIndex, 0);
+}
+
+FVector AMyCharacter::GetRespawnLocation()
+{
+	return trainPtr->GetRespawnPos(PlayerIndex);
+}
+
+#pragma region Cosmetic
 
 FColor AMyCharacter::GetPlayerColor()
 {
@@ -204,29 +254,13 @@ FVector AMyCharacter::SetPlayerColorVector(int index)
 	case 1:
 		return FVector(0.4, 1, 0);
 	case 2:
-		return FVector(1, 0.5 , 0 );
+		return FVector(1, 0.5, 0);
 	case 3:
-		return FVector(0 , 0.5 , 0.5 );
+		return FVector(0, 0.5, 0.5);
 	default:
 		return FVector(255, 255, 255);
 	}
 }
 
-void AMyCharacter::DespawnPlayer()
-{
-	IsPlayerDead = true;
-	if (IsShooting) {
-		ShootReleased();
-	}
-	NotifyPlayerDied();
-}
-
-void AMyCharacter::ResetPlayer() {
-	SetActorLocation(trainPtr->GetRespawnPos(PlayerIndex));
-	currentHealth = MaxHealth;
-	IsPlayerDead = false;
-	NotifyHealthBarWidget();
-}
-
-
+#pragma endregion Cosmetic
 
