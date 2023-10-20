@@ -56,7 +56,7 @@ void AMyCharacter::Tick(float DeltaTime)
 	else {
 		CanAddFuel = false;
 	}
-	DrawDebugBox(GetWorld(), trainPtr->GetRespawnPos(PlayerIndex), FVector(1, 1, 1) * 60, GetPlayerColor(), false, -1.0f, 0U, 10.0f);
+	//DrawDebugBox(GetWorld(), trainPtr->GetRespawnPos(PlayerIndex), FVector(1, 1, 1) * 60, GetPlayerColor(), false, -1.0f, 0U, 10.0f);
 	if (gameManager->IsOutOfBounds(GetActorLocation())) {
 		DespawnPlayer();
 	}
@@ -82,6 +82,12 @@ void AMyCharacter::InteractPressed() {
 			Fuel--;
 		}
 		NotifyFuelDisplay();
+	}
+	if (trainPtr->IsOverlappingLeverBox(GetActorLocation(), ATrain::LeverType::startLever)) {
+		trainPtr->StartTrain();
+	}
+	if (trainPtr->IsOverlappingLeverBox(GetActorLocation(), ATrain::LeverType::stopLever)) {
+		trainPtr->StopTrain();
 	}
 }
 

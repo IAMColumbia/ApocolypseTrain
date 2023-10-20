@@ -16,6 +16,42 @@ ATrain::ATrain()
 	CanMove = true;
 }
 
+void ATrain::StartTrain()
+{
+	currentState = TrainState::accelerating;
+}
+
+void ATrain::StopTrain()
+{
+	currentState = TrainState::decelerating;
+}
+
+void ATrain::MovementUpdate()
+{
+	switch (currentState) {
+		case TrainState::stopped:
+
+			break;
+		case TrainState::accelerating:
+			if (currentTrainSpeed < MaxTrainSpeed) {
+				currentTrainSpeed += AccelerationRate;
+			}
+			BurnFuel();
+			break;
+		case TrainState::decelerating:
+			if (currentTrainSpeed > 0) {
+				currentTrainSpeed -= DecelerationRate;
+			}
+			else {
+				currentTrainSpeed = 0;
+				currentState = TrainState::stopped;
+			}
+			break;
+		default:
+			break;
+	}
+}
+
 // Called when the game starts or when spawned
 void ATrain::BeginPlay()
 {
@@ -29,16 +65,20 @@ void ATrain::BeginPlay()
 			UBoxComponent* BoxCollisionComponent = Cast<UBoxComponent>(Component);
 			if (BoxCollisionComponent && BoxCollisionComponent->ComponentHasTag("FuelDeposit"))
 			{
-				// You've found the Box Collision component with the specified tag.
-				// You can perform operations on it here.
 				fuelDeposit = BoxCollisionComponent;
 			}
 			if (BoxCollisionComponent && BoxCollisionComponent->ComponentHasTag("Plow"))
 			{
-				// You've found the Box Collision component with the specified tag.
-				// You can perform operations on it here.
 				plow = BoxCollisionComponent;
 				plow->OnComponentBeginOverlap.AddDynamic(this, &ATrain::OnPlowBeginOverlap);
+			}
+			if (BoxCollisionComponent && BoxCollisionComponent->ComponentHasTag("startBox"))
+			{
+				startBox = BoxCollisionComponent;
+			}
+			if (BoxCollisionComponent && BoxCollisionComponent->ComponentHasTag("stopBox"))
+			{
+				stopBox = BoxCollisionComponent;
 			}
 		}
 	}
@@ -58,15 +98,16 @@ void ATrain::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 	if (CanMove) {
 		currentLocation = GetActorLocation();
-		currentLocation += FVector(0, 1, 0) * trainSpeed * DeltaTime;
+		currentLocation += FVector(0, 1, 0) * currentTrainSpeed * DeltaTime;
 		SetActorLocation(currentLocation, true);
 	}
 	if (currentLocation.Y >= targetYPos) {
 		GetWorld()->GetSubsystem<UGameManagerWSS>()->TrainArrivedAtTarget();
 	}
 	DrawDebugBox(GetWorld(), fuelDeposit->GetComponentLocation(), fuelDeposit->GetComponentScale() * 50, FColor::Orange, false, -1.0f, 0U, 10.0f);
-	
-	BurnFuel();
+	DrawDebugBox(GetWorld(), startBox->GetComponentLocation(), startBox->GetComponentScale() * 50, FColor::Green, false, -1.0f, 0U, 10.0f);
+	DrawDebugBox(GetWorld(), stopBox->GetComponentLocation(), stopBox->GetComponentScale() * 50, FColor::Red, false, -1.0f, 0U, 10.0f);
+	MovementUpdate();
 }
 
 bool ATrain::IsOverlappingFuelBox(FVector actorPos) {
@@ -74,6 +115,24 @@ bool ATrain::IsOverlappingFuelBox(FVector actorPos) {
 		return true;
 	}
 	return false;
+}
+
+bool ATrain::IsOverlappingLeverBox(FVector actorPos, LeverType type) {
+	switch (type) {
+	case LeverType::startLever:
+		if (UKismetMathLibrary::IsPointInBox(actorPos, startBox->GetComponentLocation(), startBox->GetComponentScale() * 50)) {
+			return true;
+		}
+		break;
+	case LeverType::stopLever:
+		if (UKismetMathLibrary::IsPointInBox(actorPos, stopBox->GetComponentLocation(), stopBox->GetComponentScale() * 50)) {
+			return true;
+		}
+		break;
+	default:break;
+	}
+	return false;
+	
 }
 
 bool ATrain::AddFuel() {
@@ -89,10 +148,10 @@ bool ATrain::AddFuel() {
 }
 
 void ATrain::BurnFuel() {
-	trainSpeed = Fuel * SpeedFuelMultiplier;
 	Fuel -= burnRate;
 	if (Fuel < 0) {
 		Fuel = 0;
+		currentState = TrainState::decelerating;
 	}
 }
 
@@ -124,13 +183,13 @@ float ATrain::GetFrontBound()
 
 void ATrain::OnPlowBeginOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	if (trainSpeed <= minnimumDamagingSpeed) {
+	if (currentTrainSpeed <= minnimumDamagingSpeed) {
 		return;
 	}
 	if (AEnemyCharacter* enemy = Cast<AEnemyCharacter>(OtherActor)) {
 
 		//GEngine->AddOnScreenDebugMessage(1, 3, FColor::Red, TEXT("TRAIN HIT ENEMY BOI"));
-		enemy->TakeDamage(0, trainSpeed * damageMultiplier, GetActorLocation(), trainSpeed * launchMultiplier);
+		enemy->TakeDamage(0, currentTrainSpeed * damageMultiplier, GetActorLocation(), currentTrainSpeed * launchMultiplier);
 	}
 }
 

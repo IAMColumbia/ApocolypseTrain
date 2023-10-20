@@ -8,15 +8,37 @@
 
 
 
+
 UCLASS()
 class PROTOTYPE0UNREAL_API ATrain : public APawn
 {
 	GENERATED_BODY()
 	
 public:	
+
+	
 	// Sets default values for this actor's properties
 	ATrain();
 
+	enum TrainState { stopped, accelerating, decelerating };
+	enum LeverType { stopLever, startLever};
+
+	TrainState currentState;
+
+	void StartTrain();
+
+	void StopTrain();
+
+	void MovementUpdate();
+
+	UPROPERTY(EditAnywhere, Category="Movement")
+	float MaxTrainSpeed;
+
+	UPROPERTY(EditAnywhere, Category = "Movement")
+	float AccelerationRate;
+
+	UPROPERTY(EditAnywhere, Category = "Movement")
+	float DecelerationRate;
 
 protected:
 	// Called when the game starts or when spawned
@@ -40,7 +62,7 @@ public:
 
 	FVector currentLocation;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Movement")
-	float trainSpeed;
+	float currentTrainSpeed;
 
 	//damage dealt to enemy when train runs into it, multiplied by speed
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat")
@@ -88,6 +110,8 @@ public:
 
 	bool IsOverlappingFuelBox(FVector actorPos);
 
+	bool IsOverlappingLeverBox(FVector actorPos, LeverType type);
+
 	bool AddFuel();
 
 	// Called every frame
@@ -98,6 +122,8 @@ public:
 	float GetFrontBound();
 
 	UBoxComponent* fuelDeposit;
+	UBoxComponent* startBox;
+	UBoxComponent* stopBox;
 	UBoxComponent* plow;
 
 	FVector GetRandomRespawnPos();
