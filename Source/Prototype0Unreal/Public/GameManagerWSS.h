@@ -28,6 +28,10 @@ public:
 
 	FVector GetRandomLocationInChunk();
 
+	FVector GetRandomLocationBehindTrain();
+
+	FVector GetTrainLocation();
+
 	bool IsOutOfBounds(FVector actorLocation);
 
 	UFUNCTION(BlueprintCallable)

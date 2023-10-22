@@ -47,7 +47,7 @@ protected:
 	void BurnFuel();
 
 	//the back bound of the train to cleanup enemies players and fuel that are left behind. this is relative to the trains world location.
-	UPROPERTY(EditAnywhere, Category = "Bounds")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Bounds")
 	float BackBound;
 	//stop players from going to far forward. this is relative to the trains world location.
 	UPROPERTY(EditAnywhere, Category = "Bounds")

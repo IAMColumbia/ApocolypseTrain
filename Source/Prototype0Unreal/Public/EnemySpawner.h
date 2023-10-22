@@ -23,7 +23,7 @@ protected:
 	virtual void BeginPlay() override;
 
 	UFUNCTION(BlueprintImplementableEvent)
-	void NotifySpawnEnemy(FVector spawnLocation);
+	void NotifySpawnEnemy(FVector spawnLocation, FRotator rotation, bool SetTarget, FVector target);
 
 	//TQueue<AEnemyCharacter*> objectPool;
 	//void PopulatePool();
@@ -39,7 +39,10 @@ public:
 
 	void SpawnEnemies();
 
+	void SpawnEnemyBehindTrain();
+
 	void PrintStuff();
 	
 	FTimerHandle spawnTimerHandle;
+
 };

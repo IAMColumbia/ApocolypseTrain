@@ -18,23 +18,29 @@ void AEnemySpawner::BeginPlay()
 {
 	Super::BeginPlay();
 	GetWorld()->GetSubsystem<UGameManagerWSS>()->enemySpawner = this;
-	//spawnTimerHandle = UKismetSystemLibrary::K2_SetTimer(this, TEXT("SpawnEnemies"), 20, true, 0, 0);
+	GetWorld()->GetTimerManager().SetTimer(spawnTimerHandle, this, &AEnemySpawner::SpawnEnemyBehindTrain, 2, false);
 }
 
 // Called every frame
 void AEnemySpawner::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
+	
 }
 
 void AEnemySpawner::SpawnEnemies()
 {
 	for (int i = 0; i < EnemiesPerChunk; i++) {
 		FVector spawnLocation = GetWorld()->GetSubsystem<UGameManagerWSS>()->GetRandomLocationInChunk();
-		NotifySpawnEnemy(spawnLocation);
+		NotifySpawnEnemy(spawnLocation, FRotator().ZeroRotator, false, FVector());
 	}
 	EnemiesPerChunk++;
+}
+
+void AEnemySpawner::SpawnEnemyBehindTrain()
+{
+	FVector spawnLoc = GetWorld()->GetSubsystem<UGameManagerWSS>()->GetRandomLocationBehindTrain();
+	NotifySpawnEnemy(spawnLoc, FRotator().ZeroRotator, true, GetWorld()->GetSubsystem<UGameManagerWSS>()->GetTrainLocation());
 }
 
 void AEnemySpawner::PrintStuff()

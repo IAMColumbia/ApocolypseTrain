@@ -39,6 +39,9 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat")
 	float Damage;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat")
+	float RegenRate;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI")
 	bool CanAddFuel;
 
@@ -147,5 +150,7 @@ private:
 	TSubclassOf<AActor> ActorToSpawn;
 
 	void DespawnPlayer();
+
+	void RegenerateHealth();
 
 };

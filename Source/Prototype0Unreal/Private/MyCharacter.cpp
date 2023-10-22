@@ -5,7 +5,6 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "Camera/CameraComponent.h"
 #include <Kismet/KismetMathLibrary.h>
-#include <Kismet/KismetSystemLibrary.h>
 #include <EnemyCharacter.h>
 #include "GameManagerWSS.h"
 #include "Train.h"
@@ -60,6 +59,7 @@ void AMyCharacter::Tick(float DeltaTime)
 	if (gameManager->IsOutOfBounds(GetActorLocation())) {
 		DespawnPlayer();
 	}
+	RegenerateHealth();
 }
 
 #pragma region Movement
@@ -73,7 +73,6 @@ void AMyCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 	PlayerInputComponent->BindAction("Interact", EInputEvent::IE_Pressed, this, &AMyCharacter::InteractPressed);
 	PlayerInputComponent->BindAxis("MoveForward", this, &AMyCharacter::MoveForward);
 	PlayerInputComponent->BindAxis("MoveRight", this, &AMyCharacter::MoveRight);
-	
 }
 
 void AMyCharacter::InteractPressed() {
@@ -143,21 +142,20 @@ void AMyCharacter::MoveForward(float AxisValue) {
 void AMyCharacter::ShootPressed() {
 	IsShooting = true;
 	NotifyStartedShooting();
-	shootTimerHandle = UKismetSystemLibrary::K2_SetTimer(this, TEXT("ShootProjectile"), FireRate, true, 0, 0);
+	ShootProjectile();
+	GetWorld()->GetTimerManager().SetTimer(shootTimerHandle, this, &AMyCharacter::ShootProjectile, FireRate, true);
 }
 
 void AMyCharacter::ShootReleased() {
 	IsShooting = false;
 	NotifyStoppedShooting();
-	UKismetSystemLibrary::K2_ClearAndInvalidateTimerHandle(this, shootTimerHandle);
+	GetWorld()->GetTimerManager().ClearTimer(shootTimerHandle);
 }
 
 
 
 void AMyCharacter::ShootProjectile() {
 	Ray();
-	
-	//GetWorld()->SpawnActor<AActor>(ActorToSpawn, GetActorLocation(), characterMesh->GetComponentRotation() + FRotator(0,90,0));
 }
 
 void AMyCharacter::Ray()
@@ -185,11 +183,6 @@ void AMyCharacter::Ray()
 			}
 		}
 
-		//if(actorHit && hit.GetActor() == Enemy)
-		//need to insert a cpp class and make enemy ai inherit from that class
-		//make a method in cpp for taking damage
-		//override or call that method from enemy BP
-		//maybe pass in the distance from player to determine a delay before the enemy starts taking damage
 	}
 }
 
@@ -250,6 +243,14 @@ FVector AMyCharacter::GetRespawnLocation()
 FColor AMyCharacter::GetPlayerColor()
 {
 	return FColor(PlayerColor.X * 255, PlayerColor.Y * 255, PlayerColor.Z * 255, 255);
+}
+
+void AMyCharacter::RegenerateHealth()
+{
+	currentHealth += RegenRate;
+	if (currentHealth > MaxHealth) {
+		currentHealth = MaxHealth;
+	}
 }
 
 FVector AMyCharacter::SetPlayerColorVector(int index)

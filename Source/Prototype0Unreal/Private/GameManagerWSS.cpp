@@ -30,6 +30,7 @@ void UGameManagerWSS::TrainArrivedAtTarget()
 	train->IncrementTotalMeters();
 }
 
+
 FVector UGameManagerWSS::GetRandomLocationInChunk()
 {
 	//maybe just add the targetYpos to the y value on the vector to keep things in range. Spawnign on the x and z should be fine if just getting values from the mesh
@@ -40,6 +41,19 @@ FVector UGameManagerWSS::GetRandomLocationInChunk()
 	//GEngine->AddOnScreenDebugMessage(-1, 3, FColor::Yellow, FString::Printf(TEXT("x: %f y: %f z: %f"), location.X, location.Y, location.Z));
 
 	return location;
+}
+
+FVector UGameManagerWSS::GetRandomLocationBehindTrain()
+{
+	FVector loc = GetRandomLocationInChunk(); 
+	loc.Y = train->GetActorLocation().Y+train->GetBackBound()/2;
+	return loc;
+}
+
+FVector UGameManagerWSS::GetTrainLocation()
+{
+
+	return train->GetActorLocation();
 }
 
 bool UGameManagerWSS::IsOutOfBounds(FVector actorLocation)
