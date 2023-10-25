@@ -31,7 +31,7 @@ public:
 
 	void MovementUpdate();
 
-	UPROPERTY(EditAnywhere, Category="Movement")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Movement")
 	float MaxTrainSpeed;
 
 	UPROPERTY(EditAnywhere, Category = "Movement")

@@ -18,7 +18,7 @@ void AEnemySpawner::BeginPlay()
 {
 	Super::BeginPlay();
 	GetWorld()->GetSubsystem<UGameManagerWSS>()->enemySpawner = this;
-	GetWorld()->GetTimerManager().SetTimer(spawnTimerHandle, this, &AEnemySpawner::SpawnEnemyBehindTrain, 2, false);
+	GetWorld()->GetTimerManager().SetTimer(spawnTimerHandle, this, &AEnemySpawner::SpawnEnemyBehindTrain, 20, true);
 }
 
 // Called every frame
