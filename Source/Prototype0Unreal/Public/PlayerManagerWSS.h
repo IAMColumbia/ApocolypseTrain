@@ -22,8 +22,12 @@ public:
 
 	void RegisterPlayer(AMyCharacter* player);
 
+	bool IsOverlappingPlayer();
+
 protected:
 	virtual void Initialize(FSubsystemCollectionBase& Collection) override;
 
 	void SortPlayers();
+
+	
 };

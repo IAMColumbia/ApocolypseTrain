@@ -58,7 +58,8 @@ void ATrain::BeginPlay()
 	Super::BeginPlay();
 	GetWorld()->GetSubsystem<UGameManagerWSS>()->train = this;
 	TotalMeters = 0;
-	for (UActorComponent* Component : GetComponents())
+	TSet<UActorComponent*> components = GetComponents();
+	for (UActorComponent* Component : components)
 	{
 		if (Component->IsA(UBoxComponent::StaticClass()))
 		{
@@ -79,6 +80,12 @@ void ATrain::BeginPlay()
 			if (BoxCollisionComponent && BoxCollisionComponent->ComponentHasTag("stopBox"))
 			{
 				stopBox = BoxCollisionComponent;
+			}
+		}
+		if (Component->IsA(UStaticMeshComponent::StaticClass())) {
+			UStaticMeshComponent* mesh = Cast<UStaticMeshComponent>(Component);
+			if (mesh && mesh->ComponentHasTag("StartLever")) {
+				startLeverMesh = mesh;
 			}
 		}
 	}
@@ -104,14 +111,14 @@ void ATrain::Tick(float DeltaTime)
 	if (currentLocation.Y >= targetYPos) {
 		GetWorld()->GetSubsystem<UGameManagerWSS>()->TrainArrivedAtTarget();
 	}
-	DrawDebugBox(GetWorld(), fuelDeposit->GetComponentLocation(), fuelDeposit->GetComponentScale() * 50, FColor::Orange, false, -1.0f, 0U, 10.0f);
-	DrawDebugBox(GetWorld(), startBox->GetComponentLocation(), startBox->GetComponentScale() * 50, FColor::Green, false, -1.0f, 0U, 10.0f);
-	DrawDebugBox(GetWorld(), stopBox->GetComponentLocation(), stopBox->GetComponentScale() * 50, FColor::Red, false, -1.0f, 0U, 10.0f);
+	DrawDebugBox(GetWorld(), fuelDeposit->GetComponentLocation(), fuelDeposit->GetScaledBoxExtent(), FColor::Orange, false, -1.0f, 0U, 10.0f);
+	DrawDebugBox(GetWorld(), startBox->GetComponentLocation(), startBox->GetScaledBoxExtent(), FColor::Green, false, -1.0f, 0U, 10.0f);
+	DrawDebugBox(GetWorld(), stopBox->GetComponentLocation(), stopBox->GetScaledBoxExtent(), FColor::Red, false, -1.0f, 0U, 10.0f);
 	MovementUpdate();
 }
 
 bool ATrain::IsOverlappingFuelBox(FVector actorPos) {
-	if (UKismetMathLibrary::IsPointInBox(actorPos, fuelDeposit->GetComponentLocation(), fuelDeposit->GetComponentScale() * 50)) {
+	if (UKismetMathLibrary::IsPointInBox(actorPos, fuelDeposit->GetComponentLocation(), fuelDeposit->GetScaledBoxExtent())) {
 		return true;
 	}
 	return false;
@@ -120,12 +127,12 @@ bool ATrain::IsOverlappingFuelBox(FVector actorPos) {
 bool ATrain::IsOverlappingLeverBox(FVector actorPos, LeverType type) {
 	switch (type) {
 	case LeverType::startLever:
-		if (UKismetMathLibrary::IsPointInBox(actorPos, startBox->GetComponentLocation(), startBox->GetComponentScale() * 50)) {
+		if (UKismetMathLibrary::IsPointInBox(actorPos, startBox->GetComponentLocation(), startBox->GetScaledBoxExtent())) {
 			return true;
 		}
 		break;
 	case LeverType::stopLever:
-		if (UKismetMathLibrary::IsPointInBox(actorPos, stopBox->GetComponentLocation(), stopBox->GetComponentScale() * 50)) {
+		if (UKismetMathLibrary::IsPointInBox(actorPos, stopBox->GetComponentLocation(), stopBox->GetScaledBoxExtent())) {
 			return true;
 		}
 		break;

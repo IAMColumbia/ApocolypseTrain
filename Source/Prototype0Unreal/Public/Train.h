@@ -7,8 +7,6 @@
 #include "Train.generated.h"
 
 
-
-
 UCLASS()
 class PROTOTYPE0UNREAL_API ATrain : public APawn
 {
@@ -16,7 +14,6 @@ class PROTOTYPE0UNREAL_API ATrain : public APawn
 	
 public:	
 
-	
 	// Sets default values for this actor's properties
 	ATrain();
 
@@ -126,6 +123,8 @@ public:
 	UBoxComponent* stopBox;
 	UBoxComponent* plow;
 
+	UStaticMeshComponent* startLeverMesh;
+
 	FVector GetRandomRespawnPos();
 
 	FVector GetRespawnPos(int PlayerIndex);
@@ -147,5 +146,8 @@ public:
 
 	UFUNCTION(BlueprintImplementableEvent)
 	void NotifyIncrementMeters(int meters);
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void NotifyStartLeverOverlap(bool isOverlapping);
 
 };
