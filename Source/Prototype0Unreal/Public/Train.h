@@ -7,6 +7,11 @@
 #include "Train.generated.h"
 
 
+UENUM()
+enum class ETrainState : uint8 {
+	stopped UMETA(DIsplayName = "Stopped"), accelerating UMETA(DIsplayName = "Accelerating"), decelerating UMETA(DIsplayName = "Decelerating")
+};
+
 UCLASS()
 class PROTOTYPE0UNREAL_API ATrain : public APawn
 {
@@ -17,10 +22,12 @@ public:
 	// Sets default values for this actor's properties
 	ATrain();
 
-	enum TrainState { stopped, accelerating, decelerating };
+	
+
 	enum LeverType { stopLever, startLever};
 
-	TrainState currentState;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	ETrainState currentState;
 
 	void StartTrain();
 

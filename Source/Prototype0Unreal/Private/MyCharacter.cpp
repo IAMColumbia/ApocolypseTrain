@@ -245,6 +245,14 @@ FColor AMyCharacter::GetPlayerColor()
 	return FColor(PlayerColor.X * 255, PlayerColor.Y * 255, PlayerColor.Z * 255, 255);
 }
 
+bool AMyCharacter::HasFuel()
+{
+	if (Fuel > 0) {
+		return true;
+	}
+	return false;
+}
+
 void AMyCharacter::RegenerateHealth()
 {
 	currentHealth += RegenRate;

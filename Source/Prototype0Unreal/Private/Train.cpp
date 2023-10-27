@@ -6,7 +6,7 @@
 #include "GameManagerWSS.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "EnemyCharacter.h"
-
+#include "PlayerManagerWSS.h"
 
 // Sets default values
 ATrain::ATrain()
@@ -18,33 +18,33 @@ ATrain::ATrain()
 
 void ATrain::StartTrain()
 {
-	currentState = TrainState::accelerating;
+	currentState = ETrainState::accelerating;
 }
 
 void ATrain::StopTrain()
 {
-	currentState = TrainState::decelerating;
+	currentState = ETrainState::decelerating;
 }
 
 void ATrain::MovementUpdate()
 {
 	switch (currentState) {
-		case TrainState::stopped:
+		case ETrainState::stopped:
 
 			break;
-		case TrainState::accelerating:
+		case ETrainState::accelerating:
 			if (currentTrainSpeed < MaxTrainSpeed) {
 				currentTrainSpeed += AccelerationRate;
 			}
 			BurnFuel();
 			break;
-		case TrainState::decelerating:
+		case ETrainState::decelerating:
 			if (currentTrainSpeed > 0) {
 				currentTrainSpeed -= DecelerationRate;
 			}
 			else {
 				currentTrainSpeed = 0;
-				currentState = TrainState::stopped;
+				currentState = ETrainState::stopped;
 			}
 			break;
 		default:
@@ -111,9 +111,9 @@ void ATrain::Tick(float DeltaTime)
 	if (currentLocation.Y >= targetYPos) {
 		GetWorld()->GetSubsystem<UGameManagerWSS>()->TrainArrivedAtTarget();
 	}
-	DrawDebugBox(GetWorld(), fuelDeposit->GetComponentLocation(), fuelDeposit->GetScaledBoxExtent(), FColor::Orange, false, -1.0f, 0U, 10.0f);
-	DrawDebugBox(GetWorld(), startBox->GetComponentLocation(), startBox->GetScaledBoxExtent(), FColor::Green, false, -1.0f, 0U, 10.0f);
-	DrawDebugBox(GetWorld(), stopBox->GetComponentLocation(), stopBox->GetScaledBoxExtent(), FColor::Red, false, -1.0f, 0U, 10.0f);
+	//DrawDebugBox(GetWorld(), fuelDeposit->GetComponentLocation(), fuelDeposit->GetScaledBoxExtent(), FColor::Orange, false, -1.0f, 0U, 10.0f);
+	//DrawDebugBox(GetWorld(), startBox->GetComponentLocation(), startBox->GetScaledBoxExtent(), FColor::Green, false, -1.0f, 0U, 10.0f);
+	//DrawDebugBox(GetWorld(), stopBox->GetComponentLocation(), stopBox->GetScaledBoxExtent(), FColor::Red, false, -1.0f, 0U, 10.0f);
 	MovementUpdate();
 }
 
@@ -158,7 +158,7 @@ void ATrain::BurnFuel() {
 	Fuel -= burnRate;
 	if (Fuel < 0) {
 		Fuel = 0;
-		currentState = TrainState::decelerating;
+		currentState = ETrainState::decelerating;
 	}
 }
 
