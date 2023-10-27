@@ -3,6 +3,8 @@
 
 #include "PlayerManagerWSS.h"
 #include "MyCharacter.h"
+#include <Kismet/KismetMathLibrary.h>
+#include <Components/BoxComponent.h>
 
 void UPlayerManagerWSS::RegisterPlayer(AMyCharacter* player)
 {
@@ -10,6 +12,30 @@ void UPlayerManagerWSS::RegisterPlayer(AMyCharacter* player)
 	SortPlayers();
 	GEngine->AddOnScreenDebugMessage(-1, 1, player->GetPlayerColor(), FString::Printf(TEXT("Player %d was registered with manager"), player->PlayerIndex));
 	//Players[player->PlayerIndex] = player;
+}
+
+bool UPlayerManagerWSS::IsOverlappingPlayer(UBoxComponent* box)
+{
+	for (int i = 0; i < Players.Num(); i++) {
+		if (UKismetMathLibrary::IsPointInBox(Players[i]->GetActorLocation(), box->GetComponentLocation(), box->GetScaledBoxExtent()))
+		{
+			return true;
+		}
+	}
+	return false;
+}
+
+bool UPlayerManagerWSS::IsOverlappingPlayerWithFuel(UBoxComponent* box)
+{
+	for (int i = 0; i < Players.Num(); i++) {
+		if (UKismetMathLibrary::IsPointInBox(Players[i]->GetActorLocation(), box->GetComponentLocation(), box->GetScaledBoxExtent()))
+		{
+			if (Players[i]->HasFuel()) {
+				return true;
+			}
+		}
+	}
+	return false;
 }
 
 void UPlayerManagerWSS::Initialize(FSubsystemCollectionBase& Collection)

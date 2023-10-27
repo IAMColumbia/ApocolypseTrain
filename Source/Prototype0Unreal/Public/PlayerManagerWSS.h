@@ -22,8 +22,16 @@ public:
 
 	void RegisterPlayer(AMyCharacter* player);
 
+	UFUNCTION(BlueprintCallable)
+	bool IsOverlappingPlayer(class UBoxComponent* box);
+
+	UFUNCTION(BlueprintCallable)
+	bool IsOverlappingPlayerWithFuel(class UBoxComponent* box);
+
 protected:
 	virtual void Initialize(FSubsystemCollectionBase& Collection) override;
 
 	void SortPlayers();
+
+	
 };

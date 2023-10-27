@@ -144,6 +144,8 @@ public:
 
 	FVector SetPlayerColorVector(int index);
 
+	bool HasFuel();
+
 
 private:
 	UPROPERTY(EditAnywhere, meta=(AllowPrivateAccess="true"))
