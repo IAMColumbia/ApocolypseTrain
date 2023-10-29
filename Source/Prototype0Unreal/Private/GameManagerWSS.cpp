@@ -28,6 +28,7 @@ void UGameManagerWSS::TrainArrivedAtTarget()
 	}
 	train->targetYPos = GetNextTargetLocation();
 	train->IncrementTotalMeters();
+	CurrentYPos = train->targetYPos;
 }
 
 

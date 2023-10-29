@@ -22,6 +22,9 @@ public:
 	class AEnemySpawner* enemySpawner;
 	class ATrain* train;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	float CurrentYPos;
+
 	void PrintTrainLocation(FVector location);
 	float GetNextTargetLocation();
 	void TrainArrivedAtTarget();
