@@ -7,6 +7,7 @@
 #include "Kismet/KismetMathLibrary.h"
 #include "EnemyCharacter.h"
 #include "PlayerManagerWSS.h"
+#include "Obstacle.h"
 
 // Sets default values
 ATrain::ATrain()
@@ -41,6 +42,15 @@ void ATrain::MovementUpdate()
 		case ETrainState::decelerating:
 			if (currentTrainSpeed > 0) {
 				currentTrainSpeed -= DecelerationRate;
+			}
+			else {
+				currentTrainSpeed = 0;
+				currentState = ETrainState::stopped;
+			}
+			break;
+		case ETrainState::reversing:
+			if (currentTrainSpeed < 0) {
+				currentTrainSpeed += DecelerationRate;
 			}
 			else {
 				currentTrainSpeed = 0;
@@ -197,6 +207,15 @@ void ATrain::OnPlowBeginOverlap(UPrimitiveComponent* OverlappedComp, AActor* Oth
 
 		//GEngine->AddOnScreenDebugMessage(1, 3, FColor::Red, TEXT("TRAIN HIT ENEMY BOI"));
 		enemy->TakeDamage(0, currentTrainSpeed * damageMultiplier, GetActorLocation(), currentTrainSpeed * launchMultiplier);
+	}
+	if (OtherActor->Tags.Contains("Obstacle")) {
+		currentTrainSpeed *= -1;
+		currentState = ETrainState::reversing;
+		NotifyTrainHitObstacle();
+		if (AObstacle* obstacle = Cast<AObstacle>(OtherActor)) {
+
+			obstacle->DamageObstacle(currentTrainSpeed * damageMultiplier);
+		}
 	}
 }
 

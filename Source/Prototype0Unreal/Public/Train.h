@@ -9,7 +9,7 @@
 
 UENUM()
 enum class ETrainState : uint8 {
-	stopped UMETA(DIsplayName = "Stopped"), accelerating UMETA(DIsplayName = "Accelerating"), decelerating UMETA(DIsplayName = "Decelerating")
+	stopped UMETA(DIsplayName = "Stopped"), accelerating UMETA(DIsplayName = "Accelerating"), decelerating UMETA(DIsplayName = "Decelerating"), reversing UMETA(DisplayName="Reversing")
 };
 
 UCLASS()
@@ -156,5 +156,8 @@ public:
 
 	UFUNCTION(BlueprintImplementableEvent)
 	void NotifyStartLeverOverlap(bool isOverlapping);
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void NotifyTrainHitObstacle();
 
 };
