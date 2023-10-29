@@ -214,7 +214,7 @@ void ATrain::OnPlowBeginOverlap(UPrimitiveComponent* OverlappedComp, AActor* Oth
 		NotifyTrainHitObstacle();
 		if (AObstacle* obstacle = Cast<AObstacle>(OtherActor)) {
 
-			obstacle->DamageObstacle(currentTrainSpeed * damageMultiplier);
+			obstacle->DamageObstacle(currentTrainSpeed);
 		}
 	}
 }

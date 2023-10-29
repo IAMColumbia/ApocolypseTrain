@@ -28,4 +28,7 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 	void DamageObstacle(float damage);
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void NotifyDamageObstacle();
 };

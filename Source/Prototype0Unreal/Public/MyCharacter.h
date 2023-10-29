@@ -35,10 +35,11 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat")
 	float FireRate;
 
-	//how much damage players do to enemies
+	//how much damage players do to
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat")
 	float Damage;
 
+	//the rate at which players passivly increase health if below max
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat")
 	float RegenRate;
 

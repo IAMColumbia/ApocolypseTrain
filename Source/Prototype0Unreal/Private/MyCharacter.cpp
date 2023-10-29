@@ -10,6 +10,7 @@
 #include "Train.h"
 #include "Kismet/GameplayStatics.h"
 #include "PlayerManagerWSS.h"
+#include "Obstacle.h"
 
 // Sets default values
 AMyCharacter::AMyCharacter()
@@ -180,6 +181,9 @@ void AMyCharacter::Ray()
 			//GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red, hit.GetActor()->GetFName().ToString());
 			if (AEnemyCharacter* enemy = Cast<AEnemyCharacter>(hit.GetActor())) {
 				enemy->TakeDamage(hit.Distance, Damage, GetActorLocation(), 2);
+			}
+			if (AObstacle* obstacle = Cast<AObstacle>(hit.GetActor())) {
+				obstacle->DamageObstacle(Damage);
 			}
 		}
 

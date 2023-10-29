@@ -14,8 +14,8 @@ AObstacle::AObstacle()
 // Called when the game starts or when spawned
 void AObstacle::BeginPlay()
 {
-	Super::BeginPlay();
 	currentHealth = MaxObstacleHealth;
+	Super::BeginPlay();
 }
 
 // Called every frame
@@ -28,7 +28,8 @@ void AObstacle::Tick(float DeltaTime)
 void AObstacle::DamageObstacle(float damage)
 {
 	currentHealth -= FGenericPlatformMath::Abs(damage);
-	GEngine->AddOnScreenDebugMessage(1, 3, FColor::Red, FString::Printf(TEXT("TRAIN HIT OBSTACLE % f"), currentHealth));
+	NotifyDamageObstacle();
+	//GEngine->AddOnScreenDebugMessage(1, 3, FColor::Red, FString::Printf(TEXT("TRAIN HIT OBSTACLE % f"), currentHealth));
 	if (currentHealth <= 0) {
 		AActor::Destroy();
 	}
