@@ -196,6 +196,7 @@ void AMyCharacter::Ray()
 void AMyCharacter::TakeDamage(float damageToTake) {
 	currentHealth -= damageToTake;
 	NotifyHealthBarWidget();
+	NotifyTakeDamage();
 	if (currentHealth <= 0) {
 		DespawnPlayer();
 	}

@@ -138,6 +138,9 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Combat")
 	void TakeDamage(float damageToTake);
 
+	UFUNCTION(BlueprintImplementableEvent)
+	void NotifyTakeDamage();
+
 	UFUNCTION(BlueprintCallable, Category = "Initialize")
 	void OnPlayerSpawn();
 

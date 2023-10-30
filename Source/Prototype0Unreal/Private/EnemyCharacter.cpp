@@ -4,6 +4,7 @@
 #include <GameFramework/Actor.h>
 #include "GameManagerWSS.h"
 #include <Kismet/KismetMathLibrary.h>
+#include "MyCharacter.h"
 
 // Sets default values
 AEnemyCharacter::AEnemyCharacter()
@@ -54,6 +55,11 @@ bool AEnemyCharacter::IsInAttackRange(AActor* targetToAttack) {
 	}
 	double distance = (GetActorLocation() - targetToAttack->GetActorLocation()).Size();
 	if (distance < AttackRange) {
+		if (AMyCharacter* targ = Cast<AMyCharacter>(targetToAttack)) {
+			if (targ->IsPlayerDead) {
+				return false;
+			}
+		}
 		return true;
 	}
 	else {
