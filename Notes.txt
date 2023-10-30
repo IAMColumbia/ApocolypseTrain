@@ -1,0 +1,4 @@
+Use these commands to see what the physics engine sees in the console `
+
+p.Chaos.DebugDraw.Enabled 1
+p.Chaos.Solver.DebugDrawShapes 1
