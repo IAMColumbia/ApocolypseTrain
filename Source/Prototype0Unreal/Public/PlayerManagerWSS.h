@@ -28,6 +28,9 @@ public:
 	UFUNCTION(BlueprintCallable)
 	bool IsOverlappingPlayerWithFuel(class UBoxComponent* box);
 
+	UFUNCTION(BlueprintCallable)
+	int NumActivePlayers();
+
 protected:
 	virtual void Initialize(FSubsystemCollectionBase& Collection) override;
 

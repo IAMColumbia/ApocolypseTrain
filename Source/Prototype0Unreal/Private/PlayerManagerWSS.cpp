@@ -38,6 +38,11 @@ bool UPlayerManagerWSS::IsOverlappingPlayerWithFuel(UBoxComponent* box)
 	return false;
 }
 
+int UPlayerManagerWSS::NumActivePlayers()
+{
+	return Players.Num();
+}
+
 void UPlayerManagerWSS::Initialize(FSubsystemCollectionBase& Collection)
 {
 	UE_LOG(LogTemp, Warning, TEXT("PlayerManager Initialized"));
