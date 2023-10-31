@@ -24,6 +24,9 @@ void UGameManagerWSS::TrainArrivedAtTarget()
 {
 	chunkSpawner->SpawnNextChunk();
 	if (train->CanMove) {
+		if (train->TotalMeters % enemySpawner->DifficultyIncrease == 0 && train->TotalMeters > 2) {
+			enemySpawner->IncreaseEnemyDifficulty();
+		}
 		enemySpawner->SpawnEnemies();
 	}
 	train->targetYPos = GetNextTargetLocation();

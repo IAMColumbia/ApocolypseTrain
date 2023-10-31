@@ -18,6 +18,22 @@ public:
 	// Sets default values for this actor's properties
 	AEnemySpawner();
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Enemies")
+	float EnemyHealth;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Enemies")
+	float EnemySpeed;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Enemies")
+	float EnemyHealthIncrease;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Enemies")
+	float EnemySpeedIncrease;
+
+	//a wave divisible by this number will increase the enemy difficulty
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Enemies")
+	int DifficultyIncrease;
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -44,5 +60,7 @@ public:
 	void PrintStuff();
 	
 	FTimerHandle spawnTimerHandle;
+
+	void IncreaseEnemyDifficulty();
 
 };

@@ -48,3 +48,9 @@ void AEnemySpawner::PrintStuff()
 	GEngine->AddOnScreenDebugMessage(-1, 3, FColor::Cyan, TEXT("I am enemy spawner"));
 }
 
+void AEnemySpawner::IncreaseEnemyDifficulty()
+{
+	EnemySpeed += EnemySpeedIncrease;
+	EnemyHealth += EnemyHealthIncrease;
+}
+
