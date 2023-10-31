@@ -25,6 +25,9 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	float CurrentYPos;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	int TotalMeters;
+
 	void PrintTrainLocation(FVector location);
 	float GetNextTargetLocation();
 	void TrainArrivedAtTarget();

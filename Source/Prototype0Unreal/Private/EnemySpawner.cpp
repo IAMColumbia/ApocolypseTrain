@@ -52,5 +52,6 @@ void AEnemySpawner::IncreaseEnemyDifficulty()
 {
 	EnemySpeed += EnemySpeedIncrease;
 	EnemyHealth += EnemyHealthIncrease;
+	EnemyDamage += EnemyDamageIncrease;
 }
 

@@ -18,20 +18,26 @@ public:
 	// Sets default values for this actor's properties
 	AEnemySpawner();
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Enemies")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Enemy Initial Values")
 	float EnemyHealth;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Enemies")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Enemy Initial Values")
 	float EnemySpeed;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Enemies")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Enemy Initial Values")
+	float EnemyDamage;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Enemy Difficulty Increase")
 	float EnemyHealthIncrease;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Enemies")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Enemy Difficulty Increase")
 	float EnemySpeedIncrease;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Enemy Difficulty Increase")
+	float EnemyDamageIncrease;
+
 	//a wave divisible by this number will increase the enemy difficulty
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Enemies")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Enemy Difficulty Increase")
 	int DifficultyIncrease;
 
 protected:
