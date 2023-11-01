@@ -59,7 +59,7 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 	UFUNCTION(BlueprintCallable)
-	virtual void TakeDamage(float distance, float damage, FVector sourcePos, float launchForce);
+	void TakeDamage(float distance, float damage, FVector sourcePos, float launchForce);
 	
 	UFUNCTION(BlueprintCallable)
 	bool IsInAttackRange(AActor* targetToAttack);
