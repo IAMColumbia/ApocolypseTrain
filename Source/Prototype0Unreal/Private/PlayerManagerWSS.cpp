@@ -5,6 +5,7 @@
 #include "MyCharacter.h"
 #include <Kismet/KismetMathLibrary.h>
 #include <Components/BoxComponent.h>
+#include <Kismet/GameplayStatics.h>
 
 void UPlayerManagerWSS::RegisterPlayer(AMyCharacter* player)
 {
@@ -41,6 +42,32 @@ bool UPlayerManagerWSS::IsOverlappingPlayerWithFuel(UBoxComponent* box)
 int UPlayerManagerWSS::NumActivePlayers()
 {
 	return Players.Num();
+}
+
+void UPlayerManagerWSS::CheckGameOver()
+{
+	if (AllPlayersDead()) {
+		float delayTime = 8;
+		GEngine->AddOnScreenDebugMessage(-1, delayTime, FColor::Red, FString::Printf(TEXT("GAME OVER \nALL PLAYERS DIED")), true, FVector2D(10, 10));
+		UGameplayStatics::OpenLevel((UObject*)GetWorld(), FName(TEXT("TrainTest")));
+	}
+}
+
+bool UPlayerManagerWSS::AllPlayersDead()
+{
+	int deadPlayers = 0;
+	int activePlayers = NumActivePlayers();
+	if (activePlayers > 0) {
+		for (int i = 0; i < activePlayers; i++) {
+			if (Players[i]->IsPlayerDead == true) {
+				deadPlayers++;
+			}
+		}
+	}
+	if (deadPlayers >= activePlayers) {
+		return true;
+	}
+	return false;
 }
 
 void UPlayerManagerWSS::Initialize(FSubsystemCollectionBase& Collection)

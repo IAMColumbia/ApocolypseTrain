@@ -217,6 +217,7 @@ void AMyCharacter::DespawnPlayer()
 	currentRespawnTime = TotalRespawnTime;
 	respawnTimerHandle = UKismetSystemLibrary::K2_SetTimer(this, TEXT("UpdateRespawnTimer"), 1, true, 0, 0);
 	trainPtr->StartRespawnTimer(PlayerIndex, currentRespawnTime);
+	GetWorld()->GetSubsystem<UPlayerManagerWSS>()->CheckGameOver();
 }
 
 void AMyCharacter::UpdateRespawnTimer()

@@ -204,9 +204,12 @@ void ATrain::OnPlowBeginOverlap(UPrimitiveComponent* OverlappedComp, AActor* Oth
 		return;
 	}
 	if (AEnemyCharacter* enemy = Cast<AEnemyCharacter>(OtherActor)) {
-
+		
 		//GEngine->AddOnScreenDebugMessage(1, 3, FColor::Red, TEXT("TRAIN HIT ENEMY BOI"));
 		enemy->TakeDamage(0, currentTrainSpeed * damageMultiplier, GetActorLocation(), currentTrainSpeed * launchMultiplier);
+		/*if (enemy->EnemyState == EEnemyState::Dead) {
+			enemy->Destroy();
+		}*/
 	}
 	if (OtherActor->Tags.Contains("Obstacle")) {
 		currentTrainSpeed *= -1;

@@ -6,6 +6,11 @@
 #include "GameFramework/Character.h"
 #include "EnemyCharacter.generated.h"
 
+UENUM()
+enum class EEnemyState : uint8 {
+	Idle UMETA(DisplayName = "Idle"), Dead UMETA(DisplayName = "Dead")
+};
+
 UCLASS()
 class PROTOTYPE0UNREAL_API AEnemyCharacter : public ACharacter
 {
@@ -14,6 +19,9 @@ class PROTOTYPE0UNREAL_API AEnemyCharacter : public ACharacter
 public:
 	// Sets default values for this character's properties
 	AEnemyCharacter();
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	EEnemyState EnemyState;
 
 protected:
 	// Called when the game starts or when spawned
@@ -30,6 +38,9 @@ protected:
 
 	UFUNCTION(BlueprintImplementableEvent)
 	void DeactivateEnemy();
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void EnemyKilled();
 public:	
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat")

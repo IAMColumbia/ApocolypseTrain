@@ -39,12 +39,16 @@ void AEnemyCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComp
 }
 
 void AEnemyCharacter::TakeDamage(float distance, float damage, FVector sourcePos, float launchForce) {
+	if (EnemyState == EEnemyState::Dead) {
+		return;
+	}
 	currentHealth -= damage;
 	NotifyHealthBarWidget();
 	NotifyDamageEnemy();
 	LaunchCharacter((GetActorLocation()-sourcePos) * launchForce,false, false);
 	if (currentHealth <= 0) {
-		Destroy();
+		EnemyState = EEnemyState::Dead;
+		EnemyKilled();
 	}
 }
 

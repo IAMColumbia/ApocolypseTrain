@@ -31,10 +31,12 @@ public:
 	UFUNCTION(BlueprintCallable)
 	int NumActivePlayers();
 
+	void CheckGameOver();
+
 protected:
 	virtual void Initialize(FSubsystemCollectionBase& Collection) override;
 
 	void SortPlayers();
-
+	bool AllPlayersDead();
 	
 };
