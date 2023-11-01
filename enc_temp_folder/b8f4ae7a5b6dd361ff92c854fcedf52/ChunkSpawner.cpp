@@ -19,6 +19,7 @@ void AChunkSpawner::BeginPlay()
 	Super::BeginPlay();
 	GetWorld()->GetSubsystem<UGameManagerWSS>()->chunkSpawner = this;
 	SpawnNextChunk();
+	SpawnNextChunk();
 }
 
 

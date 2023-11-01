@@ -18,7 +18,7 @@ void AEnemySpawner::BeginPlay()
 {
 	Super::BeginPlay();
 	GetWorld()->GetSubsystem<UGameManagerWSS>()->enemySpawner = this;
-	GetWorld()->GetTimerManager().SetTimer(spawnTimerHandle, this, &AEnemySpawner::SpawnEnemyBehindTrain, 20, true);
+	
 }
 
 // Called every frame
@@ -26,6 +26,16 @@ void AEnemySpawner::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 	
+}
+
+void AEnemySpawner::StartRearSpawner()
+{
+	GetWorld()->GetTimerManager().SetTimer(rearSpawner, this, &AEnemySpawner::SpawnEnemyBehindTrain, RearSpawnRate, true);
+}
+
+void AEnemySpawner::StopRearSpawner()
+{
+	GetWorld()->GetTimerManager().ClearTimer(rearSpawner);
 }
 
 void AEnemySpawner::SpawnEnemies()

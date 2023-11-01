@@ -22,15 +22,9 @@ public:
 	// Sets default values for this actor's properties
 	ATrain();
 
-	
-
 	enum LeverType { stopLever, startLever};
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	ETrainState currentState;
-
 	void StartTrain();
-
 	void StopTrain();
 
 	void MovementUpdate();
@@ -45,6 +39,9 @@ public:
 	float DecelerationRate;
 
 protected:
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	ETrainState currentState;
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
@@ -135,6 +132,10 @@ public:
 	FVector GetRandomRespawnPos();
 
 	FVector GetRespawnPos(int PlayerIndex);
+
+	//used to make sure certain behavior happens when the train state is updated
+	UFUNCTION()
+	void SetTrainState(ETrainState stateToSet);
 
 	UFUNCTION()
 	void OnPlowBeginOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);

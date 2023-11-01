@@ -30,7 +30,7 @@ public:
 
 	void PrintTrainLocation(FVector location);
 	float GetNextTargetLocation();
-	void TrainArrivedAtTarget();
+	void SpawnNewChunk();
 
 	FVector GetRandomLocationInChunk();
 
@@ -42,6 +42,9 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	bool IsOutOfBackBounds(FVector actorLocation);
+
+	void OnTrainAccelerating();
+	void OnTrainStopped();
 
 protected:
 	virtual void Initialize(FSubsystemCollectionBase& Collection) override;

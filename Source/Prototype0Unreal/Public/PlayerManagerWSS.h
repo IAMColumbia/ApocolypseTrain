@@ -39,4 +39,5 @@ protected:
 	void SortPlayers();
 	bool AllPlayersDead();
 	
+	void RestartGame();
 };

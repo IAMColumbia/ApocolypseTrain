@@ -67,7 +67,6 @@ void ATrain::BeginPlay()
 {
 	Super::BeginPlay();
 	GetWorld()->GetSubsystem<UGameManagerWSS>()->train = this;
-	targetYPos = GetWorld()->GetSubsystem<UGameManagerWSS>()->GetNextTargetLocation();
 	TotalMeters = 0;
 	TSet<UActorComponent*> components = GetComponents();
 	for (UActorComponent* Component : components)

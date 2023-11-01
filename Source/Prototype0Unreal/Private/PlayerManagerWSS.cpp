@@ -49,7 +49,9 @@ void UPlayerManagerWSS::CheckGameOver()
 	if (AllPlayersDead()) {
 		float delayTime = 8;
 		GEngine->AddOnScreenDebugMessage(-1, delayTime, FColor::Red, FString::Printf(TEXT("GAME OVER \nALL PLAYERS DIED")), true, FVector2D(10, 10));
-		UGameplayStatics::OpenLevel((UObject*)GetWorld(), FName(TEXT("TrainTest")));
+		FTimerHandle resetTimer;
+		GetWorld()->GetTimerManager().SetTimer(resetTimer, this, &UPlayerManagerWSS::RestartGame, delayTime, true);
+		
 	}
 }
 
@@ -68,6 +70,11 @@ bool UPlayerManagerWSS::AllPlayersDead()
 		return true;
 	}
 	return false;
+}
+
+void UPlayerManagerWSS::RestartGame()
+{
+	UGameplayStatics::OpenLevel((UObject*)GetWorld(), FName(TEXT("TrainTest")));
 }
 
 void UPlayerManagerWSS::Initialize(FSubsystemCollectionBase& Collection)

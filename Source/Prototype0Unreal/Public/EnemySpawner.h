@@ -40,6 +40,15 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Enemy Difficulty Increase")
 	int DifficultyIncrease;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Spawning")
+	int EnemiesPerChunk;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Spawning")
+	int MaxEnemies;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Spawning")
+	float RearSpawnRate;
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -50,14 +59,15 @@ protected:
 	//TQueue<AEnemyCharacter*> objectPool;
 	//void PopulatePool();
 
-public:	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Spawning")
-	int EnemiesPerChunk;
+	FTimerHandle rearSpawner;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Spawning")
-	int MaxEnemies;
+public:	
+	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
+
+	void StartRearSpawner();
+	void StopRearSpawner();
 
 	void SpawnEnemies();
 

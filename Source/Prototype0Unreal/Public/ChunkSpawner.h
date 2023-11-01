@@ -31,6 +31,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Subsystem")
 	float nextTargetLocation;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Spawning")
+	int TotalChunksSpawned;
+
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
