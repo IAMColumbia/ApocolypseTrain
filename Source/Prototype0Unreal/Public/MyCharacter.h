@@ -77,7 +77,10 @@ protected:
 	void ShootPressed();
 	void ShootReleased();
 
+	
+
 	void InteractPressed();
+	void InteractReleased();
 
 	UFUNCTION(BlueprintImplementableEvent)
 	void NotifyHealthBarWidget();
@@ -101,6 +104,19 @@ protected:
 	void NotifyPlayerRespawn();
 
 public:	
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	bool Interacted;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	bool Carrying;
+
+	class AInteractableActor* carriedObject;
+
+	USceneComponent* CarryPosition;
+
+	void PickupItem(class AInteractableActor* itemToCarry);
+
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 

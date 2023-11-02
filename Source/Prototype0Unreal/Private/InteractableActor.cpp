@@ -2,7 +2,8 @@
 
 
 #include "InteractableActor.h"
-#include <Components/BoxComponent.h>
+#include <Components/SphereComponent.h>
+#include <MyCharacter.h>
 
 // Sets default values
 AInteractableActor::AInteractableActor()
@@ -12,18 +13,42 @@ AInteractableActor::AInteractableActor()
 
 }
 
+void AInteractableActor::DropObject(FVector directionToLaunch)
+{
+	state = EInteractableState::Dropped;
+	OnDropped(directionToLaunch);
+}
+
 // Called when the game starts or when spawned
 void AInteractableActor::BeginPlay()
 {
 	Super::BeginPlay();
 	TSet<UActorComponent*> components = GetComponents();
 	for (UActorComponent* component : components) {
-		if (component->IsA(UBoxComponent::StaticClass())) {
-			UBoxComponent* BoxCollisionComponent = Cast<UBoxComponent>(component);
-			if (BoxCollisionComponent && BoxCollisionComponent->ComponentHasTag("Trigger"))
+		if (component->IsA(USphereComponent::StaticClass())) {
+			USphereComponent* SphereCollisionComponent = Cast<USphereComponent>(component);
+			if (SphereCollisionComponent && SphereCollisionComponent->ComponentHasTag("Trigger"))
 			{
-				trigger = BoxCollisionComponent;
+				trigger = SphereCollisionComponent;
+				trigger->OnComponentBeginOverlap.AddDynamic(this, &AInteractableActor::OnTriggerBeginOverlap);
+				trigger->OnComponentEndOverlap.AddDynamic(this, &AInteractableActor::OnTriggerEndOverlap);
+				
 			}
+		}
+	}
+}
+
+void AInteractableActor::CheckForInteractPressed()
+{
+	if (state != EInteractableState::Idle) {
+		return;
+	}
+	for(AMyCharacter * player : overlappingPlayers) {
+		if (player->Interacted) {
+			player->PickupItem(this);
+			state = EInteractableState::Carried;
+			GEngine->AddOnScreenDebugMessage(-1, 3, FColor::Orange, TEXT("PLAYER INTERACTED"));
+			return;
 		}
 	}
 }
@@ -32,6 +57,33 @@ void AInteractableActor::BeginPlay()
 void AInteractableActor::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+	if (overlappingPlayers.Num() > 0) {
+		CheckForInteractPressed();
+	}
+}
 
+void AInteractableActor::OnTriggerBeginOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
+	if (OtherActor->ActorHasTag("Player")) {
+		if (AMyCharacter* player = Cast<AMyCharacter>(OtherActor)) {
+			overlappingPlayers.Add(player);
+			PlayersOverlapping();
+		}
+		
+	}
+}
+
+void AInteractableActor::OnTriggerEndOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
+{
+	if (OtherActor->ActorHasTag("Player")) {
+		if (AMyCharacter* player = Cast<AMyCharacter>(OtherActor)) {
+			overlappingPlayers.Remove(player);
+			if (overlappingPlayers.Num() <= 0) {
+				NoPlayersOverlapping();
+				state = EInteractableState::Idle;
+			}
+		}
+
+	}
 }
 

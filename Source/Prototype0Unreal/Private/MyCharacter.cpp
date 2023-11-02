@@ -11,6 +11,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "PlayerManagerWSS.h"
 #include "Obstacle.h"
+#include <InteractableActor.h>
 
 // Sets default values
 AMyCharacter::AMyCharacter()
@@ -31,6 +32,16 @@ void AMyCharacter::BeginPlay()
 	NotifyHealthBarWidget();
 	gameManager = GetWorld()->GetSubsystem<UGameManagerWSS>();
 	trainPtr = gameManager->train;
+
+	TSet<UActorComponent*> components = GetComponents();
+	for (UActorComponent* component : components) {
+		if (component->IsA(USceneComponent::StaticClass())) {
+			USceneComponent* sceneComponent = Cast<USceneComponent>(component);
+			if (sceneComponent && sceneComponent->ComponentHasTag("PickupSlot")) {
+				CarryPosition = sceneComponent;
+			}
+		}
+	}
 }
 
 void AMyCharacter::OnPlayerSpawn() {
@@ -41,6 +52,8 @@ void AMyCharacter::OnPlayerSpawn() {
 	GetWorld()->GetSubsystem<UPlayerManagerWSS>()->RegisterPlayer(this);
 	trainPtr->OnControllerPosses(PlayerIndex, GetPlayerColor());
 }
+
+
 
 // Called every frame
 void AMyCharacter::Tick(float DeltaTime)
@@ -72,14 +85,18 @@ void AMyCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 	PlayerInputComponent->BindAction("ShootWeapon", EInputEvent::IE_Pressed, this, &AMyCharacter::ShootPressed);
 	PlayerInputComponent->BindAction("ShootWeapon", EInputEvent::IE_Released, this, &AMyCharacter::ShootReleased);
 	PlayerInputComponent->BindAction("Interact", EInputEvent::IE_Pressed, this, &AMyCharacter::InteractPressed);
+	PlayerInputComponent->BindAction("Interact", EInputEvent::IE_Released, this, &AMyCharacter::InteractReleased);
 	PlayerInputComponent->BindAxis("MoveForward", this, &AMyCharacter::MoveForward);
 	PlayerInputComponent->BindAxis("MoveRight", this, &AMyCharacter::MoveRight);
 }
 
 void AMyCharacter::InteractPressed() {
-	if (trainPtr->IsOverlappingFuelBox(GetActorLocation()) && Fuel > 0) {
-		if (trainPtr->AddFuel()) {
-			Fuel--;
+	Interacted = true;
+	if (trainPtr->IsOverlappingFuelBox(GetActorLocation()) && Carrying) {
+		if (carriedObject != NULL) {
+			if (trainPtr->AddFuel()) {
+				carriedObject->Destroy();
+			}
 		}
 		NotifyFuelDisplay();
 	}
@@ -89,7 +106,31 @@ void AMyCharacter::InteractPressed() {
 	if (trainPtr->IsOverlappingLeverBox(GetActorLocation(), ATrain::LeverType::stopLever)) {
 		trainPtr->StopTrain();
 	}
+	if (Carrying) {
+		if (carriedObject != NULL) {
+			carriedObject->DropObject(characterMesh->GetRightVector());
+		}
+		Carrying = false;
+	}
 }
+
+void AMyCharacter::InteractReleased()
+{
+	Interacted = false;
+}
+
+void AMyCharacter::PickupItem(AInteractableActor* itemToCarry)
+{
+	if (Carrying) {
+		return;
+	}
+	Carrying = true;
+	carriedObject = itemToCarry;
+	itemToCarry->OnPickedUp(CarryPosition);
+	//itemToCarry->SetActorLocation(CarryPosition->GetComponentLocation());
+	//itemToCarry->AttachToComponent(CarryPosition, FAttachmentTransformRules::SnapToTargetNotIncludingScale);
+}
+
 
 void AMyCharacter::setXRot(float AxisValue) {
 	if (AxisValue != 0.0f) {
