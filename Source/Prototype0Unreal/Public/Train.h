@@ -29,6 +29,8 @@ public:
 
 	void MovementUpdate();
 
+	bool HasFuel();
+
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Movement")
 	float MaxTrainSpeed;
 
@@ -113,6 +115,7 @@ public:
 
 	bool IsOverlappingLeverBox(FVector actorPos, LeverType type);
 
+	UFUNCTION(BlueprintCallable)
 	bool AddFuel();
 
 	// Called every frame

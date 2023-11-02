@@ -98,7 +98,6 @@ void AMyCharacter::InteractPressed() {
 				carriedObject->Destroy();
 			}
 		}
-		NotifyFuelDisplay();
 	}
 	if (trainPtr->IsOverlappingLeverBox(GetActorLocation(), ATrain::LeverType::startLever)) {
 		trainPtr->StartTrain();
@@ -252,8 +251,6 @@ void AMyCharacter::DespawnPlayer()
 	if (IsShooting) {
 		ShootReleased();
 	}
-	Fuel = 0;
-	NotifyFuelDisplay();
 	NotifyPlayerDied();
 	currentRespawnTime = TotalRespawnTime;
 	respawnTimerHandle = UKismetSystemLibrary::K2_SetTimer(this, TEXT("UpdateRespawnTimer"), 1, true, 0, 0);
@@ -294,7 +291,7 @@ FColor AMyCharacter::GetPlayerColor()
 
 bool AMyCharacter::HasFuel()
 {
-	if (Fuel > 0) {
+	if (Carrying && carriedObject != NULL) {
 		return true;
 	}
 	return false;

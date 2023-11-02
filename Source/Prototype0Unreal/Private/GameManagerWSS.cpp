@@ -86,14 +86,14 @@ bool UGameManagerWSS::IsOutOfBackBounds(FVector actorLocation)
 
 void UGameManagerWSS::OnTrainAccelerating()
 {
-	if (TotalMeters > 2) {
-		enemySpawner->StopRearSpawner();
-	}
+	enemySpawner->StopRearSpawner();
 }
 
 void UGameManagerWSS::OnTrainStopped()
 {
-	enemySpawner->StartRearSpawner();
+	if (chunkSpawner->TotalChunksSpawned > 2) {
+		enemySpawner->StartRearSpawner();
+	}
 }
 
 

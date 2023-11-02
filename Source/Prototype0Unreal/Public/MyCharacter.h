@@ -46,9 +46,6 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI")
 	bool CanAddFuel;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Fuel")
-	int Fuel;
-
 	FTimerHandle shootTimerHandle;
 	FTimerHandle respawnTimerHandle;
 
@@ -84,9 +81,6 @@ protected:
 
 	UFUNCTION(BlueprintImplementableEvent)
 	void NotifyHealthBarWidget();
-
-	UFUNCTION(BlueprintImplementableEvent)
-	void NotifyFuelDisplay();
 
 	UFUNCTION(BlueprintImplementableEvent)
 	void NotifyStartedShooting();

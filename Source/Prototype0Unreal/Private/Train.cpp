@@ -19,12 +19,17 @@ ATrain::ATrain()
 
 void ATrain::StartTrain()
 {
-	SetTrainState(ETrainState::accelerating);
+	if (HasFuel() && currentState != ETrainState::accelerating) {
+		SetTrainState(ETrainState::accelerating);
+	}
 }
 
 void ATrain::StopTrain()
 {
-	SetTrainState(ETrainState::decelerating);
+	if (currentState == ETrainState::accelerating) {
+		SetTrainState(ETrainState::decelerating);
+	}
+	
 }
 
 void ATrain::MovementUpdate()
@@ -60,6 +65,14 @@ void ATrain::MovementUpdate()
 		default:
 			break;
 	}
+}
+
+bool ATrain::HasFuel()
+{
+	if (Fuel > 0) {
+		return true;
+	}
+	return false;
 }
 
 // Called when the game starts or when spawned
