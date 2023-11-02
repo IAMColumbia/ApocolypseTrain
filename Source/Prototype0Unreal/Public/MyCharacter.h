@@ -17,6 +17,8 @@ public:
 	// Sets default values for this character's properties
 	AMyCharacter();
 
+	bool IsFacingWall();
+
 protected:
 	class UGameManagerWSS* gameManager;
 	class ATrain* trainPtr;
@@ -66,8 +68,9 @@ protected:
 
 	void setRotation();
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Combat")
 	float RayOffset = 80;
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Combat")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Combat")
 	float RayLength = 1800;
 	void Ray();
 

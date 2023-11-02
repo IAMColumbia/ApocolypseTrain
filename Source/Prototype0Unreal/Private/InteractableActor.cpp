@@ -40,14 +40,10 @@ void AInteractableActor::BeginPlay()
 
 void AInteractableActor::CheckForInteractPressed()
 {
-	if (state != EInteractableState::Idle) {
-		return;
-	}
 	for(AMyCharacter * player : overlappingPlayers) {
-		if (player->Interacted) {
+		if (player->Interacted && !player->Carrying) {
 			player->PickupItem(this);
 			state = EInteractableState::Carried;
-			GEngine->AddOnScreenDebugMessage(-1, 3, FColor::Orange, TEXT("PLAYER INTERACTED"));
 			return;
 		}
 	}
@@ -57,8 +53,10 @@ void AInteractableActor::CheckForInteractPressed()
 void AInteractableActor::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	if (overlappingPlayers.Num() > 0) {
-		CheckForInteractPressed();
+	if (state == EInteractableState::Idle) {
+		if (overlappingPlayers.Num() > 0) {
+			CheckForInteractPressed();
+		}
 	}
 }
 
@@ -80,7 +78,6 @@ void AInteractableActor::OnTriggerEndOverlap(UPrimitiveComponent* OverlappedComp
 			overlappingPlayers.Remove(player);
 			if (overlappingPlayers.Num() <= 0) {
 				NoPlayersOverlapping();
-				state = EInteractableState::Idle;
 			}
 		}
 

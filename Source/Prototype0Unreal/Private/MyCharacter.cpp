@@ -22,6 +22,39 @@ AMyCharacter::AMyCharacter()
 	characterMesh = FindComponentByClass<USkeletalMeshComponent>();
 }
 
+bool AMyCharacter::IsFacingWall()
+{
+	FVector start = GetActorLocation();
+
+	FVector forward = characterMesh->GetRightVector();
+	forward.Z = 0;
+
+	start = FVector(start.X + (forward.X), start.Y + (forward.Y), start.Z + (forward.Z));
+	//maybe need to change end pos for randomness
+	FVector end = start + forward * 80;
+
+	FHitResult hit;
+
+	if (GetWorld()) {
+		FCollisionQueryParams QueryParams;
+		QueryParams.AddIgnoredActor(this);
+		QueryParams.AddIgnoredActor(carriedObject);
+		bool actorHit = GetWorld()->LineTraceSingleByChannel(hit, start, end, ECC_WorldDynamic,QueryParams, FCollisionResponseParams());
+		//DrawDebugLine(GetWorld(), start, end, FColor::Red, false, 0.15f, 0.f, 10.f);
+		if (actorHit && hit.GetActor()) {
+			//GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red, hit.GetActor()->GetFName().ToString());
+			if (AEnemyCharacter* enemy = Cast<AEnemyCharacter>(hit.GetActor())) {
+				return false;
+			}
+			if (AObstacle* obstacle = Cast<AObstacle>(hit.GetActor())) {
+				return false;
+			}
+			return true;
+		}
+	}
+	return false;
+}
+
 
 // Called when the game starts or when spawned
 void AMyCharacter::BeginPlay()
@@ -99,15 +132,20 @@ void AMyCharacter::InteractPressed() {
 			}
 		}
 	}
-	if (trainPtr->IsOverlappingLeverBox(GetActorLocation(), ATrain::LeverType::startLever)) {
+	if (trainPtr->IsOverlappingLeverBox(GetActorLocation(), ATrain::LeverType::startLever) && !Carrying) {
 		trainPtr->StartTrain();
 	}
-	if (trainPtr->IsOverlappingLeverBox(GetActorLocation(), ATrain::LeverType::stopLever)) {
+	if (trainPtr->IsOverlappingLeverBox(GetActorLocation(), ATrain::LeverType::stopLever) && !Carrying) {
 		trainPtr->StopTrain();
 	}
 	if (Carrying) {
-		if (carriedObject != NULL) {
-			carriedObject->DropObject(characterMesh->GetRightVector());
+		if (carriedObject != NULL ) {
+			if (IsFacingWall()) {
+				carriedObject->DropObject(characterMesh->GetRightVector()*-1);
+			}
+			else {
+				carriedObject->DropObject(characterMesh->GetRightVector());
+			}
 		}
 		Carrying = false;
 	}
@@ -126,6 +164,7 @@ void AMyCharacter::PickupItem(AInteractableActor* itemToCarry)
 	Carrying = true;
 	carriedObject = itemToCarry;
 	itemToCarry->OnPickedUp(CarryPosition);
+	ShootReleased();
 	//itemToCarry->SetActorLocation(CarryPosition->GetComponentLocation());
 	//itemToCarry->AttachToComponent(CarryPosition, FAttachmentTransformRules::SnapToTargetNotIncludingScale);
 }
@@ -181,6 +220,9 @@ void AMyCharacter::MoveForward(float AxisValue) {
 #pragma region Shooting
 
 void AMyCharacter::ShootPressed() {
+	if (Carrying) {
+		return;
+	}
 	IsShooting = true;
 	NotifyStartedShooting();
 	ShootProjectile();
@@ -214,7 +256,9 @@ void AMyCharacter::Ray()
 
 
 	if (GetWorld()) {
-		bool actorHit = GetWorld()->LineTraceSingleByChannel(hit, start, end, ECC_Pawn, FCollisionQueryParams(), FCollisionResponseParams());
+		FCollisionQueryParams QueryParams;
+		QueryParams.AddIgnoredActor(this);
+		bool actorHit = GetWorld()->LineTraceSingleByChannel(hit, start, end, ECC_Pawn, QueryParams, FCollisionResponseParams());
 		NotifyFiredShot(GetActorForwardVector());
 		//DrawDebugLine(GetWorld(), start, end, FColor::Red, false, 0.15f, 0.f, 10.f);
 		if (actorHit && hit.GetActor()) {

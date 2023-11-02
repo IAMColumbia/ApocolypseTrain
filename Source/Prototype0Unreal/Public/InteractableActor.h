@@ -18,7 +18,7 @@ class PROTOTYPE0UNREAL_API AInteractableActor : public AActor
 	GENERATED_BODY()
 	
 public:	
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	EInteractableState state;
 
 	// Sets default values for this actor's properties
