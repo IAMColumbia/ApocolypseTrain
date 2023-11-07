@@ -264,7 +264,7 @@ void AMyCharacter::Ray()
 		if (actorHit && hit.GetActor()) {
 			//GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red, hit.GetActor()->GetFName().ToString());
 			if (AEnemyCharacter* enemy = Cast<AEnemyCharacter>(hit.GetActor())) {
-				enemy->TakeDamage(hit.Distance, Damage, GetActorLocation(), 2);
+				enemy->TakeDamage(hit.Distance, Damage - FMath::RandRange(0, 3), GetActorLocation(), 2);
 			}
 			if (AObstacle* obstacle = Cast<AObstacle>(hit.GetActor())) {
 				obstacle->DamageObstacle(Damage);

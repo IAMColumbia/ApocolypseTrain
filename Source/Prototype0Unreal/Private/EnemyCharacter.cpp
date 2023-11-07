@@ -42,9 +42,10 @@ void AEnemyCharacter::TakeDamage(float distance, float damage, FVector sourcePos
 	if (EnemyState == EEnemyState::Dead) {
 		return;
 	}
+	//damage = damage * ((1/distance) * 1000);
 	currentHealth -= damage;
 	NotifyHealthBarWidget();
-	NotifyDamageEnemy();
+	NotifyDamageEnemy(damage);
 	LaunchCharacter((GetActorLocation()-sourcePos) * launchForce,false, false);
 	if (currentHealth <= 0) {
 		EnemyState = EEnemyState::Dead;

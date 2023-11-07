@@ -31,7 +31,7 @@ protected:
 	void NotifyHealthBarWidget();
 
 	UFUNCTION(BlueprintImplementableEvent)
-	void NotifyDamageEnemy();
+	void NotifyDamageEnemy(float Damage);
 
 	UFUNCTION(BlueprintImplementableEvent)
 	void ActivateEnemy();
