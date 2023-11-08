@@ -132,11 +132,8 @@ void AMyCharacter::InteractPressed() {
 			}
 		}
 	}
-	if (trainPtr->IsOverlappingLeverBox(GetActorLocation(), ATrain::LeverType::startLever) && !Carrying) {
-		trainPtr->StartTrain();
-	}
-	if (trainPtr->IsOverlappingLeverBox(GetActorLocation(), ATrain::LeverType::stopLever) && !Carrying) {
-		trainPtr->StopTrain();
+	if (trainPtr->IsOverlappingLeverBox(GetActorLocation()) && !Carrying) {
+		trainPtr->ToggleTrainState();
 	}
 	if (Carrying) {
 		if (carriedObject != NULL ) {
@@ -245,7 +242,8 @@ void AMyCharacter::Ray()
 {
 	FVector start = GetActorLocation();
 
-	FVector forward = UKismetMathLibrary::RandomUnitVectorInConeInDegrees(characterMesh->GetRightVector(), 0.8);
+	//FVector forward = UKismetMathLibrary::RandomUnitVectorInConeInDegrees(characterMesh->GetRightVector(), 0.8);
+	FVector forward = characterMesh->GetRightVector();
 	forward.Z = 0;
 
 	start = FVector(start.X + (forward.X * RayOffset), start.Y + (forward.Y * RayOffset), start.Z + (forward.Z * RayOffset));

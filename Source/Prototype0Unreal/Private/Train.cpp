@@ -99,11 +99,7 @@ void ATrain::BeginPlay()
 			}
 			if (BoxCollisionComponent && BoxCollisionComponent->ComponentHasTag("startBox"))
 			{
-				startBox = BoxCollisionComponent;
-			}
-			if (BoxCollisionComponent && BoxCollisionComponent->ComponentHasTag("stopBox"))
-			{
-				stopBox = BoxCollisionComponent;
+				leverBox = BoxCollisionComponent;
 			}
 		}
 		if (Component->IsA(UStaticMeshComponent::StaticClass())) {
@@ -135,6 +131,13 @@ void ATrain::Tick(float DeltaTime)
 	if (currentLocation.Y >= targetYPos) {
 		GetWorld()->GetSubsystem<UGameManagerWSS>()->SpawnNewChunk();
 	}
+
+	if (!HasFuel() || leverState == ELeverState::stop) {
+		currentState = ETrainState::decelerating;
+	}
+	if (leverState == ELeverState::move && HasFuel()) {
+		currentState = ETrainState::accelerating;
+	}
 	//DrawDebugBox(GetWorld(), fuelDeposit->GetComponentLocation(), fuelDeposit->GetScaledBoxExtent(), FColor::Orange, false, -1.0f, 0U, 10.0f);
 	//DrawDebugBox(GetWorld(), startBox->GetComponentLocation(), startBox->GetScaledBoxExtent(), FColor::Green, false, -1.0f, 0U, 10.0f);
 	//DrawDebugBox(GetWorld(), stopBox->GetComponentLocation(), stopBox->GetScaledBoxExtent(), FColor::Red, false, -1.0f, 0U, 10.0f);
@@ -148,22 +151,25 @@ bool ATrain::IsOverlappingFuelBox(FVector actorPos) {
 	return false;
 }
 
-bool ATrain::IsOverlappingLeverBox(FVector actorPos, LeverType type) {
-	switch (type) {
-	case LeverType::startLever:
-		if (UKismetMathLibrary::IsPointInBox(actorPos, startBox->GetComponentLocation(), startBox->GetScaledBoxExtent())) {
-			return true;
-		}
-		break;
-	case LeverType::stopLever:
-		if (UKismetMathLibrary::IsPointInBox(actorPos, stopBox->GetComponentLocation(), stopBox->GetScaledBoxExtent())) {
-			return true;
-		}
-		break;
-	default:break;
+bool ATrain::IsOverlappingLeverBox(FVector actorPos) {
+	if (UKismetMathLibrary::IsPointInBox(actorPos, leverBox->GetComponentLocation(), leverBox->GetScaledBoxExtent())) {
+		return true;
 	}
 	return false;
 	
+}
+
+void ATrain::ToggleTrainState()
+{
+	switch (leverState) {
+	case ELeverState::stop:
+		leverState = ELeverState::move;
+		break;
+	case ELeverState::move:
+		leverState = ELeverState::stop;
+		break;
+	}
+	LeverStateChanged();
 }
 
 bool ATrain::AddFuel() {

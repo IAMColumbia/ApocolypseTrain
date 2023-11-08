@@ -12,6 +12,9 @@ enum class ETrainState : uint8 {
 	stopped UMETA(DIsplayName = "Stopped"), accelerating UMETA(DIsplayName = "Accelerating"), decelerating UMETA(DIsplayName = "Decelerating"), reversing UMETA(DisplayName="Reversing")
 };
 
+UENUM()
+enum class ELeverState : uint8 { move UMETA(DisplayName="Move"), stop UMETA(DisplayName="Stop") };
+
 UCLASS()
 class PROTOTYPE0UNREAL_API ATrain : public APawn
 {
@@ -22,7 +25,8 @@ public:
 	// Sets default values for this actor's properties
 	ATrain();
 
-	enum LeverType { stopLever, startLever};
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	ELeverState leverState;
 
 	void StartTrain();
 	void StopTrain();
@@ -113,7 +117,12 @@ public:
 
 	bool IsOverlappingFuelBox(FVector actorPos);
 
-	bool IsOverlappingLeverBox(FVector actorPos, LeverType type);
+	bool IsOverlappingLeverBox(FVector actorPos);
+
+	UFUNCTION(BLueprintImplementableEvent)
+	void LeverStateChanged();
+
+	void ToggleTrainState();
 
 	UFUNCTION(BlueprintCallable)
 	bool AddFuel();
@@ -126,8 +135,7 @@ public:
 	float GetFrontBound();
 
 	UBoxComponent* fuelDeposit;
-	UBoxComponent* startBox;
-	UBoxComponent* stopBox;
+	UBoxComponent* leverBox;
 	UBoxComponent* plow;
 
 	UStaticMeshComponent* startLeverMesh;
