@@ -5,7 +5,6 @@
 #include "GameManagerWSS.h"
 #include <Kismet/KismetMathLibrary.h>
 #include "MyCharacter.h"
-#include "Components/CapsuleComponent.h"
 
 // Sets default values
 AEnemyCharacter::AEnemyCharacter()
@@ -21,18 +20,6 @@ void AEnemyCharacter::BeginPlay()
 	Super::BeginPlay();
 	currentHealth = MaxHealth;
 	NotifyHealthBarWidget();
-
-
-	TSet<UActorComponent*> components = GetComponents();
-	for (UActorComponent* component : components) {
-		if (component->IsA(UCapsuleComponent::StaticClass())) {
-			UCapsuleComponent* capsule = Cast<UCapsuleComponent>(component);
-			if (capsule && capsule->ComponentHasTag("Capsule"))
-			{
-				enemyHeight = capsule->GetScaledCapsuleHalfHeight();
-			}
-		}
-	}
 }
 
 // Called every frame

@@ -52,9 +52,6 @@ public:
 	float AttackRange;
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Combat")
 	bool isAttacking;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Spawning")
-	float enemyHeight;
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 

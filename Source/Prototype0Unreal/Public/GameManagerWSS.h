@@ -32,7 +32,8 @@ public:
 	float GetNextTargetLocation();
 	void SpawnNewChunk();
 
-	FVector GetRandomLocationInChunk();
+	UFUNCTION(BlueprintCallable)
+	FVector GetRandomLocationInChunk(float zoffset);
 
 	FVector GetRandomLocationBehindTrain();
 
@@ -48,7 +49,5 @@ public:
 
 protected:
 	virtual void Initialize(FSubsystemCollectionBase& Collection) override;
-
-
 	
 };
