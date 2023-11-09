@@ -8,6 +8,7 @@
 #include "StatUpgrade.generated.h"
 
 enum class EUpgradeType : uint8;
+class AMyCharacter;
 
 UCLASS()
 class PROTOTYPE0UNREAL_API AStatUpgrade : public AInteractableActor
@@ -22,7 +23,9 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-	bool wasInteracted;
+	virtual void CheckForInteractPressed() override;
+
+	virtual void OnInteract(AMyCharacter* player) override;
 
 	//FText getUpgradeText(float value, EUpgradeType type);
 
@@ -30,9 +33,23 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	virtual void OnInteract(AMyCharacter* player);
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	float OpenPercent;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	float OpenRate;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	float OpenCompletePercent;
+
 
 	UFUNCTION(BlueprintImplementableEvent)
 	void Interacted(const FText &textToDisplay, FVector color);
 	
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	FVector ProgressColor;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FVector DefaultColor;
+
+	AMyCharacter* activePlayer;
+
 };

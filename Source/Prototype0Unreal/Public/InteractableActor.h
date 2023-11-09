@@ -35,9 +35,11 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-	void CheckForInteractPressed();
+	virtual void CheckForInteractPressed();
 
 	virtual void OnInteract(AMyCharacter* player);
+
+	bool wasInteracted;
 
 public:	
 	// Called every frame

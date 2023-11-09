@@ -32,6 +32,47 @@ void AStatUpgrade::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	if (!wasInteracted) {
+
+	}
+	if (overlappingPlayers.Num() <= 0 && OpenPercent > 0) {
+		OpenPercent -= OpenRate;
+	}
+
+}
+
+void AStatUpgrade::CheckForInteractPressed() {
+	if (wasInteracted) {
+		return;
+	}
+	if (activePlayer != NULL) {
+		if (activePlayer->Interacted) {
+			if (OpenPercent < OpenCompletePercent) {
+				OpenPercent += OpenRate;
+			}
+			if (OpenPercent >= OpenCompletePercent) {
+				OnInteract(activePlayer);
+				wasInteracted = true;
+			}
+		}
+		if (!activePlayer->Interacted) {
+			activePlayer = NULL;
+			ProgressColor = DefaultColor;
+		}
+		if (!overlappingPlayers.Contains(activePlayer)) {
+			activePlayer = NULL;
+		}
+	}
+	else {
+		for (AMyCharacter* player : overlappingPlayers) {
+			if (player->Interacted) {
+				activePlayer = player;
+				ProgressColor = activePlayer->PlayerColor;
+			}
+			
+		}
+	}
+	
 }
 
 void AStatUpgrade::OnInteract(AMyCharacter* player)
