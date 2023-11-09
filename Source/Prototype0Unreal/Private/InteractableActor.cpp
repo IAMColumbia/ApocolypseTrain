@@ -41,11 +41,18 @@ void AInteractableActor::BeginPlay()
 void AInteractableActor::CheckForInteractPressed()
 {
 	for(AMyCharacter * player : overlappingPlayers) {
-		if (player->Interacted && !player->Carrying) {
-			player->PickupItem(this);
-			state = EInteractableState::Carried;
-			return;
+		if (player->Interacted) {
+			OnInteract(player);
 		}
+	}
+}
+
+void AInteractableActor::OnInteract(AMyCharacter* player)
+{
+	if (!player->Carrying) {
+		player->PickupItem(this);
+		state = EInteractableState::Carried;
+		return;
 	}
 }
 

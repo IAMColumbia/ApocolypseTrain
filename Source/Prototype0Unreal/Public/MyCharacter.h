@@ -6,6 +6,10 @@
 #include "GameFramework/Character.h"
 #include "MyCharacter.generated.h"
 
+UENUM(BlueprintType)
+enum class EUpgradeType : uint8{damage UMETA(DisplayName="Damage"), health UMETA(DisplayName = "Health"), speed UMETA(DisplayName = "Speed")
+};
+
 UCLASS()
 class PROTOTYPE0UNREAL_API AMyCharacter : public ACharacter
 {
@@ -44,6 +48,15 @@ protected:
 	//the rate at which players passivly increase health if below max
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat")
 	float RegenRate;
+
+	//how much is added to players base damage
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Buffs")
+	float DamageBuff;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Buffs")
+	float SpeedBuff;
+
+	float baseHealth;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI")
 	bool CanAddFuel;
@@ -163,6 +176,11 @@ public:
 
 	bool HasFuel();
 
+	UFUNCTION(BlueprintImplementableEvent)
+	void ApplyUpgrade(EUpgradeType upgrade,float amount);
+
+	UFUNCTION(BlueprintCallable)
+	void Heal();
 
 private:
 	UPROPERTY(EditAnywhere, meta=(AllowPrivateAccess="true"))

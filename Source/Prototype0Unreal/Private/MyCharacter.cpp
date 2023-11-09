@@ -61,6 +61,7 @@ void AMyCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	baseHealth = MaxHealth;
 	currentHealth = MaxHealth;
 	NotifyHealthBarWidget();
 	gameManager = GetWorld()->GetSubsystem<UGameManagerWSS>();
@@ -262,7 +263,7 @@ void AMyCharacter::Ray()
 		if (actorHit && hit.GetActor()) {
 			//GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red, hit.GetActor()->GetFName().ToString());
 			if (AEnemyCharacter* enemy = Cast<AEnemyCharacter>(hit.GetActor())) {
-				enemy->TakeDamage(hit.Distance, Damage - FMath::RandRange(0, 3), GetActorLocation(), 2);
+				enemy->TakeDamage(hit.Distance, Damage - FMath::RandRange(0, ((int)(DamageBuff/2)+3)) + DamageBuff, GetActorLocation(), 2);
 			}
 			if (AObstacle* obstacle = Cast<AObstacle>(hit.GetActor())) {
 				obstacle->DamageObstacle(Damage);
@@ -294,6 +295,9 @@ void AMyCharacter::DespawnPlayer()
 		ShootReleased();
 	}
 	NotifyPlayerDied();
+	MaxHealth = baseHealth;
+	DamageBuff = 0;
+	SpeedBuff = 0;
 	currentRespawnTime = TotalRespawnTime;
 	respawnTimerHandle = UKismetSystemLibrary::K2_SetTimer(this, TEXT("UpdateRespawnTimer"), 1, true, 0, 0);
 	trainPtr->StartRespawnTimer(PlayerIndex, currentRespawnTime);
@@ -345,6 +349,9 @@ void AMyCharacter::RegenerateHealth()
 	if (currentHealth > MaxHealth) {
 		currentHealth = MaxHealth;
 	}
+}
+void AMyCharacter::Heal() {
+	currentHealth = MaxHealth;
 }
 
 FVector AMyCharacter::SetPlayerColorVector(int index)

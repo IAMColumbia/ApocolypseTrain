@@ -37,6 +37,8 @@ protected:
 
 	void CheckForInteractPressed();
 
+	virtual void OnInteract(AMyCharacter* player);
+
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
