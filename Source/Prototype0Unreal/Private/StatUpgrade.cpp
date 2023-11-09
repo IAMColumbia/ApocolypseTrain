@@ -35,7 +35,7 @@ void AStatUpgrade::Tick(float DeltaTime)
 	if (!wasInteracted) {
 
 	}
-	if (overlappingPlayers.Num() <= 0 && OpenPercent > 0) {
+	if (activePlayer== NULL && OpenPercent > 0) {
 		OpenPercent -= OpenRate;
 	}
 
