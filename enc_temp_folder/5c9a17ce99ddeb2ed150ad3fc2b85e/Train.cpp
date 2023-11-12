@@ -51,6 +51,7 @@ void ATrain::MovementUpdate()
 				}
 				else {
 					isReversing = false;
+					currentTrainSpeed = 0;
 				}
 			}
 			else {

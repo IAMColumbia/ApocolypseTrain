@@ -91,7 +91,7 @@ void UGameManagerWSS::OnTrainAccelerating()
 
 void UGameManagerWSS::OnTrainStopped()
 {
-	if (chunkSpawner->TotalChunksSpawned > 1) {
+	if (chunkSpawner->TotalChunksSpawned > 2) {
 		enemySpawner->StartRearSpawner();
 	}
 }
