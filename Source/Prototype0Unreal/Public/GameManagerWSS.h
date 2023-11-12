@@ -47,6 +47,9 @@ public:
 	void OnTrainAccelerating();
 	void OnTrainStopped();
 
+	UFUNCTION(BlueprintCallable)
+	bool TrainFuelFull();
+
 protected:
 	virtual void Initialize(FSubsystemCollectionBase& Collection) override;
 	

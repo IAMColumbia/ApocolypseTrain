@@ -9,7 +9,7 @@
 
 UENUM()
 enum class ETrainState : uint8 {
-	stopped UMETA(DIsplayName = "Stopped"), accelerating UMETA(DIsplayName = "Accelerating"), decelerating UMETA(DIsplayName = "Decelerating"), reversing UMETA(DisplayName="Reversing")
+	stopped UMETA(DIsplayName = "Stopped"), accelerating UMETA(DIsplayName = "Accelerating"), decelerating UMETA(DIsplayName = "Decelerating")
 };
 
 UENUM()
@@ -86,21 +86,25 @@ public:
 	UPROPERTY(VisibleAnywhere)
 	int TotalMeters;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Fuel")
 	float Fuel;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Fuel")
+	float CollisionFuelLoss;
+
 	//Maximum fuel that can be in the train at once. this affects max speed
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Fuel")
 	float MaxFuel;
 
 	//how much the integer number fuel is multiplied by to set the speed of the train. this affects speed and max speed.
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Fuel")
 	float SpeedFuelMultiplier;
 
 	//the decceleration rate of the train. how fast does the train burn fuel.
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Fuel")
 	float burnRate;
 
+	bool isReversing;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Spawning")
 	FVector player0RespawnPos;

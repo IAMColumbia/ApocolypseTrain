@@ -12,6 +12,7 @@
 #include "PlayerManagerWSS.h"
 #include "Obstacle.h"
 #include <InteractableActor.h>
+#include "GameFramework/CharacterMovementComponent.h"
 
 // Sets default values
 AMyCharacter::AMyCharacter()
@@ -76,6 +77,7 @@ void AMyCharacter::BeginPlay()
 			}
 		}
 	}
+	canDash = true;
 }
 
 void AMyCharacter::OnPlayerSpawn() {
@@ -120,9 +122,12 @@ void AMyCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 	PlayerInputComponent->BindAction("ShootWeapon", EInputEvent::IE_Released, this, &AMyCharacter::ShootReleased);
 	PlayerInputComponent->BindAction("Interact", EInputEvent::IE_Pressed, this, &AMyCharacter::InteractPressed);
 	PlayerInputComponent->BindAction("Interact", EInputEvent::IE_Released, this, &AMyCharacter::InteractReleased);
+	PlayerInputComponent->BindAction("Dash", EInputEvent::IE_Pressed, this, &AMyCharacter::DashPressed);
 	PlayerInputComponent->BindAxis("MoveForward", this, &AMyCharacter::MoveForward);
 	PlayerInputComponent->BindAxis("MoveRight", this, &AMyCharacter::MoveRight);
 }
+
+
 
 void AMyCharacter::InteractPressed() {
 	Interacted = true;
@@ -181,15 +186,15 @@ void AMyCharacter::setYRot(float AxisValue) {
 }
 
 void AMyCharacter::MoveRight(float AxisValue) {
+	DashDirection.Y = (AxisValue * -1);
 	if (Controller != NULL && AxisValue != 0.0f) {
-
+		
 		//find out which direction is right
 		const FRotator Rotation = Controller->GetControlRotation();
 		const FRotator YawRotation(0, Rotation.Yaw, 0);
 
 		//get right vector
 		const FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
-
 		//add movement in that direction
 		AddMovementInput(Direction, AxisValue);
 	}
@@ -202,6 +207,7 @@ void AMyCharacter::setRotation() {
 }
 
 void AMyCharacter::MoveForward(float AxisValue) {
+	DashDirection.X = (AxisValue * -1);
 	if ((Controller != NULL) && AxisValue != 0.0f) {
 		//find out which direction is forward
 		const FRotator Rotation = Controller->GetControlRotation();
@@ -233,7 +239,35 @@ void AMyCharacter::ShootReleased() {
 	GetWorld()->GetTimerManager().ClearTimer(shootTimerHandle);
 }
 
+void AMyCharacter::DashPressed()
+{
+	if (canDash) {
+		canDash = false;
+		isDashing = true;
+		//stop player from shooting while dashing
+		if (IsShooting) {
+			ShootReleased();
+		}
+		GetWorld()->GetTimerManager().SetTimer(dashCooldownTimerHandle, this, &AMyCharacter::ResetDash,DashCooldown, false);
+		GetWorld()->GetTimerManager().SetTimer(dashTimerHandle, this, &AMyCharacter::FinishDash, KnockBackDuration, false);
+		//GetCharacterMovement()->MaxWalkSpeed = DashSpeed;
+		if (DashDirection.X == 0 && DashDirection.Y == 0) {
+			NotifyOnDash(characterMesh->GetRightVector());
+		}
+		else {
+			NotifyOnDash(DashDirection);
+		}
+	}
+}
+void AMyCharacter::FinishDash() {
+	isDashing = false;
+	GetWorld()->GetTimerManager().ClearTimer(dashTimerHandle);
+}
 
+void AMyCharacter::ResetDash() {
+	canDash = true;
+	GetWorld()->GetTimerManager().ClearTimer(dashCooldownTimerHandle);
+}
 
 void AMyCharacter::ShootProjectile() {
 	Ray();

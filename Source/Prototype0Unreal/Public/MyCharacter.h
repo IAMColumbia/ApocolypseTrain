@@ -61,6 +61,31 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI")
 	bool CanAddFuel;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Dash")
+	float DashCooldown;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Dash")
+	float DashDistance;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Dash")
+	float KnockBackDuration;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Dash")
+	bool isDashing;
+
+	bool canDash;
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void NotifyOnDash(FVector direction);
+
+	//UFUNCTION();
+	void ResetDash();
+	void FinishDash();
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	FVector DashDirection;
+
+	FTimerHandle dashCooldownTimerHandle;
+	FTimerHandle dashTimerHandle;
+
 	FTimerHandle shootTimerHandle;
 	FTimerHandle respawnTimerHandle;
 
@@ -90,7 +115,7 @@ protected:
 	void ShootPressed();
 	void ShootReleased();
 
-	
+	void DashPressed();
 
 	void InteractPressed();
 	void InteractReleased();
@@ -112,6 +137,9 @@ protected:
 
 	UFUNCTION(BlueprintImplementableEvent)
 	void NotifyPlayerRespawn();
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void SetMovementSpeed(float speed);
 
 public:	
 

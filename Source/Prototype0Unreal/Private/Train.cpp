@@ -45,21 +45,23 @@ void ATrain::MovementUpdate()
 			BurnFuel();
 			break;
 		case ETrainState::decelerating:
-			if (currentTrainSpeed > 0) {
-				currentTrainSpeed -= DecelerationRate;
+			if (isReversing) {
+				if (currentTrainSpeed < 0) {
+					currentTrainSpeed += DecelerationRate;
+				}
+				else {
+					isReversing = false;
+					currentTrainSpeed = 0;
+				}
 			}
 			else {
-				currentTrainSpeed = 0;
-				SetTrainState(ETrainState::stopped);
-			}
-			break;
-		case ETrainState::reversing:
-			if (currentTrainSpeed < 0) {
-				currentTrainSpeed += DecelerationRate;
-			}
-			else {
-				currentTrainSpeed = 0;
-				SetTrainState(ETrainState::stopped);
+				if (currentTrainSpeed > 0) {
+					currentTrainSpeed -= DecelerationRate;
+				}
+				else {
+					currentTrainSpeed = 0;
+					SetTrainState(ETrainState::stopped);
+				}
 			}
 			break;
 		default:
@@ -132,11 +134,11 @@ void ATrain::Tick(float DeltaTime)
 		GetWorld()->GetSubsystem<UGameManagerWSS>()->SpawnNewChunk();
 	}
 
-	if (!HasFuel() || leverState == ELeverState::stop) {
-		currentState = ETrainState::decelerating;
+	if (!HasFuel() || leverState == ELeverState::stop && currentState == ETrainState::accelerating) {
+		SetTrainState(ETrainState::decelerating);
 	}
-	if (leverState == ELeverState::move && HasFuel()) {
-		currentState = ETrainState::accelerating;
+	if (leverState == ELeverState::move && HasFuel() && currentState != ETrainState::accelerating) {
+		SetTrainState(ETrainState::accelerating);
 	}
 	//DrawDebugBox(GetWorld(), fuelDeposit->GetComponentLocation(), fuelDeposit->GetScaledBoxExtent(), FColor::Orange, false, -1.0f, 0U, 10.0f);
 	//DrawDebugBox(GetWorld(), startBox->GetComponentLocation(), startBox->GetScaledBoxExtent(), FColor::Green, false, -1.0f, 0U, 10.0f);
@@ -233,12 +235,15 @@ void ATrain::OnPlowBeginOverlap(UPrimitiveComponent* OverlappedComp, AActor* Oth
 	}
 	if (OtherActor->Tags.Contains("Obstacle")) {
 		currentTrainSpeed *= -1;
-		SetTrainState(ETrainState::reversing);
+		isReversing = true;
+		//SetTrainState(ETrainState::decelerating);
+		ToggleTrainState();
 		NotifyTrainHitObstacle();
 		if (AObstacle* obstacle = Cast<AObstacle>(OtherActor)) {
 
 			obstacle->DamageObstacle(currentTrainSpeed);
 		}
+		Fuel -= CollisionFuelLoss;
 	}
 }
 
@@ -267,8 +272,6 @@ void ATrain::SetTrainState(ETrainState stateToSet)
 			GetWorld()->GetSubsystem<UGameManagerWSS>()->OnTrainAccelerating();
 			break;
 		case ETrainState::decelerating:
-			break;
-		case ETrainState::reversing:
 			break;
 	}
 	currentState = stateToSet;

@@ -96,4 +96,14 @@ void UGameManagerWSS::OnTrainStopped()
 	}
 }
 
+bool UGameManagerWSS::TrainFuelFull()
+{
+	if (train != NULL) {
+		if (train->Fuel >= train->MaxFuel) {
+			return true;
+		}
+	}
+	return false;
+}
+
 

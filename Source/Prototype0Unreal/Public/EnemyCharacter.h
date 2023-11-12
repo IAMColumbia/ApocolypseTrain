@@ -55,6 +55,18 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Spawning")
 	float enemyHeight;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Knockback")
+	bool WasKnocked;
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Knockback")
+	FVector KnockedDirection;
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category="Knockback")
+	float KnockSpeed;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Knockback")
+	float KnockbackDeceleration;
+
+	void ApplyKnockback();
+
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
