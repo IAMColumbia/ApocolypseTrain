@@ -39,7 +39,8 @@ public:
 	float OpenRate;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	float OpenCompletePercent;
-
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	float UpgradeAmount;
 
 	UFUNCTION(BlueprintImplementableEvent)
 	void Interacted(const FText &textToDisplay, FVector color);

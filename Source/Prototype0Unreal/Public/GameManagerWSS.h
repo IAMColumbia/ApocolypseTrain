@@ -50,6 +50,8 @@ public:
 	UFUNCTION(BlueprintCallable)
 	bool TrainFuelFull();
 
+	int TotalChunksSpawned();
+
 protected:
 	virtual void Initialize(FSubsystemCollectionBase& Collection) override;
 	

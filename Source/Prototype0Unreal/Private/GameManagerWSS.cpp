@@ -106,4 +106,12 @@ bool UGameManagerWSS::TrainFuelFull()
 	return false;
 }
 
+int UGameManagerWSS::TotalChunksSpawned()
+{
+	if (chunkSpawner == NULL) {
+		return 0;
+	}
+	return chunkSpawner->TotalChunksSpawned;
+}
+
 

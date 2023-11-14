@@ -3,6 +3,7 @@
 
 #include "StatUpgrade.h"
 #include "MyCharacter.h"
+#include "GameManagerWSS.h"
 
 
 
@@ -83,7 +84,8 @@ void AStatUpgrade::OnInteract(AMyCharacter* player)
 	wasInteracted = true;
 	int random = (int)FMath::FRandRange(0, (float)StaticEnum<EUpgradeType>()->GetMaxEnumValue());
 	EUpgradeType upgrade = (EUpgradeType)random;
-	float amount = 10;
+	float amount = UpgradeAmount;
+	amount += GetWorld()->GetSubsystem<UGameManagerWSS>()->TotalChunksSpawned();
 	switch (random) {
 	case 0:
 		player->ApplyUpgrade(upgrade, amount);
