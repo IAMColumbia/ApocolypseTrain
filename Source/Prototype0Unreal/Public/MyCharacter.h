@@ -47,10 +47,10 @@ protected:
 	void setXRot(float AxisValue);
 	void setYRot(float AxisValue);
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Weapon")
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Weapon")
 	class AWeapon* CurrentWeapon;
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Weapon")
-	TSubclassOf<AActor> DefaultWeapon;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Weapon")
+	TSubclassOf<AWeapon> DefaultWeapon;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category= "Combat")
 	bool IsShooting;
