@@ -6,6 +6,8 @@
 #include "GameFramework/Character.h"
 #include "MyCharacter.generated.h"
 
+class UPlayerWeapon;
+
 UENUM(BlueprintType)
 enum class EUpgradeType : uint8{damage UMETA(DisplayName="Damage"), health UMETA(DisplayName = "Health"), speed UMETA(DisplayName = "Speed")
 };
@@ -23,6 +25,19 @@ public:
 
 	bool IsFacingWall();
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Combat")
+	float RayOffset = 80;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Combat")
+	float RayLength = 1800;
+	UFUNCTION(BlueprintImplementableEvent)
+	void NotifyFiredShot(FVector direction);
+
+	//how much is added to players base damage
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Buffs")
+	float DamageBuff;
+
+	void AttachWeapon();
+
 protected:
 	class UGameManagerWSS* gameManager;
 	class ATrain* trainPtr;
@@ -32,8 +47,10 @@ protected:
 	void setXRot(float AxisValue);
 	void setYRot(float AxisValue);
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Components")
-	class UWeapon* PlayerWeapon;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Weapon")
+	class AWeapon* CurrentWeapon;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Weapon")
+	TSubclassOf<AActor> DefaultWeapon;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category= "Combat")
 	bool IsShooting;
@@ -49,9 +66,7 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat")
 	float RegenRate;
 
-	//how much is added to players base damage
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Buffs")
-	float DamageBuff;
+	
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Buffs")
 	float SpeedBuff;
@@ -106,10 +121,7 @@ protected:
 
 	void setRotation();
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Combat")
-	float RayOffset = 80;
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Combat")
-	float RayLength = 1800;
+	
 	void Ray();
 
 	void ShootPressed();
@@ -126,8 +138,7 @@ protected:
 	UFUNCTION(BlueprintImplementableEvent)
 	void NotifyStartedShooting();
 
-	UFUNCTION(BlueprintImplementableEvent)
-	void NotifyFiredShot(FVector direction);
+	
 
 	UFUNCTION(BlueprintImplementableEvent)
 	void NotifyStoppedShooting();

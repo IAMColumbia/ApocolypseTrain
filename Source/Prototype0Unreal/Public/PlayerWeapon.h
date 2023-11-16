@@ -4,25 +4,32 @@
 
 #include "CoreMinimal.h"
 #include "Components/SceneComponent.h"
-#include "WeaponSceneComponent.generated.h"
+#include "PlayerWeapon.generated.h"
 
+class AMyCharcater;
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
-class PROTOTYPE0UNREAL_API UWeaponSceneComponent : public USceneComponent
+class PROTOTYPE0UNREAL_API UPlayerWeapon : public USceneComponent
 {
 	GENERATED_BODY()
 
 public:	
 	// Sets default values for this component's properties
-	UWeaponSceneComponent();
+	UPlayerWeapon();
+
+	class AMyCharacter* OwnerCharacter;
 
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
 
+	void Ray();
+
 public:	
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
-		
+	void Attack(FColor color);
+
+	
 };

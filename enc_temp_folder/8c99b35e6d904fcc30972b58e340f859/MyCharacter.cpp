@@ -184,7 +184,6 @@ void AMyCharacter::AttachWeapon()
 {
 	FAttachmentTransformRules rules = FAttachmentTransformRules(EAttachmentRule::SnapToTarget, true);
 	CurrentWeapon->SetActorLocation(characterMesh->GetSocketTransform("WeaponSocket").GetLocation());
-	//CurrentWeapon->AttachToActor(this, rules);
 	CurrentWeapon->AttachToComponent(characterMesh, rules, "WeaponSocket");
 }
 
@@ -292,7 +291,7 @@ void AMyCharacter::ResetDash() {
 }
 
 void AMyCharacter::ShootProjectile() {
-	Ray();
+	
 }
 
 void AMyCharacter::Ray()
@@ -315,7 +314,7 @@ void AMyCharacter::Ray()
 		QueryParams.AddIgnoredActor(this);
 		bool actorHit = GetWorld()->LineTraceSingleByChannel(hit, start, end, ECC_Pawn, QueryParams, FCollisionResponseParams());
 		NotifyFiredShot(GetActorForwardVector());
-		DrawDebugLine(GetWorld(), start, end, GetPlayerColor(), false, 0.15f, 0.f, 10.f);
+		//DrawDebugLine(GetWorld(), start, end, FColor::Red, false, 0.15f, 0.f, 10.f);
 		if (actorHit && hit.GetActor()) {
 			//GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red, hit.GetActor()->GetFName().ToString());
 			if (AEnemyCharacter* enemy = Cast<AEnemyCharacter>(hit.GetActor())) {
