@@ -33,16 +33,19 @@ void AWeapon::BeginPlay()
 void AWeapon::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
+	UpdateReloadTime();
 }
 
 void AWeapon::Ray()
 {
+	if (BulletSpawn == NULL) {
+		return;
+	}
 	FVector start = GetActorLocation();
 
 	//FVector forward = UKismetMathLibrary::RandomUnitVectorInConeInDegrees(characterMesh->GetRightVector(), 0.8);
-	FVector forward = OwnerCharacter->characterMesh->GetRightVector();
-	//FVector forward = BulletSpawn->GetForwardVector();
+	//FVector forward = OwnerCharacter->characterMesh->GetRightVector();
+	FVector forward = BulletSpawn->GetForwardVector();
 	forward.Z = 0;
 
 	start = FVector(start.X + (forward.X * RayOffset), start.Y + (forward.Y * RayOffset), start.Z + (forward.Z * RayOffset));
@@ -76,6 +79,22 @@ void AWeapon::Ray()
 int AWeapon::OwnerPlayerIndex()
 {
 	return OwnerCharacter->PlayerIndex;
+}
+
+void AWeapon::UpdateReloadTime()
+{
+	if (currentReloadTime < ReloadTime) {
+		currentReloadTime++;
+	}
+	OwnerCharacter->NotifyReloadPercent(currentReloadTime, ReloadTime);
+}
+
+bool AWeapon::isReloaded()
+{
+	if (currentReloadTime < ReloadTime) {
+		return false;
+	}
+	return true;
 }
 
 void AWeapon::Attack()

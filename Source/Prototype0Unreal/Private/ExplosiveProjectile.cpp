@@ -2,6 +2,7 @@
 
 
 #include "ExplosiveProjectile.h"
+#include "Components/SphereComponent.h"
 
 // Sets default values
 AExplosiveProjectile::AExplosiveProjectile()
@@ -24,4 +25,13 @@ void AExplosiveProjectile::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 
 }
+
+void AExplosiveProjectile::Explode()
+{
+	float radius = 200;
+	USphereComponent* explosionHitCheck = Cast<USphereComponent>(GetWorld()->SpawnActorAbsolute(USphereComponent::StaticClass(), GetActorTransform()));
+	explosionHitCheck->InitSphereRadius(radius);
+}
+
+
 

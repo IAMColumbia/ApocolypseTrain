@@ -23,4 +23,12 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+	UFUNCTION(BlueprintImplementableEvent)
+	void Launch(FVector Direction);
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float Velocity;
+
+	UFUNCTION(BlueprintCallable)
+	void Explode();
 };

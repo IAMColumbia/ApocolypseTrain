@@ -58,4 +58,12 @@ public:
 
 	UFUNCTION(BlueprintCallable, BlueprintPure)
 	int OwnerPlayerIndex();
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Reload")
+	float ReloadTime;
+	float currentReloadTime;
+
+	void UpdateReloadTime();
+
+	bool isReloaded();
 };

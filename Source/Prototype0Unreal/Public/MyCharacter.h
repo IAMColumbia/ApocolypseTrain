@@ -221,6 +221,9 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void Heal();
 
+	UFUNCTION(BlueprintImplementableEvent)
+	void NotifyReloadPercent(float currentTime, float MaxTime);
+
 private:
 	UPROPERTY(EditAnywhere, meta=(AllowPrivateAccess="true"))
 	TSubclassOf<AActor> ActorToSpawn;
