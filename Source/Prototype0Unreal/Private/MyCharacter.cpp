@@ -41,6 +41,7 @@ bool AMyCharacter::IsFacingWall()
 		FCollisionQueryParams QueryParams;
 		QueryParams.AddIgnoredActor(this);
 		QueryParams.AddIgnoredActor(carriedObject);
+		QueryParams.AddIgnoredActor(CurrentWeapon);
 		bool actorHit = GetWorld()->LineTraceSingleByChannel(hit, start, end, ECC_WorldDynamic,QueryParams, FCollisionResponseParams());
 		//DrawDebugLine(GetWorld(), start, end, FColor::Red, false, 0.15f, 0.f, 10.f);
 		if (actorHit && hit.GetActor()) {
@@ -151,10 +152,10 @@ void AMyCharacter::InteractPressed() {
 	if (Carrying) {
 		if (carriedObject != NULL ) {
 			if (IsFacingWall()) {
-				carriedObject->DropObject(characterMesh->GetRightVector()*-1);
+				carriedObject->DropObject(characterMesh->GetRightVector());
 			}
 			else {
-				carriedObject->DropObject(characterMesh->GetRightVector());
+				carriedObject->DropObject(characterMesh->GetRightVector()*-1);
 			}
 		}
 		Carrying = false;
@@ -219,7 +220,7 @@ void AMyCharacter::MoveRight(float AxisValue) {
 void AMyCharacter::setRotation() {
 	FVector dir = FVector(xRot, yRot, 0); //UKismetMathLibrary::MakeVector(xRot, yRot, 0);
 	FRotator rotation = UKismetMathLibrary::MakeRotationFromAxes(dir, FVector::Zero(), FVector::Zero());
-	characterMesh->SetWorldRotation(rotation);
+	characterMesh->SetWorldRotation(rotation + FRotator(0, 200,0));
 }
 
 void AMyCharacter::MoveForward(float AxisValue) {

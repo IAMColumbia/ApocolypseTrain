@@ -21,13 +21,7 @@ void AExplosiveLauncher::Tick(float DeltaTime)
 
 void AExplosiveLauncher::ShootProjectile()
 {
-	if (!isReloaded()) {
-		return;
-	}
-	currentReloadTime = 0;
-	//FVector LaunchDirection = OwnerCharacter->GetActorForwardVector();
 	FVector LaunchDirection = BulletSpawn->GetForwardVector();
-	AExplosiveProjectile* a = Cast<AExplosiveProjectile>(GetWorld()->SpawnActorAbsolute(ExplosiveProjectile,BulletSpawn->GetComponentTransform()));
+	AExplosiveProjectile* a = Cast<AExplosiveProjectile>(GetWorld()->SpawnActorAbsolute(ExplosiveProjectile, BulletSpawn->GetComponentTransform()));
 	a->Launch(LaunchDirection);
-	GEngine->AddOnScreenDebugMessage(-1, 3, OwnerCharacter->GetPlayerColor(), TEXT("SHOOTING LAUNCHER"));
 }

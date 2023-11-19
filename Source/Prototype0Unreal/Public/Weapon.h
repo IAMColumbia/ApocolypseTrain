@@ -21,12 +21,14 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 	FTimerHandle shootTimerHandle;
+	FTimerHandle reloadTimerHandle;
 
 	virtual void ShootProjectile();
 
-	USceneComponent* BulletSpawn;
+	
 
 public:	
+	USceneComponent* BulletSpawn;
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
@@ -46,24 +48,28 @@ public:
 	float FireRate;
 
 	UFUNCTION(BlueprintImplementableEvent)
-	void NotifyFiredShot(FVector direction);
-
-	UFUNCTION(BlueprintImplementableEvent)
-	void NotifyAttackStart();
-
-	UFUNCTION(BlueprintImplementableEvent)
-	void NotifyAttackEnd();
+	void NotifyFiredShot();
 
 	void Ray();
 
 	UFUNCTION(BlueprintCallable, BlueprintPure)
 	int OwnerPlayerIndex();
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Reload")
-	float ReloadTime;
 	float currentReloadTime;
 
 	void UpdateReloadTime();
+	void CheckForAttack();
 
-	bool isReloaded();
+	bool Reloaded;
+	bool Attacking;
+	void Reload();
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Projectile")
+	TSubclassOf<class AProjectile> ProjectileType;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Projectile")
+	int PoolCount;
+
+	TQueue<class AProjectile*> objectPool;
+	void CreateObjects();
+	void SpawnProjectile();
 };

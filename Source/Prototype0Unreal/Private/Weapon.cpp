@@ -5,6 +5,7 @@
 #include "MyCharacter.h"
 #include "EnemyCharacter.h"
 #include "Obstacle.h"
+#include "Projectile.h"
 
 // Sets default values
 AWeapon::AWeapon()
@@ -27,6 +28,8 @@ void AWeapon::BeginPlay()
 			}
 		}
 	}
+	Reload();
+	CreateObjects();
 }
 
 // Called every frame
@@ -34,6 +37,7 @@ void AWeapon::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 	UpdateReloadTime();
+	CheckForAttack();
 }
 
 void AWeapon::Ray()
@@ -83,34 +87,61 @@ int AWeapon::OwnerPlayerIndex()
 
 void AWeapon::UpdateReloadTime()
 {
-	if (currentReloadTime < ReloadTime) {
-		currentReloadTime++;
-	}
-	OwnerCharacter->NotifyReloadPercent(currentReloadTime, ReloadTime);
+	currentReloadTime = GetWorld()->GetTimerManager().GetTimerElapsed(reloadTimerHandle);
+	OwnerCharacter->NotifyReloadPercent(currentReloadTime, FireRate);
 }
 
-bool AWeapon::isReloaded()
+void AWeapon::CheckForAttack()
 {
-	if (currentReloadTime < ReloadTime) {
-		return false;
+	if (Attacking && Reloaded) {
+		if (Reloaded) {
+			ShootProjectile();
+			Reloaded = false;
+			GetWorld()->GetTimerManager().SetTimer(reloadTimerHandle, this, &AWeapon::Reload, FireRate, false);
+		}
 	}
-	return true;
 }
+
+void AWeapon::Reload()
+{
+	Reloaded = true;
+}
+
+void AWeapon::CreateObjects()
+{
+	for (int i = 0; i < PoolCount; i++) {
+		AProjectile* p = Cast<AProjectile>(GetWorld()->SpawnActor(ProjectileType));
+		if (p != NULL) {
+			p->InitializeProjectile(this);
+			p->Despawn();
+			objectPool.Enqueue(p);
+		}
+	}
+}
+
+void AWeapon::SpawnProjectile()
+{
+	if (!objectPool.IsEmpty()) {
+		AProjectile* p;
+		objectPool.Dequeue(p);
+		p->Spawn();
+		objectPool.Enqueue(p);
+	}
+}
+
 
 void AWeapon::Attack()
 {
-	NotifyAttackStart();
-	ShootProjectile();
-	GetWorld()->GetTimerManager().SetTimer(shootTimerHandle, this, &AWeapon::ShootProjectile, FireRate, true);
+	Attacking = true;
 }
 
 void AWeapon::ShootProjectile() {
+	SpawnProjectile();
 	Ray();
 }
 
 void AWeapon::EndAttack()
 {
-	NotifyAttackEnd();
-	GetWorld()->GetTimerManager().ClearTimer(shootTimerHandle);
+	Attacking = false;
 }
 
