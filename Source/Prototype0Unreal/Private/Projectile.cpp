@@ -11,20 +11,23 @@ void AProjectile::Tick(float DeltaTime)
 }
 
 void AProjectile::Spawn() {
-	SetActorLocation(Owner->BulletSpawn->GetComponentLocation());
-	SetActorRotation(Owner->BulletSpawn->GetComponentRotation());
+	SetActorRotation(spawnPoint->GetComponentRotation());
+	SetActorLocation(spawnPoint->GetComponentLocation());
 	APooledActor::Spawn();
 	GetWorld()->GetTimerManager().SetTimer(lifetimeHandle, this, &APooledActor::Despawn, Lifetime, false);
+	Active = true;
 }
 
 void AProjectile::Despawn()
 {
+	Active = false;
 	APooledActor::Despawn();
 }
 
 void AProjectile::InitializeProjectile(AWeapon* owner)
 {
 	Owner = owner;
+	spawnPoint = Owner->BulletSpawn;
 }
 
 void AProjectile::MoveProjectile()

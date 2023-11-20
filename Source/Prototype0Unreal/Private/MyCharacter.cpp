@@ -189,6 +189,18 @@ void AMyCharacter::AttachWeapon()
 	CurrentWeapon->AttachToComponent(characterMesh, rules, "WeaponSocket");
 }
 
+TSubclassOf<AWeapon> AMyCharacter::PickupWeapon(TSubclassOf<AWeapon> weaponToPickup)
+{
+	TSubclassOf<AWeapon> droppedWeapon = CurrentWeapon->GetClass();
+	if (!CurrentWeapon->IsA(weaponToPickup)) {
+		CurrentWeapon->Destroy();
+		CurrentWeapon = Cast<AWeapon>(GetWorld()->SpawnActor(weaponToPickup));
+		CurrentWeapon->OwnerCharacter = this;
+		AttachWeapon();
+	}
+	return droppedWeapon;
+}
+
 void AMyCharacter::setXRot(float AxisValue) {
 	if (AxisValue != 0.0f) {
 		xRot = AxisValue * -1;

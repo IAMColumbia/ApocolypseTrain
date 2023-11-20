@@ -7,6 +7,7 @@
 #include "MyCharacter.generated.h"
 
 class UPlayerWeapon;
+class AWeapon;
 
 UENUM(BlueprintType)
 enum class EUpgradeType : uint8{damage UMETA(DisplayName="Damage"), health UMETA(DisplayName = "Health"), speed UMETA(DisplayName = "Speed")
@@ -36,9 +37,11 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Buffs")
 	float DamageBuff;
 
-	void AttachWeapon();
+	TSubclassOf<AWeapon> PickupWeapon(TSubclassOf<AWeapon> weaponToPickup);
 
 protected:
+	void AttachWeapon();
+
 	class UGameManagerWSS* gameManager;
 	class ATrain* trainPtr;
 

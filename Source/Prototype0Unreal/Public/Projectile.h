@@ -27,9 +27,12 @@ public:
 	float Lifetime;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	float ProjectileSpeed;
+	
+	bool Active;
 
 protected:
 	class AWeapon* Owner;
+	USceneComponent* spawnPoint;
 	FTimerHandle lifetimeHandle;
 
 	void MoveProjectile();
