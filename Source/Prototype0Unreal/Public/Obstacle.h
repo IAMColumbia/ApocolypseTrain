@@ -27,6 +27,7 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+	UFUNCTION(BlueprintCallable)
 	void DamageObstacle(float damage);
 
 	UFUNCTION(BlueprintImplementableEvent)

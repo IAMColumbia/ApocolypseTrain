@@ -56,11 +56,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Spawning")
 	float enemyHeight;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Knockback")
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Knockback")
 	bool WasKnocked;
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Knockback")
 	FVector KnockedDirection;
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category="Knockback")
 	float KnockSpeed;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Knockback")
 	float KnockbackDeceleration;
@@ -75,6 +73,9 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void TakeDamage(float distance, float damage, FVector sourcePos, float launchForce);
+
+	UFUNCTION(BlueprintCallable)
+	void Knockback(FVector direction, float force);
 	
 	UFUNCTION(BlueprintCallable)
 	bool IsInAttackRange(AActor* targetToAttack);

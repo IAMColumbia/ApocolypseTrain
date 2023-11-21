@@ -65,12 +65,12 @@ void AWeapon::Ray()
 		QueryParams.AddIgnoredActor(OwnerCharacter);
 		bool actorHit = GetWorld()->LineTraceSingleByChannel(hit, start, end, ECC_Pawn, QueryParams, FCollisionResponseParams());
 		//NotifyFiredShot(OwnerCharacter->GetActorRightVector());
-		NotifyFiredShot();
+		
 		//DrawDebugLine(GetWorld(), start, end, FColor::Red, false, 0.15f, 0.f, 10.f);
 		if (actorHit && hit.GetActor()) {
 			//GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red, hit.GetActor()->GetFName().ToString());
 			if (AEnemyCharacter* enemy = Cast<AEnemyCharacter>(hit.GetActor())) {
-				enemy->TakeDamage(hit.Distance, Damage - FMath::RandRange(0, ((int)(OwnerCharacter->DamageBuff / 2) + 3)) + OwnerCharacter->DamageBuff, GetActorLocation(), 2);
+				enemy->TakeDamage(hit.Distance, Damage - FMath::RandRange(0, ((int)(OwnerCharacter->DamageBuff / 2) + 3)) + OwnerCharacter->DamageBuff, GetActorLocation(), KnockbackForce);
 			}
 			if (AObstacle* obstacle = Cast<AObstacle>(hit.GetActor())) {
 				obstacle->DamageObstacle(Damage);
@@ -95,6 +95,7 @@ void AWeapon::CheckForAttack()
 {
 	if (Attacking && Reloaded) {
 		if (Reloaded) {
+			NotifyFiredShot();
 			ShootProjectile();
 			Reloaded = false;
 			GetWorld()->GetTimerManager().SetTimer(reloadTimerHandle, this, &AWeapon::Reload, FireRate, false);

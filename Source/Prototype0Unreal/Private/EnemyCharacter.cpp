@@ -52,12 +52,12 @@ void AEnemyCharacter::ApplyKnockback()
 			else {
 				FVector loc = GetActorLocation() + (KnockedDirection * KnockSpeed);
 				SetActorLocation(loc);
-				KnockSpeed-= KnockbackDeceleration;
-				if (KnockSpeed <= 0) {
-					KnockSpeed = 0;
-					WasKnocked = false;
-				}
 			}
+		}
+		KnockSpeed -= KnockbackDeceleration;
+		if (KnockSpeed <= 0) {
+			KnockSpeed = 0;
+			WasKnocked = false;
 		}
 	}
 }
@@ -87,11 +87,20 @@ void AEnemyCharacter::TakeDamage(float distance, float damage, FVector sourcePos
 	currentHealth -= damage;
 	NotifyHealthBarWidget();
 	NotifyDamageEnemy(damage);
-	LaunchCharacter((GetActorLocation()-sourcePos) * launchForce,false, false);
+	Knockback(GetActorLocation() - sourcePos, launchForce);
+	//LaunchCharacter((GetActorLocation()-sourcePos) * launchForce,true, true);
 	if (currentHealth <= 0) {
 		EnemyState = EEnemyState::Dead;
 		EnemyKilled();
 	}
+}
+
+void AEnemyCharacter::Knockback(FVector direction, float force)
+{
+	direction.Normalize();
+	WasKnocked = true;
+	KnockedDirection = direction;
+	KnockSpeed = force;
 }
 
 bool AEnemyCharacter::IsInAttackRange(AActor* targetToAttack) {

@@ -47,10 +47,13 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float FireRate;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float KnockbackForce;
+
 	UFUNCTION(BlueprintImplementableEvent)
 	void NotifyFiredShot();
 
-	void Ray();
+	virtual void Ray();
 
 	UFUNCTION(BlueprintCallable, BlueprintPure)
 	int OwnerPlayerIndex();
