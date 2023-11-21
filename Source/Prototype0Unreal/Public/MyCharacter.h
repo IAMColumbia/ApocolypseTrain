@@ -26,13 +26,6 @@ public:
 
 	bool IsFacingWall();
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Combat")
-	float RayOffset = 80;
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Combat")
-	float RayLength = 1800;
-	UFUNCTION(BlueprintImplementableEvent)
-	void NotifyFiredShot(FVector direction);
-
 	//how much is added to players base damage
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Buffs")
 	float DamageBuff;
@@ -124,9 +117,6 @@ protected:
 
 	void setRotation();
 
-	
-	void Ray();
-
 	void ShootPressed();
 	void ShootReleased();
 
@@ -140,8 +130,6 @@ protected:
 
 	UFUNCTION(BlueprintImplementableEvent)
 	void NotifyStartedShooting();
-
-	
 
 	UFUNCTION(BlueprintImplementableEvent)
 	void NotifyStoppedShooting();
@@ -177,9 +165,6 @@ public:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, category = "Mesh")
 	USkeletalMeshComponent* characterMesh;
-
-	UFUNCTION(BlueprintCallable, Category = "ProjectileSpawning")
-	void ShootProjectile();
 
 	UFUNCTION(BlueprintCallable, Category = "Respawning")
 	void ResetPlayer();

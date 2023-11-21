@@ -262,16 +262,12 @@ void AMyCharacter::ShootPressed() {
 	IsShooting = true;
 	NotifyStartedShooting();
 	CurrentWeapon->Attack();
-	
-	//ShootProjectile();
-	//GetWorld()->GetTimerManager().SetTimer(shootTimerHandle, this, &AMyCharacter::ShootProjectile, FireRate, true);
 }
 
 void AMyCharacter::ShootReleased() {
 	IsShooting = false;
 	NotifyStoppedShooting();
 	CurrentWeapon->EndAttack();
-	//GetWorld()->GetTimerManager().ClearTimer(shootTimerHandle);
 }
 
 void AMyCharacter::DashPressed()
@@ -287,7 +283,7 @@ void AMyCharacter::DashPressed()
 		GetWorld()->GetTimerManager().SetTimer(dashTimerHandle, this, &AMyCharacter::FinishDash, KnockBackDuration, false);
 		//GetCharacterMovement()->MaxWalkSpeed = DashSpeed;
 		if (DashDirection.X == 0 && DashDirection.Y == 0) {
-			NotifyOnDash(characterMesh->GetRightVector());
+			NotifyOnDash(characterMesh->GetRightVector()*-1);
 		}
 		else {
 			NotifyOnDash(DashDirection);
@@ -302,44 +298,6 @@ void AMyCharacter::FinishDash() {
 void AMyCharacter::ResetDash() {
 	canDash = true;
 	GetWorld()->GetTimerManager().ClearTimer(dashCooldownTimerHandle);
-}
-
-void AMyCharacter::ShootProjectile() {
-	Ray();
-}
-
-void AMyCharacter::Ray()
-{
-	FVector start = GetActorLocation();
-
-	//FVector forward = UKismetMathLibrary::RandomUnitVectorInConeInDegrees(characterMesh->GetRightVector(), 0.8);
-	FVector forward = characterMesh->GetRightVector();
-	forward.Z = 0;
-
-	start = FVector(start.X + (forward.X * RayOffset), start.Y + (forward.Y * RayOffset), start.Z + (forward.Z * RayOffset));
-	//maybe need to change end pos for randomness
-	FVector end = start + forward * RayLength;
-
-	FHitResult hit;
-
-
-	if (GetWorld()) {
-		FCollisionQueryParams QueryParams;
-		QueryParams.AddIgnoredActor(this);
-		bool actorHit = GetWorld()->LineTraceSingleByChannel(hit, start, end, ECC_Pawn, QueryParams, FCollisionResponseParams());
-		NotifyFiredShot(GetActorForwardVector());
-		DrawDebugLine(GetWorld(), start, end, GetPlayerColor(), false, 0.15f, 0.f, 10.f);
-		if (actorHit && hit.GetActor()) {
-			//GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red, hit.GetActor()->GetFName().ToString());
-			if (AEnemyCharacter* enemy = Cast<AEnemyCharacter>(hit.GetActor())) {
-				enemy->TakeDamage(hit.Distance, Damage - FMath::RandRange(0, ((int)(DamageBuff/2)+3)) + DamageBuff, GetActorLocation(), 2);
-			}
-			if (AObstacle* obstacle = Cast<AObstacle>(hit.GetActor())) {
-				obstacle->DamageObstacle(Damage);
-			}
-		}
-
-	}
 }
 
 #pragma endregion Shooting
