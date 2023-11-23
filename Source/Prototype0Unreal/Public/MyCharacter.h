@@ -32,6 +32,8 @@ public:
 
 	TSubclassOf<AWeapon> PickupWeapon(TSubclassOf<AWeapon> weaponToPickup);
 
+	TSubclassOf<AWeapon> GetCurrentWeapon();
+
 protected:
 	void AttachWeapon();
 

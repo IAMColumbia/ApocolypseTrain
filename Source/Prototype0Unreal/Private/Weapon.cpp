@@ -32,6 +32,34 @@ void AWeapon::BeginPlay()
 	CreateObjects();
 }
 
+FVector AWeapon::GetBeamEnd()
+{
+	FVector start = GetActorLocation();
+
+	//FVector forward = UKismetMathLibrary::RandomUnitVectorInConeInDegrees(characterMesh->GetRightVector(), 0.8);
+	//FVector forward = OwnerCharacter->characterMesh->GetRightVector();
+	FVector forward = BulletSpawn->GetForwardVector();
+	forward.Z = 0;
+
+	start = FVector(start.X + (forward.X * RayOffset), start.Y + (forward.Y * RayOffset), start.Z + (forward.Z * RayOffset));
+	//maybe need to change end pos for randomness
+	FVector end = start + forward * RayLength;
+	FHitResult hit;
+	if (GetWorld()) {
+		FCollisionQueryParams QueryParams;
+		QueryParams.AddIgnoredActor(this);
+		QueryParams.AddIgnoredActor(OwnerCharacter);
+		bool actorHit = GetWorld()->LineTraceSingleByChannel(hit, start, end, ECC_Pawn, QueryParams, FCollisionResponseParams());
+		//DrawDebugLine(GetWorld(), start, end, FColor::Red, false, 0.15f, 0.f, 10.f);
+		if (actorHit && hit.GetActor()) {
+			//GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red, hit.GetActor()->GetFName().ToString());
+			return hit.Location;
+		}
+
+	}
+	return end;
+}
+
 // Called every frame
 void AWeapon::Tick(float DeltaTime)
 {

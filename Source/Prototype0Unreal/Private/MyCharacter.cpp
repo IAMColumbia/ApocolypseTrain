@@ -201,6 +201,11 @@ TSubclassOf<AWeapon> AMyCharacter::PickupWeapon(TSubclassOf<AWeapon> weaponToPic
 	return droppedWeapon;
 }
 
+TSubclassOf<AWeapon> AMyCharacter::GetCurrentWeapon()
+{
+	return CurrentWeapon->StaticClass();
+}
+
 void AMyCharacter::setXRot(float AxisValue) {
 	if (AxisValue != 0.0f) {
 		xRot = AxisValue * -1;

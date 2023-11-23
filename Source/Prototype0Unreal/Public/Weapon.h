@@ -28,6 +28,10 @@ protected:
 	
 
 public:	
+
+	UFUNCTION(BlueprintCallable, BlueprintPure)
+	FVector GetBeamEnd();
+
 	USceneComponent* BulletSpawn;
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;

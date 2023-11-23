@@ -33,6 +33,9 @@ public:
 
 	void CheckGameOver();
 
+	UFUNCTION(BlueprintCallable)
+	TArray<class TSubclassOf<AWeapon>> GetPlayerWeaponTypes();
+
 protected:
 	virtual void Initialize(FSubsystemCollectionBase& Collection) override;
 

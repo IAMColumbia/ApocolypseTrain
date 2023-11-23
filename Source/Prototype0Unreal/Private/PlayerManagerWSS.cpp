@@ -6,6 +6,7 @@
 #include <Kismet/KismetMathLibrary.h>
 #include <Components/BoxComponent.h>
 #include <Kismet/GameplayStatics.h>
+#include <Weapon.h>
 
 void UPlayerManagerWSS::RegisterPlayer(AMyCharacter* player)
 {
@@ -53,6 +54,16 @@ void UPlayerManagerWSS::CheckGameOver()
 		GetWorld()->GetTimerManager().SetTimer(resetTimer, this, &UPlayerManagerWSS::RestartGame, delayTime, true);
 		
 	}
+}
+
+TArray< TSubclassOf<AWeapon>> UPlayerManagerWSS::GetPlayerWeaponTypes()
+{
+	TArray<TSubclassOf<AWeapon>> weaponarray;
+	int activePlayers = NumActivePlayers();
+	for (int i = 0; i < activePlayers; i++) {
+		weaponarray.Add(Players[i]->GetCurrentWeapon());
+	}
+	return weaponarray;
 }
 
 bool UPlayerManagerWSS::AllPlayersDead()
