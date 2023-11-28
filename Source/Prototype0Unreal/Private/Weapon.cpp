@@ -43,7 +43,7 @@ FVector AWeapon::GetBeamEnd()
 
 	start = FVector(start.X + (forward.X * RayOffset), start.Y + (forward.Y * RayOffset), start.Z + (forward.Z * RayOffset));
 	//maybe need to change end pos for randomness
-	FVector end = start + forward * RayLength;
+	FVector end = start + forward * (RayLength/2);
 	FHitResult hit;
 	if (GetWorld()) {
 		FCollisionQueryParams QueryParams;

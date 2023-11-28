@@ -23,6 +23,9 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+	UPROPERTY(BlueprintReadOnly)
+	int FiredPlayerIndex;
+
 	UFUNCTION(BlueprintImplementableEvent)
 	void Launch(FVector Direction);
 
