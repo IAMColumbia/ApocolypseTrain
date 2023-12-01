@@ -10,5 +10,7 @@ RB - Interact
 RS - Aim
 LS - Move
 
-https://github.com/IAMColumbia/ApocolypseTrain/assets/76492881/766976a2-ac71-42a1-bec6-2cdc90a4409e
+https://github.com/IAMColumbia/ApocolypseTrain/assets/76492881/bcb0b507-44fe-41f6-9f2c-edc8f360444c
 
+Full Gameplay Demo On Youtube
+https://youtu.be/Dy0m0I4A_Zw
