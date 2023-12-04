@@ -75,6 +75,13 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat")
 	float damageMultiplier;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat")
+	float playerDamage;
+
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat")
+	float playerLaunchForce;
+
 	//force enemy launched by train runs into it, multiplied by speed
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat")
 	float launchMultiplier;

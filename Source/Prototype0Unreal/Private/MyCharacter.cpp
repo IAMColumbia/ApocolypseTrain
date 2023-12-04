@@ -103,9 +103,9 @@ void AMyCharacter::OnPlayerSpawn() {
 void AMyCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	AMyCharacter::setXRot(GetInputAxisValue("Horizontal"));
-	AMyCharacter::setYRot(GetInputAxisValue("Vertical"));
-	AMyCharacter::setRotation();
+	//AMyCharacter::setXRot(GetInputAxisValue("Horizontal"));
+	//AMyCharacter::setYRot(GetInputAxisValue("Vertical"));
+	//AMyCharacter::setRotation();
 	if (trainPtr->IsOverlappingFuelBox(GetActorLocation())) {
 		//GEngine->AddOnScreenDebugMessage(-1, 1, FColor::Orange, FString::Printf(TEXT("is in box")));
 		CanAddFuel = true;
@@ -133,6 +133,8 @@ void AMyCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 	PlayerInputComponent->BindAction("Dash", EInputEvent::IE_Pressed, this, &AMyCharacter::DashPressed);
 	PlayerInputComponent->BindAxis("MoveForward", this, &AMyCharacter::MoveForward);
 	PlayerInputComponent->BindAxis("MoveRight", this, &AMyCharacter::MoveRight);
+	PlayerInputComponent->BindAxis("AimHorizontal", this, &AMyCharacter::setXRot);
+	PlayerInputComponent->BindAxis("AimVertical", this, &AMyCharacter::setYRot);
 }
 
 
@@ -212,12 +214,14 @@ void AMyCharacter::setXRot(float AxisValue) {
 	if (AxisValue != 0.0f) {
 		xRot = AxisValue * -1;
 	}
+	setRotation();
 }
 
 void AMyCharacter::setYRot(float AxisValue) {
 	if (AxisValue != 0.0f) {
 		yRot = AxisValue;
 	}
+	setRotation();
 }
 
 
@@ -238,6 +242,7 @@ void AMyCharacter::MoveRight(float AxisValue) {
 
 void AMyCharacter::setRotation() {
 	FVector dir = FVector(xRot, yRot, 0); //UKismetMathLibrary::MakeVector(xRot, yRot, 0);
+	
 	FRotator rotation = UKismetMathLibrary::MakeRotationFromAxes(dir, FVector::Zero(), FVector::Zero());
 	characterMesh->SetWorldRotation(rotation + FRotator(0, 200,0));
 }
@@ -309,6 +314,7 @@ void AMyCharacter::ResetDash() {
 
 #pragma endregion Shooting
 
+#pragma region spawning
 
 void AMyCharacter::TakeDamage(float damageToTake) {
 	currentHealth -= damageToTake;
@@ -361,6 +367,8 @@ FVector AMyCharacter::GetRespawnLocation()
 {
 	return trainPtr->GetRespawnPos(PlayerIndex);
 }
+
+#pragma endregion spawning
 
 #pragma region Cosmetic
 

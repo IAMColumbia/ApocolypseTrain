@@ -8,6 +8,7 @@
 #include "EnemyCharacter.h"
 #include "PlayerManagerWSS.h"
 #include "Obstacle.h"
+#include "MyCharacter.h"
 
 // Sets default values
 ATrain::ATrain()
@@ -231,6 +232,10 @@ void ATrain::OnPlowBeginOverlap(UPrimitiveComponent* OverlappedComp, AActor* Oth
 		/*if (enemy->EnemyState == EEnemyState::Dead) {
 			enemy->Destroy();
 		}*/
+	}
+	if (AMyCharacter* player = Cast<AMyCharacter>(OtherActor)) {
+		player->TakeDamage(playerDamage);
+		player->LaunchCharacter(GetActorRightVector() * playerLaunchForce, true, true);
 	}
 	if (OtherActor->Tags.Contains("Obstacle")) {
 		currentTrainSpeed *= -1;
