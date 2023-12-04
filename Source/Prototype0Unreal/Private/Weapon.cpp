@@ -26,6 +26,9 @@ void AWeapon::BeginPlay()
 			if (sceneComponent && sceneComponent->ComponentHasTag("BulletSpawn")) {
 				BulletSpawn = sceneComponent;
 			}
+			if (sceneComponent && sceneComponent->ComponentHasTag("Laser")) {
+				laser = sceneComponent;
+			}
 		}
 	}
 	Reload();
@@ -134,6 +137,20 @@ void AWeapon::CheckForAttack()
 void AWeapon::Reload()
 {
 	Reloaded = true;
+}
+
+void AWeapon::HideLaser()
+{
+	if (laser != NULL) {
+		laser->SetVisibility(false);
+	}
+}
+
+void AWeapon::ShowLaser()
+{
+	if (laser != NULL) {
+		laser->SetVisibility(true);
+	}
 }
 
 void AWeapon::CreateObjects()

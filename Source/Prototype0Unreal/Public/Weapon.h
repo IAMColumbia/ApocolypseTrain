@@ -71,6 +71,12 @@ public:
 	bool Attacking;
 	void Reload();
 
+	USceneComponent* laser;
+
+	void HideLaser();
+
+	void ShowLaser();
+
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Projectile")
 	TSubclassOf<class AProjectile> ProjectileType;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Projectile")

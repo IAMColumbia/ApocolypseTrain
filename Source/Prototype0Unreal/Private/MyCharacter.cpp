@@ -159,6 +159,7 @@ void AMyCharacter::InteractPressed() {
 			}
 		}
 		Carrying = false;
+		CurrentWeapon->ShowLaser();
 	}
 }
 
@@ -174,6 +175,7 @@ void AMyCharacter::PickupItem(AInteractableActor* itemToCarry)
 	}
 	Carrying = true;
 	carriedObject = itemToCarry;
+	CurrentWeapon->HideLaser();
 	itemToCarry->OnPickedUp(CarryPosition);
 	ShootReleased();
 	//itemToCarry->SetActorLocation(CarryPosition->GetComponentLocation());
