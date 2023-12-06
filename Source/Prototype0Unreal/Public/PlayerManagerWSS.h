@@ -48,5 +48,6 @@ protected:
 	void SortPlayers();
 	bool AllPlayersDead();
 	
+	UFUNCTION(BlueprintCallable)
 	void RestartGame();
 };
