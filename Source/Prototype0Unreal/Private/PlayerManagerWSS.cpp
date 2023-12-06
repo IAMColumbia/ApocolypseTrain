@@ -75,6 +75,15 @@ TArray<int> UPlayerManagerWSS::GetPlayerKills()
 	return kills;
 }
 
+TArray<int> UPlayerManagerWSS::GetPlayerDeaths()
+{
+	TArray<int> deaths;
+	for (int i = 0; i < Players.Num(); i++) {
+		deaths.Add(Players[i]->TotalDeaths);
+	}
+	return deaths;
+}
+
 bool UPlayerManagerWSS::AllPlayersDead()
 {
 	int deadPlayers = 0;

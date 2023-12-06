@@ -39,6 +39,9 @@ public:
 	UFUNCTION(BlueprintCallable)
 	TArray<int> GetPlayerKills();
 
+	UFUNCTION(BlueprintCallable)
+	TArray<int> GetPlayerDeaths();
+
 protected:
 	virtual void Initialize(FSubsystemCollectionBase& Collection) override;
 

@@ -335,6 +335,7 @@ void AMyCharacter::DespawnPlayer()
 		ShootReleased();
 	}
 	NotifyPlayerDied();
+	TotalDeaths++;
 	MaxHealth = baseHealth;
 	DamageBuff = 0;
 	SpeedBuff = 0;

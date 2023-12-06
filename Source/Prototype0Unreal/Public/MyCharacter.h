@@ -37,6 +37,9 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	int TotalKills;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	int TotalDeaths;
+
 protected:
 	void AttachWeapon();
 
