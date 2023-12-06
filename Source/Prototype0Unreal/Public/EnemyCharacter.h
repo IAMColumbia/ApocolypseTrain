@@ -72,7 +72,7 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 	UFUNCTION(BlueprintCallable)
-	void TakeDamage(float distance, float damage, FVector sourcePos, float launchForce);
+	bool TakeDamage(float distance, float damage, FVector sourcePos, float launchForce);
 
 	UFUNCTION(BlueprintCallable)
 	void Knockback(FVector direction, float force);

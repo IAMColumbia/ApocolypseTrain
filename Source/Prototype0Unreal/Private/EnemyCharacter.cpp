@@ -79,9 +79,9 @@ void AEnemyCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComp
 
 }
 
-void AEnemyCharacter::TakeDamage(float distance, float damage, FVector sourcePos, float launchForce) {
+bool AEnemyCharacter::TakeDamage(float distance, float damage, FVector sourcePos, float launchForce) {
 	if (EnemyState == EEnemyState::Dead) {
-		return;
+		return false;
 	}
 	//damage = damage * ((1/distance) * 1000);
 	currentHealth -= damage;
@@ -92,7 +92,9 @@ void AEnemyCharacter::TakeDamage(float distance, float damage, FVector sourcePos
 	if (currentHealth <= 0) {
 		EnemyState = EEnemyState::Dead;
 		EnemyKilled();
+		return true;
 	}
+	return false;
 }
 
 void AEnemyCharacter::Knockback(FVector direction, float force)

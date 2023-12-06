@@ -35,6 +35,12 @@ void AWeapon::BeginPlay()
 	CreateObjects();
 }
 
+void AWeapon::KilledEnemy()
+{
+	OwnerCharacter->TotalKills++;
+	GEngine->AddOnScreenDebugMessage(1, 3, OwnerCharacter->GetPlayerColor(), FString::Printf(TEXT("Killed %d"), OwnerCharacter->TotalKills));
+}
+
 FVector AWeapon::GetBeamEnd()
 {
 	FVector start = GetActorLocation();
@@ -101,7 +107,9 @@ void AWeapon::Ray()
 		if (actorHit && hit.GetActor()) {
 			//GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red, hit.GetActor()->GetFName().ToString());
 			if (AEnemyCharacter* enemy = Cast<AEnemyCharacter>(hit.GetActor())) {
-				enemy->TakeDamage(hit.Distance, Damage - FMath::RandRange(0, ((int)(OwnerCharacter->DamageBuff / 2) + 3)) + OwnerCharacter->DamageBuff, GetActorLocation(), KnockbackForce);
+				if (enemy->TakeDamage(hit.Distance, Damage - FMath::RandRange(0, ((int)(OwnerCharacter->DamageBuff / 2) + 3)) + OwnerCharacter->DamageBuff, GetActorLocation(), KnockbackForce)) {
+					KilledEnemy();
+				}
 			}
 			if (AObstacle* obstacle = Cast<AObstacle>(hit.GetActor())) {
 				obstacle->DamageObstacle(Damage);

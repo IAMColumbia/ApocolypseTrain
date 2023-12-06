@@ -30,6 +30,8 @@ public:
 	
 	bool Active;
 
+	
+
 protected:
 	class AWeapon* Owner;
 	USceneComponent* spawnPoint;

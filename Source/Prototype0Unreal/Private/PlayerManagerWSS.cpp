@@ -66,6 +66,15 @@ TArray< TSubclassOf<AWeapon>> UPlayerManagerWSS::GetPlayerWeaponTypes()
 	return weaponarray;
 }
 
+TArray<int> UPlayerManagerWSS::GetPlayerKills()
+{
+	TArray<int> kills;
+	for (int i = 0; i < Players.Num(); i++) {
+		kills.Add(Players[i]->TotalKills);
+	}
+	return kills;
+}
+
 bool UPlayerManagerWSS::AllPlayersDead()
 {
 	int deadPlayers = 0;
@@ -106,6 +115,8 @@ void UPlayerManagerWSS::SortPlayers()
 		}
 	}
 }
+
+
 
 
 

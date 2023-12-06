@@ -36,7 +36,9 @@ void ASniper::Ray()
 			if (actorHit && hits[i].GetActor()) {
 				//GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red, hits[i].GetActor()->GetFName().ToString());
 				if (AEnemyCharacter* enemy = Cast<AEnemyCharacter>(hits[i].GetActor())) {
-					enemy->TakeDamage(hits[i].Distance, Damage - FMath::RandRange(0, ((int)(OwnerCharacter->DamageBuff / 2) + 3)) + OwnerCharacter->DamageBuff, GetActorLocation(), KnockbackForce/enemiesHit);
+					if (enemy->TakeDamage(hits[i].Distance, Damage - FMath::RandRange(0, ((int)(OwnerCharacter->DamageBuff / 2) + 3)) + OwnerCharacter->DamageBuff, GetActorLocation(), KnockbackForce / enemiesHit)) {
+						KilledEnemy();
+					}
 					enemiesHit++;
 				}
 				if (AObstacle* obstacle = Cast<AObstacle>(hits[i].GetActor())) {

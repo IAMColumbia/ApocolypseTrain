@@ -29,6 +29,8 @@ protected:
 
 public:	
 
+	void KilledEnemy();
+
 	UFUNCTION(BlueprintCallable, BlueprintPure)
 	FVector GetBeamEnd();
 

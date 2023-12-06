@@ -23,6 +23,7 @@ void AExplosiveLauncher::ShootProjectile()
 {
 	FVector LaunchDirection = BulletSpawn->GetForwardVector();
 	AExplosiveProjectile* a = Cast<AExplosiveProjectile>(GetWorld()->SpawnActorAbsolute(ExplosiveProjectile, BulletSpawn->GetComponentTransform()));
+	a->ownerWeapon = this;
 	a->Launch(LaunchDirection);
 	a->FiredPlayerIndex = OwnerPlayerIndex();
 }

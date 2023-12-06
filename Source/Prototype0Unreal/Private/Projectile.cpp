@@ -30,6 +30,8 @@ void AProjectile::InitializeProjectile(AWeapon* owner)
 	spawnPoint = Owner->BulletSpawn;
 }
 
+
+
 void AProjectile::MoveProjectile()
 {
 	FVector location = GetActorLocation();

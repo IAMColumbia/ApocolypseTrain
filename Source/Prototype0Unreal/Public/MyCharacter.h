@@ -34,6 +34,9 @@ public:
 
 	TSubclassOf<AWeapon> GetCurrentWeapon();
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	int TotalKills;
+
 protected:
 	void AttachWeapon();
 

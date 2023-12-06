@@ -3,6 +3,7 @@
 
 #include "ExplosiveProjectile.h"
 #include "Components/SphereComponent.h"
+#include "Weapon.h"
 
 // Sets default values
 AExplosiveProjectile::AExplosiveProjectile()
@@ -33,5 +34,9 @@ void AExplosiveProjectile::Explode()
 	explosionHitCheck->InitSphereRadius(radius);
 }
 
+void AExplosiveProjectile::KilledEnemy()
+{
+	ownerWeapon->KilledEnemy();
+}
 
 

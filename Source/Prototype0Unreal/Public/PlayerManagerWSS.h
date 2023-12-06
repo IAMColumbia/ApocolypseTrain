@@ -36,6 +36,9 @@ public:
 	UFUNCTION(BlueprintCallable)
 	TArray<class TSubclassOf<AWeapon>> GetPlayerWeaponTypes();
 
+	UFUNCTION(BlueprintCallable)
+	TArray<int> GetPlayerKills();
+
 protected:
 	virtual void Initialize(FSubsystemCollectionBase& Collection) override;
 

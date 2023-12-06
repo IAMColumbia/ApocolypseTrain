@@ -20,8 +20,13 @@ protected:
 	virtual void BeginPlay() override;
 
 public:	
+
+	class AWeapon* ownerWeapon;
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
+
+	UFUNCTION(BlueprintCallable)
+	void KilledEnemy();
 
 	UPROPERTY(BlueprintReadOnly)
 	int FiredPlayerIndex;
