@@ -40,6 +40,9 @@ void UGameManagerWSS::SpawnNewChunk()
 FVector UGameManagerWSS::GetRandomLocationInChunk(float zoffset)
 {
 	//maybe just add the targetYpos to the y value on the vector to keep things in range. Spawnign on the x and z should be fine if just getting values from the mesh
+	if (chunkSpawner == NULL) {
+		return FVector(0, 0, 0);
+	}
 	FVector chunkScale = chunkSpawner->chunkScale;
 	float yOffset = chunkSpawner->nextTargetLocation;
 	float zOffset = zoffset;

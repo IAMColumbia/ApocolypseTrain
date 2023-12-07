@@ -18,7 +18,7 @@ void AChunkSpawner::BeginPlay()
 {
 	Super::BeginPlay();
 	GetWorld()->GetSubsystem<UGameManagerWSS>()->chunkSpawner = this;
-	SpawnNextChunk();
+	chunkScale = FVector(100, 100, 100);
 }
 
 
