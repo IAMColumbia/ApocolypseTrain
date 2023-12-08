@@ -86,5 +86,5 @@ public:
 
 	TQueue<class AProjectile*> objectPool;
 	void CreateObjects();
-	virtual void SpawnProjectile();
+	void SpawnProjectile();
 };

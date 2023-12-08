@@ -43,7 +43,7 @@ void AWeapon::KilledEnemy()
 
 FVector AWeapon::GetBeamEnd()
 {
-	FVector start = BulletSpawn->GetComponentLocation();
+	FVector start = GetActorLocation();
 
 	//FVector forward = UKismetMathLibrary::RandomUnitVectorInConeInDegrees(characterMesh->GetRightVector(), 0.8);
 	//FVector forward = OwnerCharacter->characterMesh->GetRightVector();
@@ -52,7 +52,7 @@ FVector AWeapon::GetBeamEnd()
 
 	start = FVector(start.X + (forward.X * RayOffset), start.Y + (forward.Y * RayOffset), start.Z + (forward.Z * RayOffset));
 	//maybe need to change end pos for randomness
-	FVector end = start + forward * (RayLength/3);
+	FVector end = start + forward * (RayLength/2);
 	FHitResult hit;
 	if (GetWorld()) {
 		FCollisionQueryParams QueryParams;

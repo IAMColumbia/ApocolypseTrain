@@ -18,15 +18,6 @@ void AProjectile::Spawn() {
 	Active = true;
 }
 
-void AProjectile::SpawnWithRotation(FRotator rot)
-{
-	SetActorRotation(rot);
-	SetActorLocation(spawnPoint->GetComponentLocation());
-	APooledActor::Spawn();
-	GetWorld()->GetTimerManager().SetTimer(lifetimeHandle, this, &APooledActor::Despawn, Lifetime, false);
-	Active = true;
-}
-
 void AProjectile::Despawn()
 {
 	Active = false;
@@ -37,6 +28,11 @@ void AProjectile::InitializeProjectile(AWeapon* owner)
 {
 	Owner = owner;
 	spawnPoint = Owner->BulletSpawn;
+}
+
+bool AProjectile::ShouldDespawn()
+{
+	return false;
 }
 
 

@@ -19,8 +19,6 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 	virtual void Spawn() override;
-
-	virtual void SpawnWithRotation(FRotator rot);
 	UFUNCTION(BlueprintCallable)
 	virtual void Despawn() override;
 	virtual void InitializeProjectile(class AWeapon* owner);
@@ -32,6 +30,7 @@ public:
 	
 	bool Active;
 
+	
 
 protected:
 	class AWeapon* Owner;
