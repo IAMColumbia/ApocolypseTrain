@@ -28,6 +28,9 @@ public:
 	float EnemyDamage;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Enemy Difficulty Increase")
+	float SpawnRateIncrease;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Enemy Difficulty Increase")
 	float EnemyHealthIncrease;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Enemy Difficulty Increase")

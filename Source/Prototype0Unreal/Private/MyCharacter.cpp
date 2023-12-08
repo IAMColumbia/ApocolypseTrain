@@ -403,11 +403,11 @@ FVector AMyCharacter::SetPlayerColorVector(int index)
 	case 0:
 		return FVector(0, 0.4, 1);
 	case 1:
-		return FVector(0.4, 1, 0);
+		return FVector(1, 0, 0);
 	case 2:
-		return FVector(1, 0.5, 0);
+		return FVector(0.4, 1, 0);
 	case 3:
-		return FVector(0, 0.5, 0.5);
+		return FVector(1, 1, 0);
 	default:
 		return FVector(255, 255, 255);
 	}

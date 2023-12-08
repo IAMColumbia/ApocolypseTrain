@@ -5,6 +5,7 @@
 #include "GameManagerWSS.h"
 #include "EnemyCharacter.h"
 #include <Kismet/KismetSystemLibrary.h>
+#include "GameManagerWSS.h"
 // Sets default values
 AEnemySpawner::AEnemySpawner()
 {
@@ -32,6 +33,8 @@ void AEnemySpawner::Tick(float DeltaTime)
 void AEnemySpawner::StartRearSpawner()
 {
 	GetWorld()->GetTimerManager().SetTimer(rearSpawner, this, &AEnemySpawner::SpawnEnemyBehindTrain, RearSpawnRate, true);
+	int chunks = GetWorld()->GetSubsystem<UGameManagerWSS>()->TotalChunksSpawned();
+	RearSpawnRate -= (chunks*SpawnRateIncrease);
 }
 
 void AEnemySpawner::StopRearSpawner()
@@ -43,7 +46,7 @@ void AEnemySpawner::SpawnEnemies()
 {
 	for (int i = 0; i < EnemiesPerChunk; i++) {
 		FVector spawnLocation = GetWorld()->GetSubsystem<UGameManagerWSS>()->GetRandomLocationInChunk(100);
-		NotifySpawnEnemy(spawnLocation, FRotator().ZeroRotator, false, FVector());
+		NotifySpawnEnemy(spawnLocation, FRotator(0,0,(float)FMath::RandRange(0, 180)), false, FVector());
 	}
 	EnemiesPerChunk++;
 }
