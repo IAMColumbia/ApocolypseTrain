@@ -50,6 +50,9 @@ public:
 	UFUNCTION(BlueprintCallable)
 	bool TrainFuelFull();
 
+	UFUNCTION(BlueprintCallable)
+	bool TrainFuelCritical();
+
 	int TotalChunksSpawned();
 
 	void GameOver(int loseType);
@@ -57,7 +60,7 @@ public:
 
 	void RestartGame();
 
-	
+	void PlayerJoined();
 
 protected:
 	virtual void Initialize(FSubsystemCollectionBase& Collection) override;

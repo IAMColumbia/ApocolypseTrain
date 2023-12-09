@@ -14,6 +14,7 @@ void UPlayerManagerWSS::RegisterPlayer(AMyCharacter* player)
 	Players.Add(player);
 	SortPlayers();
 	GEngine->AddOnScreenDebugMessage(-1, 1, player->GetPlayerColor(), FString::Printf(TEXT("Player %d was registered with manager"), player->PlayerIndex));
+	GetWorld()->GetSubsystem<UGameManagerWSS>()->PlayerJoined();
 	//Players[player->PlayerIndex] = player;
 }
 
@@ -48,6 +49,8 @@ int UPlayerManagerWSS::NumActivePlayers()
 
 void UPlayerManagerWSS::CheckGameOver()
 {
+	//NOT HAVING PLAYERS DYING END THE GAME
+	return;
 	if (AllPlayersDead()) {
 		
 		GetWorld()->GetSubsystem<UGameManagerWSS>()->GameOver(1);

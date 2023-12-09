@@ -110,6 +110,11 @@ bool UGameManagerWSS::TrainFuelFull()
 	return false;
 }
 
+bool UGameManagerWSS::TrainFuelCritical()
+{
+	return train->FuelIsCritical();
+}
+
 int UGameManagerWSS::TotalChunksSpawned()
 {
 	if (chunkSpawner == NULL) {
@@ -138,6 +143,11 @@ void UGameManagerWSS::GameOver(int loseType)
 void UGameManagerWSS::RestartGame()
 {
 	UGameplayStatics::OpenLevel((UObject*)GetWorld(), FName(TEXT("TrainTest")));
+}
+
+void UGameManagerWSS::PlayerJoined()
+{
+	train->PlayerJoined();
 }
 
 

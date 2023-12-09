@@ -148,6 +148,12 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Fuel")
 	float burnRate;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Fuel")
+	float burnRateDifficultyScaling;
+	void PlayerJoined();
+
+	bool FuelIsCritical();
+
 	bool isReversing;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Spawning")
@@ -222,4 +228,6 @@ public:
 	UFUNCTION(BlueprintImplementableEvent)
 	void NotifyTrainHitObstacle();
 
+	UFUNCTION(BlueprintImplementableEvent)
+	void NotifyTrainHitEnemy();
 };

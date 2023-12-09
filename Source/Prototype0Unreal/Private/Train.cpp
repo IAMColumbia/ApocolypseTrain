@@ -29,6 +29,8 @@ void ATrain::StartTrain()
 	}
 }
 
+
+
 void ATrain::StopTrain()
 {
 	if (currentState == ETrainState::accelerating) {
@@ -126,6 +128,19 @@ void ATrain::BeginPlay()
 		}
 	}
 	GetWorld()->GetTimerManager().SetTimer(startTimerHandle, this, &ATrain::TrainCanMove, 5.0, false);
+}
+
+void ATrain::PlayerJoined()
+{
+	burnRate += burnRateDifficultyScaling;
+}
+
+bool ATrain::FuelIsCritical()
+{
+	if (FuelState == EFuelState::critical) {
+		return true;
+	}
+	return false;
 }
 
 void ATrain::TrainCanMove()
@@ -287,6 +302,7 @@ void ATrain::OnPlowBeginOverlap(UPrimitiveComponent* OverlappedComp, AActor* Oth
 		
 		//GEngine->AddOnScreenDebugMessage(1, 3, FColor::Red, TEXT("TRAIN HIT ENEMY BOI"));
 		enemy->TakeDamage(0, currentTrainSpeed * damageMultiplier, GetActorLocation(), currentTrainSpeed * launchMultiplier);
+		NotifyTrainHitEnemy();
 		/*if (enemy->EnemyState == EEnemyState::Dead) {
 			enemy->Destroy();
 		}*/
