@@ -82,13 +82,9 @@ protected:
 
 public:
 
-	bool countingDownGameOver;
 	FTimerHandle countdown;
 	void DecrementGameOverCounter();
-	UPROPERTY(BlueprintReadOnly)
 	int graceTimeLeft;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	int GraceTime;
 	UFUNCTION(BlueprintImplementableEvent)
 	void NotifyGameOverCounter();
 

@@ -19,7 +19,7 @@ ATrain::ATrain()
 	CanMove = false;
 	Fuel = MaxFuel;
 	currentState = ETrainState::starting;
-	graceTimeLeft = GraceTime;
+	graceTimeLeft = 5;
 }
 
 void ATrain::StartTrain()
@@ -226,30 +226,23 @@ void ATrain::UpdateFuelState()
 		NotifyFuelCritical();
 		//notify danger
 	}
-	if (!HasFuel()) {
+	if (Fuel <= 0) {
 		//notify failed
-		if (!countingDownGameOver && !GetWorld()->GetSubsystem<UGameManagerWSS>()->gameEnded) {
-			countingDownGameOver = true;
-			graceTimeLeft = GraceTime;
-			GetWorld()->GetTimerManager().SetTimer(countdown, this, &ATrain::DecrementGameOverCounter, 1, true);
-		}
-	}
-	if (countingDownGameOver) {
-		if (HasFuel()) {
-			GetWorld()->GetTimerManager().ClearTimer(countdown);
-			countingDownGameOver = false;
-		}
+		GetWorld()->GetTimerManager().SetTimer(countdown, this, &ATrain::DecrementGameOverCounter, 1, true);
 	}
 }
 
 void ATrain::DecrementGameOverCounter()
 {
+	graceTimeLeft--;
 	NotifyGameOverCounter();
-	if (graceTimeLeft <= 0 && !HasFuel()) {
+	if (HasFuel()) {
+		graceTimeLeft = 5;
 		GetWorld()->GetTimerManager().ClearTimer(countdown);
+	}
+	if (graceTimeLeft <= 0 && !HasFuel()) {
 		GetWorld()->GetSubsystem<UGameManagerWSS>()->GameOver(0);
 	}
-	graceTimeLeft--;
 }
 
 FVector ATrain::GetRandomRespawnPos() {

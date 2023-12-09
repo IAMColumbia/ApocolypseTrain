@@ -52,6 +52,13 @@ public:
 
 	int TotalChunksSpawned();
 
+	void GameOver(int loseType);
+	bool gameEnded;
+
+	void RestartGame();
+
+	
+
 protected:
 	virtual void Initialize(FSubsystemCollectionBase& Collection) override;
 	

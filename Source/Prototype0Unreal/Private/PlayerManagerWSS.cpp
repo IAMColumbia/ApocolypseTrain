@@ -7,6 +7,7 @@
 #include <Components/BoxComponent.h>
 #include <Kismet/GameplayStatics.h>
 #include <Weapon.h>
+#include <GameManagerWSS.h>
 
 void UPlayerManagerWSS::RegisterPlayer(AMyCharacter* player)
 {
@@ -48,11 +49,8 @@ int UPlayerManagerWSS::NumActivePlayers()
 void UPlayerManagerWSS::CheckGameOver()
 {
 	if (AllPlayersDead()) {
-		float delayTime = 8;
-		GEngine->AddOnScreenDebugMessage(-1, delayTime, FColor::Red, FString::Printf(TEXT("GAME OVER \nALL PLAYERS DIED")), true, FVector2D(10, 10));
-		FTimerHandle resetTimer;
-		GetWorld()->GetTimerManager().SetTimer(resetTimer, this, &UPlayerManagerWSS::RestartGame, delayTime, true);
 		
+		GetWorld()->GetSubsystem<UGameManagerWSS>()->GameOver(1);
 	}
 }
 
@@ -101,10 +99,6 @@ bool UPlayerManagerWSS::AllPlayersDead()
 	return false;
 }
 
-void UPlayerManagerWSS::RestartGame()
-{
-	UGameplayStatics::OpenLevel((UObject*)GetWorld(), FName(TEXT("TrainTest")));
-}
 
 void UPlayerManagerWSS::Initialize(FSubsystemCollectionBase& Collection)
 {
