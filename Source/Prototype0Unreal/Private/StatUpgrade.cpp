@@ -55,13 +55,16 @@ void AStatUpgrade::CheckForInteractPressed() {
 				OnInteract(activePlayer);
 				wasInteracted = true;
 			}
+			if (!startedInteract) {
+				startedInteract = true;
+				BeginInteract();
+			}
+			//GEngine->AddOnScreenDebugMessage(1, 3, activePlayer->GetPlayerColor(), TEXT("Interacted"));
 		}
-		if (!activePlayer->Interacted) {
+		if (!activePlayer->Interacted || !overlappingPlayers.Contains(activePlayer)) {
 			activePlayer = NULL;
+			startedInteract = false;
 			ProgressColor = DefaultColor;
-		}
-		if (!overlappingPlayers.Contains(activePlayer)) {
-			activePlayer = NULL;
 		}
 	}
 	else {

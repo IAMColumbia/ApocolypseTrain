@@ -46,6 +46,7 @@ void AInteractableActor::CheckForInteractPressed()
 	for(AMyCharacter * player : overlappingPlayers) {
 		if (player->Interacted) {
 			OnInteract(player);
+			
 		}
 	}
 }

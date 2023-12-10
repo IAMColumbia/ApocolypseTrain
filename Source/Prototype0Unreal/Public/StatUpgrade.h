@@ -44,6 +44,11 @@ public:
 
 	UFUNCTION(BlueprintImplementableEvent)
 	void Interacted(const FText &textToDisplay, FVector color);
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void BeginInteract();
+
+	bool startedInteract;
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	FVector ProgressColor;
