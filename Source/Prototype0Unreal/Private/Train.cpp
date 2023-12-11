@@ -146,6 +146,7 @@ bool ATrain::FuelIsCritical()
 void ATrain::TrainCanMove()
 {
 	CanMove = true;
+	NotifyTrainStartGame();
 }
 
 void ATrain::IncrementTotalMeters()
@@ -213,6 +214,7 @@ void ATrain::ToggleTrainState()
 bool ATrain::AddFuel() {
 	if (Fuel + 1 <= MaxFuel) {
 		Fuel++;
+		NotifyFuelAdded();
 		//GEngine->AddOnScreenDebugMessage(1, 2.0f, FColor::Red, FString::Printf(TEXT("fuel = %f"), Fuel));
 		return true;
 	}
@@ -245,12 +247,14 @@ void ATrain::UpdateFuelState()
 		//notify failed
 		if (!countingDownGameOver && !GetWorld()->GetSubsystem<UGameManagerWSS>()->gameEnded) {
 			countingDownGameOver = true;
+			NotifyTrainStop();
 			graceTimeLeft = GraceTime;
 			GetWorld()->GetTimerManager().SetTimer(countdown, this, &ATrain::DecrementGameOverCounter, 1, true);
 		}
 	}
 	if (countingDownGameOver) {
 		if (HasFuel()) {
+			NotifyTrainStart();
 			GetWorld()->GetTimerManager().ClearTimer(countdown);
 			countingDownGameOver = false;
 		}

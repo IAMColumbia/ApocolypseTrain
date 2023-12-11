@@ -230,4 +230,16 @@ public:
 
 	UFUNCTION(BlueprintImplementableEvent)
 	void NotifyTrainHitEnemy();
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void NotifyTrainStartGame();
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void NotifyTrainStart();
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void NotifyTrainStop();
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void NotifyFuelAdded();
 };

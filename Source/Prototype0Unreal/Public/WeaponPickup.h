@@ -23,7 +23,11 @@ public:
 	UFUNCTION(BlueprintImplementableEvent)
 	void NotifyWeaponSwapped();
 
+	virtual void Tick(float DeltaTime) override;
+
 protected:
+	class AMyCharacter* pickingPlayer;
+
 	virtual void BeginPlay() override;
 
 	void AttachWeapon();
@@ -32,4 +36,5 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	bool pickedUp;
+
 };

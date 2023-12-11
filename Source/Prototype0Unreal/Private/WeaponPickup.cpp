@@ -10,7 +10,19 @@ void AWeaponPickup::OnInteract(AMyCharacter* player)
 	if (!pickedUp) {
 		AvailableWeapon = player->PickupWeapon(AvailableWeapon);
 		pickedUp = true;
+		pickingPlayer = player;
 		NotifyWeaponSwapped();
+	}
+}
+
+void AWeaponPickup::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+	if (pickingPlayer != NULL) {
+		if (!pickingPlayer->Interacted) {
+			pickedUp = false;
+			pickingPlayer = NULL;
+		}
 	}
 }
 
