@@ -6,6 +6,7 @@
 #include "EnemyCharacter.h"
 #include "Obstacle.h"
 #include "Projectile.h"
+#include <Kismet/GameplayStatics.h>
 
 // Sets default values
 AWeapon::AWeapon()
@@ -75,6 +76,13 @@ void AWeapon::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 	UpdateReloadTime();
 	CheckForAttack();
+}
+
+void AWeapon::WeaponEquipped()
+{
+	if (equipSound) {
+		UGameplayStatics::PlaySoundAtLocation(this, equipSound, GetActorLocation(), 0.3f, 1+ FMath::RandRange(-0.1,0.1),0,attenuation);
+	}
 }
 
 void AWeapon::Ray()

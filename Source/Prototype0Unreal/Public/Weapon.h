@@ -59,6 +59,14 @@ public:
 	UFUNCTION(BlueprintImplementableEvent)
 	void NotifyFiredShot();
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, category = "Audio")
+	USoundBase* equipSound;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, category = "Audio")
+	USoundAttenuation* attenuation;
+
+	void WeaponEquipped();
+
 	virtual void Ray();
 
 	UFUNCTION(BlueprintCallable, BlueprintPure)
@@ -68,6 +76,7 @@ public:
 
 	void UpdateReloadTime();
 	void CheckForAttack();
+	
 
 	bool Reloaded;
 	bool Attacking;

@@ -134,6 +134,9 @@ public:
 	float Fuel;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Fuel")
+	int CriticalLevel;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Fuel")
 	float CollisionFuelLoss;
 
 	//Maximum fuel that can be in the train at once. this affects max speed

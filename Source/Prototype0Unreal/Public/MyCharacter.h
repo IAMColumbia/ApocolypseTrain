@@ -42,6 +42,7 @@ public:
 
 protected:
 	void AttachWeapon();
+	void HolsterWeapon();
 
 	class UGameManagerWSS* gameManager;
 	class ATrain* trainPtr;
@@ -159,11 +160,16 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	bool Carrying;
 
+	bool justDropped;
+
 	class AInteractableActor* carriedObject;
 
-	USceneComponent* CarryPosition;
+	USceneComponent* CarrySlot;
+	USceneComponent* HolsterSlot;
 
 	void PickupItem(class AInteractableActor* itemToCarry);
+
+	void CheckDropItem();
 
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;

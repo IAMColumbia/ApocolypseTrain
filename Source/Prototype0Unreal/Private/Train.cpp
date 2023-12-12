@@ -127,11 +127,14 @@ void ATrain::BeginPlay()
 			}
 		}
 	}
-	GetWorld()->GetTimerManager().SetTimer(startTimerHandle, this, &ATrain::TrainCanMove, 5.0, false);
+	
 }
 
 void ATrain::PlayerJoined()
 {
+	if (!CanMove) {
+		GetWorld()->GetTimerManager().SetTimer(startTimerHandle, this, &ATrain::TrainCanMove, 5.0, false);
+	}
 	burnRate += burnRateDifficultyScaling;
 }
 
@@ -234,11 +237,11 @@ void ATrain::BurnFuel() {
 
 void ATrain::UpdateFuelState()
 {
-	if (Fuel > MaxFuel / 5) {
+	if (Fuel > MaxFuel / CriticalLevel) {
 		FuelState = EFuelState::normal;
 		NotifyFuelNormal();
 	}
-	else if (Fuel <= MaxFuel / 5) {
+	else if (Fuel <= MaxFuel / CriticalLevel && !countingDownGameOver) {
 		FuelState = EFuelState::critical;
 		NotifyFuelCritical();
 		//notify danger
@@ -323,7 +326,7 @@ void ATrain::OnPlowBeginOverlap(UPrimitiveComponent* OverlappedComp, AActor* Oth
 		NotifyTrainHitObstacle();
 		if (AObstacle* obstacle = Cast<AObstacle>(OtherActor)) {
 
-			obstacle->DamageObstacle(currentTrainSpeed);
+			obstacle->DamageObstacle(obstacleDamage);
 		}
 		Fuel -= CollisionFuelLoss;
 	}

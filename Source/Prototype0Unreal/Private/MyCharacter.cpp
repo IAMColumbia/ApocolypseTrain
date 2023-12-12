@@ -74,8 +74,11 @@ void AMyCharacter::BeginPlay()
 	for (UActorComponent* component : components) {
 		if (component->IsA(USceneComponent::StaticClass())) {
 			USceneComponent* sceneComponent = Cast<USceneComponent>(component);
-			if (sceneComponent && sceneComponent->ComponentHasTag("PickupSlot")) {
-				CarryPosition = sceneComponent;
+			if (sceneComponent && sceneComponent->ComponentHasTag("HolsterSlot")) {
+				HolsterSlot = sceneComponent;
+			}
+			if (sceneComponent && sceneComponent->ComponentHasTag("CarrySlot")) {
+				CarrySlot = sceneComponent;
 			}
 		}
 	}
@@ -106,7 +109,7 @@ void AMyCharacter::Tick(float DeltaTime)
 	//AMyCharacter::setXRot(GetInputAxisValue("Horizontal"));
 	//AMyCharacter::setYRot(GetInputAxisValue("Vertical"));
 	//AMyCharacter::setRotation();
-	if (trainPtr->IsOverlappingFuelBox(GetActorLocation())) {
+	if (trainPtr->IsOverlappingFuelBox(GetActorLocation()) && Carrying) {
 		//GEngine->AddOnScreenDebugMessage(-1, 1, FColor::Orange, FString::Printf(TEXT("is in box")));
 		CanAddFuel = true;
 	}
@@ -151,23 +154,13 @@ void AMyCharacter::InteractPressed() {
 	if (trainPtr->IsOverlappingLeverBox(GetActorLocation()) && !Carrying) {
 		trainPtr->ToggleTrainState();
 	}
-	if (Carrying) {
-		if (carriedObject != NULL ) {
-			if (IsFacingWall()) {
-				carriedObject->DropObject(characterMesh->GetRightVector());
-			}
-			else {
-				carriedObject->DropObject(characterMesh->GetRightVector()*-1);
-			}
-		}
-		Carrying = false;
-		CurrentWeapon->ShowLaser();
-	}
+	CheckDropItem();
 }
 
 void AMyCharacter::InteractReleased()
 {
 	Interacted = false;
+	justDropped = false;
 }
 
 void AMyCharacter::PickupItem(AInteractableActor* itemToCarry)
@@ -177,11 +170,31 @@ void AMyCharacter::PickupItem(AInteractableActor* itemToCarry)
 	}
 	Carrying = true;
 	carriedObject = itemToCarry;
-	CurrentWeapon->HideLaser();
-	itemToCarry->OnPickedUp(CarryPosition);
+	
+	HolsterWeapon();
+	itemToCarry->OnPickedUp(CarrySlot);
 	ShootReleased();
 	//itemToCarry->SetActorLocation(CarryPosition->GetComponentLocation());
 	//itemToCarry->AttachToComponent(CarryPosition, FAttachmentTransformRules::SnapToTargetNotIncludingScale);
+}
+
+void AMyCharacter::CheckDropItem()
+{
+	if (Carrying) {
+		if (carriedObject != NULL) {
+			if (IsFacingWall()) {
+				carriedObject->DropObject(characterMesh->GetRightVector());
+			}
+			else {
+				carriedObject->DropObject(characterMesh->GetRightVector() * -1);
+			}
+		}
+		AttachWeapon();
+		CurrentWeapon->WeaponEquipped();
+		CurrentWeapon->ShowLaser();
+		justDropped = true;
+		Carrying = false;
+	}
 }
 
 
@@ -191,6 +204,16 @@ void AMyCharacter::AttachWeapon()
 	CurrentWeapon->SetActorLocation(characterMesh->GetSocketTransform("WeaponSocket").GetLocation());
 	//CurrentWeapon->AttachToActor(this, rules);
 	CurrentWeapon->AttachToComponent(characterMesh, rules, "WeaponSocket");
+}
+
+void AMyCharacter::HolsterWeapon()
+{
+	FAttachmentTransformRules rules = FAttachmentTransformRules(EAttachmentRule::SnapToTarget, true);
+	CurrentWeapon->SetActorLocation(HolsterSlot->GetComponentLocation());
+	CurrentWeapon->SetActorRotation(HolsterSlot->GetComponentRotation());
+	//CurrentWeapon->AttachToActor(this, rules);
+	CurrentWeapon->AttachToComponent(HolsterSlot, rules);
+	CurrentWeapon->HideLaser();
 }
 
 TSubclassOf<AWeapon> AMyCharacter::PickupWeapon(TSubclassOf<AWeapon> weaponToPickup)
@@ -334,6 +357,8 @@ void AMyCharacter::DespawnPlayer()
 	if (IsShooting) {
 		ShootReleased();
 	}
+	CheckDropItem();
+	justDropped = false;
 	NotifyPlayerDied();
 	TotalDeaths++;
 	MaxHealth = baseHealth;
