@@ -121,6 +121,7 @@ void AMyCharacter::Tick(float DeltaTime)
 		DespawnPlayer();
 	}
 	RegenerateHealth();
+	ApplyDash();
 }
 
 #pragma region Movement
@@ -310,6 +311,7 @@ void AMyCharacter::DashPressed()
 	if (canDash) {
 		canDash = false;
 		isDashing = true;
+		DashSpeed = DashForce;
 		//stop player from shooting while dashing
 		if (IsShooting) {
 			ShootReleased();
@@ -325,8 +327,37 @@ void AMyCharacter::DashPressed()
 		}
 	}
 }
+
+void AMyCharacter::ApplyDash()
+{
+	if (isDashing) {
+		FHitResult hit;
+		FVector start = GetActorLocation();
+		FVector end = start + (DashDirection* 70);
+		if (GetWorld()) {
+			FCollisionQueryParams QueryParams;
+			QueryParams.AddIgnoredActor(this);
+			bool actorHit = GetWorld()->LineTraceSingleByChannel(hit, start, end, ECC_Pawn, QueryParams, FCollisionResponseParams());
+			//DrawDebugLine(GetWorld(), start, end, FColor::Red, false, 0.15f, 0.f, 10.f);
+			if (actorHit && hit.GetActor()) {
+
+			}
+			else {
+				FVector loc = GetActorLocation() + (DashDirection * DashSpeed);
+				SetActorLocation(loc);
+			}
+		}
+		DashSpeed -= DashDecelleration;
+		if (DashSpeed <= 0) {
+			DashSpeed = 0;
+			isDashing = false;
+		}
+	}
+}
+
 void AMyCharacter::FinishDash() {
 	isDashing = false;
+	OnDashFinish();
 	GetWorld()->GetTimerManager().ClearTimer(dashTimerHandle);
 }
 

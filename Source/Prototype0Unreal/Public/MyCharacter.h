@@ -84,7 +84,7 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Dash")
 	float DashCooldown;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Dash")
-	float DashDistance;
+	float DashForce;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Dash")
 	float KnockBackDuration;
 
@@ -93,8 +93,16 @@ protected:
 
 	bool canDash;
 
+	float DashSpeed;
+	UPROPERTY(EditDefaultsOnly, Category = "Dash")
+	float DashDecelleration;
+	void ApplyDash();
+
 	UFUNCTION(BlueprintImplementableEvent)
 	void NotifyOnDash(FVector direction);
+
+	UFUNCTION(BLueprintImplementableEvent)
+	void OnDashFinish();
 
 	//UFUNCTION();
 	void ResetDash();
