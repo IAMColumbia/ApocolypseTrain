@@ -85,6 +85,20 @@ TArray<int> UPlayerManagerWSS::GetPlayerDeaths()
 	return deaths;
 }
 
+float UPlayerManagerWSS::GetAverageLocation()
+{
+	TArray<float> positions;
+	for (int i = 0; i < Players.Num(); i++) {
+		if (!Players[i]->IsPlayerDead) {
+			positions.Add(Players[i]->GetActorLocation().Y);
+		}
+	}
+	float min = FMath::Min(positions);
+	float max = FMath::Max(positions);
+	float average = (min + max) / 2;
+	return average;
+}
+
 bool UPlayerManagerWSS::AllPlayersDead()
 {
 	int deadPlayers = 0;

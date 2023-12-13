@@ -30,7 +30,11 @@ void AWeapon::BeginPlay()
 			if (sceneComponent && sceneComponent->ComponentHasTag("Laser")) {
 				laser = sceneComponent;
 			}
+			if (sceneComponent && sceneComponent->ComponentHasTag("WeaponRotator")) {
+				weaponRotator = sceneComponent;
+			}
 		}
+		
 	}
 	Reload();
 	CreateObjects();
@@ -76,6 +80,20 @@ void AWeapon::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 	UpdateReloadTime();
 	CheckForAttack();
+	if (Clipping() && !upright) {
+		upright = true;
+		HideLaser();
+		FRotator CurrentRotation = weaponRotator->GetComponentRotation();
+		FRotator NewRotation = FRotator(CurrentRotation.Pitch, CurrentRotation.Yaw , CurrentRotation.Roll - 90.0f);
+		weaponRotator->SetWorldRotation(NewRotation);
+	}
+	else if (!Clipping() && upright) {
+		ShowLaser();
+		upright = false;
+		FRotator CurrentRotation = weaponRotator->GetComponentRotation();
+		FRotator NewRotation = FRotator(CurrentRotation.Pitch, CurrentRotation.Yaw , CurrentRotation.Roll + 90.0f);
+		weaponRotator->SetWorldRotation(NewRotation);
+	}
 }
 
 void AWeapon::WeaponEquipped()
@@ -141,7 +159,7 @@ void AWeapon::UpdateReloadTime()
 void AWeapon::CheckForAttack()
 {
 	if (Attacking && Reloaded) {
-		if (Reloaded) {
+		if (!Clipping()) {
 			NotifyFiredShot();
 			ShootProjectile();
 			Reloaded = false;
@@ -189,6 +207,40 @@ void AWeapon::SpawnProjectile()
 		p->Spawn();
 		objectPool.Enqueue(p);
 	}
+}
+
+bool AWeapon::Clipping()
+{
+	if (BulletSpawn == NULL) {
+		return false;
+	}
+	FVector start = BulletSpawn->GetComponentLocation();
+
+	//FVector forward = UKismetMathLibrary::RandomUnitVectorInConeInDegrees(characterMesh->GetRightVector(), 0.8);
+	//FVector forward = OwnerCharacter->characterMesh->GetRightVector();
+	FVector forward = OwnerCharacter->GetActorLocation() - BulletSpawn->GetComponentLocation();
+	forward.Z = 0;
+
+	//start = FVector(start.X + (forward.X), start.Y + (forward.Y), start.Z + (forward.Z));
+	//maybe need to change end pos for randomness
+	FVector end = start + forward;
+
+	FHitResult hit;
+
+	if (GetWorld()) {
+		FCollisionQueryParams QueryParams;
+		QueryParams.AddIgnoredActor(this);
+		QueryParams.AddIgnoredActor(OwnerCharacter);
+		bool actorHit = GetWorld()->LineTraceSingleByChannel(hit, start, end, ECC_Pawn, QueryParams, FCollisionResponseParams());
+		//NotifyFiredShot(OwnerCharacter->GetActorRightVector());
+
+		//DrawDebugLine(GetWorld(), start, end, FColor::Red, false, 0.15f, 0.f, 10.f);
+		if (actorHit && hit.GetActor() && !Cast<AEnemyCharacter>(hit.GetActor()) && !Cast<AObstacle>(hit.GetActor()) && !hit.GetActor()->ActorHasTag("EnemyTrap")) {
+			//GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red, hit.GetActor()->GetFName().ToString());
+			return true;
+		}
+	}
+	return false;
 }
 
 

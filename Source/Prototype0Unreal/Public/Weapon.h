@@ -25,7 +25,7 @@ protected:
 
 	virtual void ShootProjectile();
 
-	
+	USceneComponent* weaponRotator;
 
 public:	
 
@@ -96,4 +96,8 @@ public:
 	TQueue<class AProjectile*> objectPool;
 	void CreateObjects();
 	virtual void SpawnProjectile();
+
+	FQuat OriginalRotation;
+	bool upright;
+	bool Clipping();
 };

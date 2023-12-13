@@ -42,6 +42,8 @@ public:
 	UFUNCTION(BlueprintCallable)
 	TArray<int> GetPlayerDeaths();
 
+	float GetAverageLocation();
+
 protected:
 	virtual void Initialize(FSubsystemCollectionBase& Collection) override;
 

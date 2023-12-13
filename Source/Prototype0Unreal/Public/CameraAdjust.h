@@ -23,6 +23,16 @@ protected:
 public:	
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
-
+	class UPlayerManagerWSS* playerManager;
 		
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float TrainPositionOffset;
+
+	FVector curLoc;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float cameraSpeed;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float deadZone;
+	float smoothOffset;
+	float GetYDir();
 };
