@@ -28,13 +28,12 @@ bool AMyCharacter::IsFacingWall()
 {
 	FVector start = GetActorLocation();
 
-	//FVector forward = characterMesh->GetRightVector();
-	FVector forward = CarrySlot->GetComponentLocation() - GetActorLocation();
+	FVector forward = characterMesh->GetRightVector();
 	forward.Z = 0;
 
-	//start = FVector(start.X + (forward.X), start.Y + (forward.Y), start.Z + (forward.Z));
+	start = FVector(start.X + (forward.X), start.Y + (forward.Y), start.Z + (forward.Z));
 	//maybe need to change end pos for randomness
-	FVector end = start + forward;
+	FVector end = start + forward * 80;
 
 	FHitResult hit;
 
@@ -44,7 +43,7 @@ bool AMyCharacter::IsFacingWall()
 		QueryParams.AddIgnoredActor(carriedObject);
 		QueryParams.AddIgnoredActor(CurrentWeapon);
 		bool actorHit = GetWorld()->LineTraceSingleByChannel(hit, start, end, ECC_WorldDynamic,QueryParams, FCollisionResponseParams());
-		//DrawDebugLine(GetWorld(), start, end, FColor::Red, false, 4.15f, 0.f, 10.f);
+		//DrawDebugLine(GetWorld(), start, end, FColor::Red, false, 0.15f, 0.f, 10.f);
 		if (actorHit && hit.GetActor()) {
 			//GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red, hit.GetActor()->GetFName().ToString());
 			if (AEnemyCharacter* enemy = Cast<AEnemyCharacter>(hit.GetActor())) {
@@ -193,7 +192,6 @@ void AMyCharacter::CheckDropItem()
 	if (Carrying) {
 		if (carriedObject != NULL) {
 			if (IsFacingWall()) {
-				carriedObject->SetActorLocation(GetActorLocation());
 				carriedObject->DropObject(characterMesh->GetRightVector());
 			}
 			else {

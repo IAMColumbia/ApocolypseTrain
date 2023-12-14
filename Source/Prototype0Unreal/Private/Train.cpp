@@ -132,9 +132,7 @@ void ATrain::BeginPlay()
 
 void ATrain::PlayerJoined()
 {
-	if (!CanMove) {
-		GetWorld()->GetTimerManager().SetTimer(startTimerHandle, this, &ATrain::TrainCanMove, 5.0, false);
-	}
+	
 	burnRate += burnRateDifficultyScaling;
 }
 
@@ -215,6 +213,10 @@ void ATrain::ToggleTrainState()
 }
 
 bool ATrain::AddFuel() {
+	if (!CanMove) {
+		GetWorld()->GetTimerManager().SetTimer(startTimerHandle, this, &ATrain::TrainCanMove, 1.0, false);
+		//TrainCanMove();
+	}
 	if (Fuel + 1 <= MaxFuel) {
 		Fuel++;
 		NotifyFuelAdded();
