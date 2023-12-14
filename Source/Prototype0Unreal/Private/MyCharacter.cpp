@@ -164,6 +164,14 @@ void AMyCharacter::InteractReleased()
 	justDropped = false;
 }
 
+bool AMyCharacter::isWeaponUpright()
+{
+	if (CurrentWeapon != NULL) {
+		return CurrentWeapon->upright;
+	}
+	return false;
+}
+
 void AMyCharacter::PickupItem(AInteractableActor* itemToCarry)
 {
 	if (Carrying) {

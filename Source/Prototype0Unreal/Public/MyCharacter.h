@@ -161,6 +161,8 @@ protected:
 	void SetMovementSpeed(float speed);
 
 public:	
+	UFUNCTION(BlueprintCallable, BlueprintPure)
+	bool isWeaponUpright();
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	bool Interacted;
