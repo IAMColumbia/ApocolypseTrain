@@ -194,7 +194,7 @@ void AMyCharacter::CheckDropItem()
 		if (carriedObject != NULL) {
 			if (IsFacingWall()) {
 				carriedObject->SetActorLocation(GetActorLocation());
-				carriedObject->DropObject(characterMesh->GetRightVector());
+				carriedObject->DropObject(characterMesh->GetRightVector() * 0.2);
 			}
 			else {
 				carriedObject->DropObject(characterMesh->GetRightVector() * -1);
