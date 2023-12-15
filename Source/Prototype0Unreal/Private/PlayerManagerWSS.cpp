@@ -8,6 +8,7 @@
 #include <Kismet/GameplayStatics.h>
 #include <Weapon.h>
 #include <GameManagerWSS.h>
+#include <Components/SphereComponent.h>
 
 void UPlayerManagerWSS::RegisterPlayer(AMyCharacter* player)
 {

@@ -34,7 +34,7 @@ bool AMyCharacter::IsFacingWall()
 
 	//start = FVector(start.X + (forward.X), start.Y + (forward.Y), start.Z + (forward.Z));
 	//maybe need to change end pos for randomness
-	FVector end = start + forward;
+	FVector end = start + (forward* 1.2 );
 
 	FHitResult hit;
 
@@ -200,11 +200,11 @@ void AMyCharacter::CheckDropItem()
 				carriedObject->DropObject(characterMesh->GetRightVector() * -1);
 			}
 		}
+		Carrying = false;
 		AttachWeapon();
 		CurrentWeapon->WeaponEquipped();
 		CurrentWeapon->ShowLaser();
 		justDropped = true;
-		Carrying = false;
 	}
 }
 
@@ -215,10 +215,13 @@ void AMyCharacter::AttachWeapon()
 	CurrentWeapon->SetActorLocation(characterMesh->GetSocketTransform("WeaponSocket").GetLocation());
 	//CurrentWeapon->AttachToActor(this, rules);
 	CurrentWeapon->AttachToComponent(characterMesh, rules, "WeaponSocket");
+	CurrentWeapon->Equipped = true;
 }
 
 void AMyCharacter::HolsterWeapon()
 {
+	CurrentWeapon->Equipped = false;
+	CurrentWeapon->LowerWeapon();
 	FAttachmentTransformRules rules = FAttachmentTransformRules(EAttachmentRule::SnapToTarget, true);
 	CurrentWeapon->SetActorLocation(HolsterSlot->GetComponentLocation());
 	CurrentWeapon->SetActorRotation(HolsterSlot->GetComponentRotation());

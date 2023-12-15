@@ -29,6 +29,11 @@ protected:
 
 public:	
 
+	bool Equipped;
+
+	void RaiseWeapon();
+	void LowerWeapon();
+
 	void KilledEnemy();
 
 	UFUNCTION(BlueprintCallable, BlueprintPure)

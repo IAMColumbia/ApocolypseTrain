@@ -40,6 +40,7 @@ void AWeapon::BeginPlay()
 	CreateObjects();
 }
 
+
 void AWeapon::KilledEnemy()
 {
 	OwnerCharacter->TotalKills++;
@@ -80,21 +81,36 @@ void AWeapon::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 	UpdateReloadTime();
 	CheckForAttack();
-	if (Clipping() && !upright) {
+	if (Clipping() && Equipped) {
+		RaiseWeapon();
+	}
+	else if (!Clipping() && Equipped) {
+		LowerWeapon();
+	}
+}
+
+void AWeapon::RaiseWeapon()
+{
+	if (!upright) {
 		upright = true;
 		HideLaser();
 		FRotator CurrentRotation = weaponRotator->GetComponentRotation();
-		FRotator NewRotation = FRotator(CurrentRotation.Pitch, CurrentRotation.Yaw , CurrentRotation.Roll - 90.0f);
-		weaponRotator->SetWorldRotation(NewRotation);
-	}
-	else if (!Clipping() && upright) {
-		ShowLaser();
-		upright = false;
-		FRotator CurrentRotation = weaponRotator->GetComponentRotation();
-		FRotator NewRotation = FRotator(CurrentRotation.Pitch, CurrentRotation.Yaw , CurrentRotation.Roll + 90.0f);
+		FRotator NewRotation = FRotator(CurrentRotation.Pitch, CurrentRotation.Yaw, CurrentRotation.Roll - 90.0f);
 		weaponRotator->SetWorldRotation(NewRotation);
 	}
 }
+
+void AWeapon::LowerWeapon()
+{
+	if (upright) {
+		ShowLaser();
+		upright = false;
+		FRotator CurrentRotation = weaponRotator->GetComponentRotation();
+		FRotator NewRotation = FRotator(CurrentRotation.Pitch, CurrentRotation.Yaw, CurrentRotation.Roll + 90.0f);
+		weaponRotator->SetWorldRotation(NewRotation);
+	}
+}
+
 
 void AWeapon::WeaponEquipped()
 {

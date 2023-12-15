@@ -95,12 +95,12 @@ void AStatUpgrade::OnInteract(AMyCharacter* player)
 		Interacted(getUpgradeText(amount, upgrade), player->PlayerColor);
 		break;
 	case 1:
-		player->ApplyUpgrade(upgrade, amount);
-		Interacted(getUpgradeText(amount, upgrade), player->PlayerColor);
+		player->ApplyUpgrade(upgrade, 20);
+		Interacted(getUpgradeText(20, upgrade), player->PlayerColor);
 		break;
 	case 2:
-		player->ApplyUpgrade(upgrade, amount);
-		Interacted(getUpgradeText(amount, upgrade), player->PlayerColor);
+		player->ApplyUpgrade(upgrade, 15);
+		Interacted(getUpgradeText(15, upgrade), player->PlayerColor);
 		break;
 	}
 	

@@ -4,6 +4,7 @@
 #include "InteractableActor.h"
 #include <Components/SphereComponent.h>
 #include <MyCharacter.h>
+#include <PlayerManagerWSS.h>
 
 // Sets default values
 AInteractableActor::AInteractableActor()
@@ -64,9 +65,23 @@ void AInteractableActor::OnInteract(AMyCharacter* player)
 void AInteractableActor::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+	for(AMyCharacter* c : GetWorld()->GetSubsystem<UPlayerManagerWSS>()->Players) {
+		if (IsOverlappingActor(c) && !overlappingPlayers.Contains(c)) {
+			overlappingPlayers.Add(c);
+			PlayersOverlapping();
+		}
+	}
 	if (state == EInteractableState::Idle) {
 		if (overlappingPlayers.Num() > 0) {
 			CheckForInteractPressed();
+		}
+	}
+	for (AMyCharacter* c : GetWorld()->GetSubsystem<UPlayerManagerWSS>()->Players) {
+		if (!IsOverlappingActor(c) && overlappingPlayers.Contains(c)) {
+			overlappingPlayers.Remove(c);
+			if (overlappingPlayers.Num() <= 0) {
+				NoPlayersOverlapping();
+			}
 		}
 	}
 }
@@ -75,10 +90,9 @@ void AInteractableActor::OnTriggerBeginOverlap(UPrimitiveComponent* OverlappedCo
 {
 	if (OtherActor->ActorHasTag("Player")) {
 		if (AMyCharacter* player = Cast<AMyCharacter>(OtherActor)) {
-			overlappingPlayers.Add(player);
-			PlayersOverlapping();
+			/*overlappingPlayers.Add(player);
+			PlayersOverlapping();*/
 		}
-		
 	}
 }
 
@@ -86,10 +100,10 @@ void AInteractableActor::OnTriggerEndOverlap(UPrimitiveComponent* OverlappedComp
 {
 	if (OtherActor->ActorHasTag("Player")) {
 		if (AMyCharacter* player = Cast<AMyCharacter>(OtherActor)) {
-			overlappingPlayers.Remove(player);
+			/*overlappingPlayers.Remove(player);
 			if (overlappingPlayers.Num() <= 0) {
 				NoPlayersOverlapping();
-			}
+			}*/
 		}
 
 	}

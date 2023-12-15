@@ -236,6 +236,7 @@ public:
 	UFUNCTION(BlueprintImplementableEvent)
 	void NotifyReloadPercent(float currentTime, float MaxTime);
 
+	bool overlappingInteractable;
 private:
 	UPROPERTY(EditAnywhere, meta=(AllowPrivateAccess="true"))
 	TSubclassOf<AActor> ActorToSpawn;

@@ -24,7 +24,8 @@ public:
 	// Sets default values for this actor's properties
 	AInteractableActor();
 
-	TArray<AMyCharacter* > overlappingPlayers;
+	TArray<AMyCharacter*> overlappingPlayers;
+	TArray<AMyCharacter*> overlappingPlayersToRemove;
 
 
 	class USphereComponent* trigger;
