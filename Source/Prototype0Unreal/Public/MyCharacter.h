@@ -117,6 +117,9 @@ protected:
 	FTimerHandle shootTimerHandle;
 	FTimerHandle respawnTimerHandle;
 
+	bool Invincible;
+	void SetInvincibility();
+
 	//How long it takes the player to respawn when they die
 	UPROPERTY(EditAnywhere, Category = "Respawning")
 	int TotalRespawnTime;

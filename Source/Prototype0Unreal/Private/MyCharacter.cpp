@@ -384,6 +384,9 @@ void AMyCharacter::ResetDash() {
 #pragma region spawning
 
 void AMyCharacter::TakeDamage(float damageToTake) {
+	if (Invincible) {
+		return;
+	}
 	currentHealth -= damageToTake;
 	NotifyHealthBarWidget();
 	NotifyTakeDamage();
@@ -414,6 +417,11 @@ void AMyCharacter::DespawnPlayer()
 	GetWorld()->GetSubsystem<UPlayerManagerWSS>()->CheckGameOver();
 }
 
+void AMyCharacter::SetInvincibility()
+{
+	Invincible = false;
+}
+
 void AMyCharacter::UpdateRespawnTimer()
 {
 	currentRespawnTime--;
@@ -426,11 +434,13 @@ void AMyCharacter::UpdateRespawnTimer()
 
 void AMyCharacter::ResetPlayer() {
 	SetActorLocation(trainPtr->GetRespawnPos(PlayerIndex));
+	Invincible = true;
 	currentHealth = MaxHealth;
 	IsPlayerDead = false;
 	NotifyHealthBarWidget();
 	NotifyPlayerRespawn();
 	trainPtr->StopRespawnTimer(PlayerIndex, 0);
+	GetWorld()->GetTimerManager().SetTimer(respawnTimerHandle, this, &AMyCharacter::SetInvincibility, 3, false);
 }
 
 FVector AMyCharacter::GetRespawnLocation()
