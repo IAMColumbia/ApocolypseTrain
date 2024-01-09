@@ -248,16 +248,12 @@ TSubclassOf<AWeapon> AMyCharacter::GetCurrentWeapon()
 }
 
 void AMyCharacter::setXRot(float AxisValue) {
-	if (AxisValue != 0.0f) {
-		xRot = AxisValue * -1;
-	}
+	aimRot.X = AxisValue * -1;
 	setRotation();
 }
 
 void AMyCharacter::setYRot(float AxisValue) {
-	if (AxisValue != 0.0f) {
-		yRot = AxisValue;
-	}
+	aimRot.Y = AxisValue;
 	setRotation();
 }
 
@@ -278,10 +274,11 @@ void AMyCharacter::MoveRight(float AxisValue) {
 }
 
 void AMyCharacter::setRotation() {
-	FVector dir = FVector(xRot, yRot, 0); //UKismetMathLibrary::MakeVector(xRot, yRot, 0);
-	
-	FRotator rotation = UKismetMathLibrary::MakeRotationFromAxes(dir, FVector::Zero(), FVector::Zero());
-	characterMesh->SetWorldRotation(rotation + FRotator(0, 200,0));
+	//GEngine->AddOnScreenDebugMessage(-1, 1, FColor::Green, FString::Printf(TEXT("X: %d  Y: %d"), aimRot.X, aimRot.Y));
+	if (aimRot.Length() >= deadZone) {
+		FRotator rotation = UKismetMathLibrary::MakeRotationFromAxes(aimRot, FVector::Zero(), FVector::Zero());
+		characterMesh->SetWorldRotation(rotation + FRotator(0, 200, 0));
+	}
 }
 
 void AMyCharacter::MoveForward(float AxisValue) {

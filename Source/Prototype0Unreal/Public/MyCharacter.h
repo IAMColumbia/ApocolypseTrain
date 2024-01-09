@@ -26,6 +26,7 @@ public:
 
 	bool IsFacingWall();
 
+	float deadZone = 0.45f;
 	//how much is added to players base damage
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Buffs")
 	float DamageBuff;
@@ -47,8 +48,7 @@ protected:
 	class UGameManagerWSS* gameManager;
 	class ATrain* trainPtr;
 
-	float xRot;
-	float yRot;
+	FVector aimRot;
 	void setXRot(float AxisValue);
 	void setYRot(float AxisValue);
 
