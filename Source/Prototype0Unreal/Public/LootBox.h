@@ -5,19 +5,19 @@
 #include "InteractableActor.h"
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "StatUpgrade.generated.h"
+#include "LootBox.generated.h"
 
 enum class EUpgradeType : uint8;
 class AMyCharacter;
 
 UCLASS()
-class PROTOTYPE0UNREAL_API AStatUpgrade : public AInteractableActor
+class PROTOTYPE0UNREAL_API ALootBox : public AInteractableActor
 {
 	GENERATED_BODY()
 	
 public:	
 	// Sets default values for this actor's properties
-	AStatUpgrade();
+	ALootBox();
 
 protected:
 	// Called when the game starts or when spawned

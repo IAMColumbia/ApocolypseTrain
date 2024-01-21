@@ -79,6 +79,9 @@ bool UGameManagerWSS::IsOutOfBounds(FVector actorLocation)
 
 bool UGameManagerWSS::IsOutOfBackBounds(FVector actorLocation)
 {
+	if (train == NULL) {
+		return false;
+	}
 	if (actorLocation.Y < train->GetBackBound()) {
 		return true;
 	}
@@ -147,7 +150,9 @@ void UGameManagerWSS::RestartGame()
 
 void UGameManagerWSS::PlayerJoined()
 {
-	train->PlayerJoined();
+	if (train != NULL) {
+		train->PlayerJoined();
+	}
 }
 
 

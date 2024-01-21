@@ -100,6 +100,13 @@ float UPlayerManagerWSS::GetAverageLocation()
 	return average;
 }
 
+void UPlayerManagerWSS::ShareCoins(int coins)
+{
+	for(AMyCharacter * c : Players) {
+		c->AddCoins(coins);
+	}
+}
+
 bool UPlayerManagerWSS::AllPlayersDead()
 {
 	int deadPlayers = 0;

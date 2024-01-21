@@ -96,9 +96,16 @@ void AMyCharacter::OnPlayerSpawn() {
 	PlayerIndex = UGameplayStatics::GetPlayerControllerID(((APlayerController*)GetController()));
 	PlayerColor = SetPlayerColorVector(PlayerIndex);
 	GEngine->AddOnScreenDebugMessage(-1, 5, GetPlayerColor(), FString::Printf(TEXT("Player With Index %d Joined The Game"), PlayerIndex));
-	SetActorLocation(trainPtr->GetRespawnPos(PlayerIndex));
 	GetWorld()->GetSubsystem<UPlayerManagerWSS>()->RegisterPlayer(this);
-	trainPtr->OnControllerPosses(PlayerIndex, GetPlayerColor());
+	if (trainPtr != NULL) {
+		SetActorLocation(trainPtr->GetRespawnPos(PlayerIndex));
+		trainPtr->OnControllerPosses(PlayerIndex, GetPlayerColor());
+	}
+	else {
+		UE_LOG(LogTemp, Warning, TEXT("Train ptr is null in Character"));
+	}
+	
+	
 }
 
 
@@ -110,16 +117,18 @@ void AMyCharacter::Tick(float DeltaTime)
 	//AMyCharacter::setXRot(GetInputAxisValue("Horizontal"));
 	//AMyCharacter::setYRot(GetInputAxisValue("Vertical"));
 	//AMyCharacter::setRotation();
-	if (trainPtr->IsOverlappingFuelBox(GetActorLocation()) && Carrying) {
-		//GEngine->AddOnScreenDebugMessage(-1, 1, FColor::Orange, FString::Printf(TEXT("is in box")));
-		CanAddFuel = true;
-	}
-	else {
-		CanAddFuel = false;
-	}
-	//DrawDebugBox(GetWorld(), trainPtr->GetRespawnPos(PlayerIndex), FVector(1, 1, 1) * 60, GetPlayerColor(), false, -1.0f, 0U, 10.0f);
-	if (gameManager->IsOutOfBounds(GetActorLocation())) {
-		DespawnPlayer();
+	if (trainPtr != NULL) {
+		if (trainPtr->IsOverlappingFuelBox(GetActorLocation()) && Carrying && carriedObject->ActorHasTag("Fuel")) {
+			//GEngine->AddOnScreenDebugMessage(-1, 1, FColor::Orange, FString::Printf(TEXT("is in box")));
+			CanAddFuel = true;
+		}
+		else {
+			CanAddFuel = false;
+		}
+		//DrawDebugBox(GetWorld(), trainPtr->GetRespawnPos(PlayerIndex), FVector(1, 1, 1) * 60, GetPlayerColor(), false, -1.0f, 0U, 10.0f);
+		if (gameManager->IsOutOfBounds(GetActorLocation())) {
+			DespawnPlayer();
+		}
 	}
 	RegenerateHealth();
 	ApplyDash();
@@ -146,15 +155,17 @@ void AMyCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 
 void AMyCharacter::InteractPressed() {
 	Interacted = true;
-	if (trainPtr->IsOverlappingFuelBox(GetActorLocation()) && Carrying) {
-		if (carriedObject != NULL) {
-			if (trainPtr->AddFuel()) {
-				carriedObject->Destroy();
+	if (trainPtr != NULL) {
+		if (trainPtr->IsOverlappingFuelBox(GetActorLocation()) && Carrying && carriedObject->ActorHasTag("Fuel")) {
+			if (carriedObject != NULL) {
+				if (trainPtr->AddFuel()) {
+					carriedObject->Destroy();
+				}
 			}
 		}
-	}
-	if (trainPtr->IsOverlappingLeverBox(GetActorLocation()) && !Carrying) {
-		trainPtr->ToggleTrainState();
+		if (trainPtr->IsOverlappingLeverBox(GetActorLocation()) && !Carrying) {
+			trainPtr->ToggleTrainState();
+		}
 	}
 	CheckDropItem();
 }
@@ -208,6 +219,11 @@ void AMyCharacter::CheckDropItem()
 	}
 }
 
+
+void AMyCharacter::AddCoins(int coins)
+{
+	Coins += coins;
+}
 
 void AMyCharacter::AttachWeapon()
 {
@@ -410,7 +426,9 @@ void AMyCharacter::DespawnPlayer()
 	SpeedBuff = 0;
 	currentRespawnTime = TotalRespawnTime;
 	respawnTimerHandle = UKismetSystemLibrary::K2_SetTimer(this, TEXT("UpdateRespawnTimer"), 1, true, 0, 0);
-	trainPtr->StartRespawnTimer(PlayerIndex, currentRespawnTime);
+	if (trainPtr != NULL) {
+		trainPtr->StartRespawnTimer(PlayerIndex, currentRespawnTime);
+	}
 	GetWorld()->GetSubsystem<UPlayerManagerWSS>()->CheckGameOver();
 }
 

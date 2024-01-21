@@ -44,6 +44,8 @@ public:
 
 	float GetAverageLocation();
 
+	void ShareCoins(int coins);
+
 protected:
 	virtual void Initialize(FSubsystemCollectionBase& Collection) override;
 

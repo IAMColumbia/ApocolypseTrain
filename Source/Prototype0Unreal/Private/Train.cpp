@@ -320,6 +320,9 @@ void ATrain::OnPlowBeginOverlap(UPrimitiveComponent* OverlappedComp, AActor* Oth
 		player->TakeDamage(playerDamage);
 		player->LaunchCharacter(GetActorRightVector() * playerLaunchForce, true, true);
 	}
+	if (OtherActor->Tags.Contains("Fuel")) {
+		OtherActor->Destroy();
+	}
 	if (OtherActor->Tags.Contains("Obstacle")) {
 		currentTrainSpeed *= -1;
 		isReversing = true;

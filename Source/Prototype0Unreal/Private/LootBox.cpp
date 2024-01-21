@@ -1,14 +1,14 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "StatUpgrade.h"
+#include "LootBox.h"
 #include "MyCharacter.h"
 #include "GameManagerWSS.h"
 
 
 
 // Sets default values
-AStatUpgrade::AStatUpgrade()
+ALootBox::ALootBox()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
@@ -16,7 +16,7 @@ AStatUpgrade::AStatUpgrade()
 }
 
 // Called when the game starts or when spawned
-void AStatUpgrade::BeginPlay()
+void ALootBox::BeginPlay()
 {
 	Super::BeginPlay();
 	
@@ -29,7 +29,7 @@ FText getUpgradeText(float value, EUpgradeType type)
 
 
 // Called every frame
-void AStatUpgrade::Tick(float DeltaTime)
+void ALootBox::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
@@ -42,7 +42,7 @@ void AStatUpgrade::Tick(float DeltaTime)
 
 }
 
-void AStatUpgrade::CheckForInteractPressed() {
+void ALootBox::CheckForInteractPressed() {
 	if (wasInteracted) {
 		return;
 	}
@@ -79,7 +79,7 @@ void AStatUpgrade::CheckForInteractPressed() {
 	
 }
 
-void AStatUpgrade::OnInteract(AMyCharacter* player)
+void ALootBox::OnInteract(AMyCharacter* player)
 {
 	if (wasInteracted) {
 		return;

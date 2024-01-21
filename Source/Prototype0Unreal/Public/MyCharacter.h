@@ -41,6 +41,11 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	int TotalDeaths;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	int Coins;
+
+	void AddCoins(int coins);
+
 protected:
 	void AttachWeapon();
 	void HolsterWeapon();
