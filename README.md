@@ -14,3 +14,5 @@ https://github.com/IAMColumbia/ApocolypseTrain/assets/76492881/bcb0b507-44fe-41f
 
 Full Gameplay Demo On Youtube
 https://youtu.be/Dy0m0I4A_Zw
+
+Check out our Wiki <a href="https://github.com/IAMColumbia/ApocolypseTrain/wiki">here</a> for more info.
